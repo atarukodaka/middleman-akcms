@@ -1,0 +1,17 @@
+---
+title: Categories
+layout: layout
+date: 2014/11/1
+group: navigation
+type: summary
+---
+
+<h1>Categories</h1>
+
+<div>
+  <ul>
+    <% akcms.categories.select {|catres| catres.parent == top_page() }.sort_by{|c| c.locals[:name]}.each {|catres| %>
+    <%= partial("partials/category_list", locals: {category_resource: catres}) %>
+    <% } %>
+  </ul>
+</div>

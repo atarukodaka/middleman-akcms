@@ -1,0 +1,37 @@
+<% wrap_layout :layout do %>
+
+<article>
+  <header>
+    <h1><%= yield_content(:title) || h(current_resource.title) %></h1>
+    <%= partial("partials/article_info", locals: { article: current_resource }) %>
+    <!-- render_toc(current_resource)  -->
+  </header>
+
+  <div class="content numbering_headings">
+    <%= yield %>
+  </div>
+
+  <footer>
+    <nav>
+      <ul class="pager">
+	<% prev_article = current_resource.prev_article({within_category: false}) %>
+	<% if prev_article %>
+	<li class="previous">
+	  <%= link_to("&larr;" + prev_article.title,  prev_article, title: h(prev_article.title))%>
+	</li>
+	<% end %>
+
+	<% next_article = current_resource.next_article({within_category: false}) %>
+	<% if next_article %>
+	<li class="next">
+	  <%= link_to(next_article.title + "&rarr;",  next_article, title: h(next_article.title)) %>
+	</li>
+	<% end %>
+      </ul>
+    </nav>
+
+  </footer>
+</article>
+
+<% end %>
+

@@ -1,0 +1,14 @@
+---
+title: Home
+layout: layout
+date: 2014/11/1
+pagination:
+  per_page: 5
+---
+
+<% if pagination %>
+  <%= partial("partials/summary", locals: {articles: page_articles}) %>
+  <%= partial("partials/pagination", locals: {paginator: paginator}) %>
+<% else %>
+  <%= partial("partials/summary", locals: {articles: akcms.articles.first(10)}) %>
+<% end %>

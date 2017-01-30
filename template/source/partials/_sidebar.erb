@@ -1,0 +1,47 @@
+<div id="sidebar">
+  <aside>
+    <h2>PROFILE</h2>
+    <p>
+      <%= h(data.config.site_info.author) %> 
+      <%= link_to("@" + h(data.config.site_info.twitter), "http://www.twitter.com/" + h(data.config.site_info.twitter)) if data.config.site_info.twitter %>
+    </p>
+    <p><%= h(data.config.site_info.description) %></p>
+  </aside>
+  <!-- ================ -->
+  <aside>
+    <h2>CATEGORIES</h2>
+    <ul>
+      <% akcms.categories.select {|catres| catres.parent == top_page() }.sort_by{|c| c.locals[:name]}.each {|catres| %>
+      <%= partial("partials/category_list", locals: {category_resource: catres}) %>
+      <% } %>
+    </ul>
+  </aside>
+  <!-- ================ -->
+  <aside>
+    <h2>TAGS</h2>
+    <div>
+      <% akcms.tags.select.each {|res| %>
+      <%= link_to(res.locals[:name], res) %>
+      <% } %>
+    </div>
+  </aside>
+  <!-- ================ -->
+  <aside>
+    <h2>RECENT</h2>
+    <ul>
+      <% akcms.articles.first(10).each {|page| %>
+      <li> <%= link_to(h(page.title), page) %></li>
+      <% } %>
+    </ul>
+  </aside>
+  <!-- ================ -->
+  <aside>
+    <h2>ARCHIVES</h2>
+    <ul>
+      <% akcms.archives.each {|res|%>
+      <li> <%= link_to(res.metadata[:locals][:date].strftime("%b %Y"), res) %></li>
+      <% } %>
+    </ul>
+  </aside>
+    
+</div>

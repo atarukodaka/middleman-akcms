@@ -1,0 +1,29 @@
+---
+title: Archives
+layout: layout
+date: 2014/11/1
+group: navigation
+pagination:
+  per_page: 30
+---
+
+<h1>Archives</h1>
+
+<% hash = {} %>
+
+<% page_articles.each {|article| %>
+ <% ym = Date.new(article.date.year, article.date.month, 1) %>
+ <% hash[ym] ||= [] %>
+ <% hash[ym].push article %>
+<% } %>
+
+<% hash.each {|date, articles| %>
+  <h3><%= date.strftime("%b %Y") %></h3>
+  <ul>
+   <% articles.each {|article|%>
+     <li><%= link_to(article.title, article) %></li>
+   <% } %>
+   </ul>
+<% } %>
+<%= partial("partials/pagination", locals: {paginator: paginator}) %>
+

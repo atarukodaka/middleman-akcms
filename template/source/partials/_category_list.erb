@@ -1,0 +1,15 @@
+<!-- locals: category_resource -->
+
+<li>
+  <%= link_to(category_resource.locals[:display_name] || category_resource.data.title, category_resource) %>
+  <% unless category_resource.children.empty? %>
+    <ul>
+      <% category_resource.children.select {|child| child.ext == ".html"}.each {|child| %>
+      <% unless  child.singleton_class.include? Middleman::Akcms::Article %>
+      <%= partial("partials/category_list", locals: {category_resource: child}) %>
+      <% end %>
+      <% } %>
+    </ul>
+  <% end %>
+
+</li>

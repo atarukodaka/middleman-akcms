@@ -1,0 +1,9 @@
+
+<!-- required locals: article -->
+
+<section class="article_info">
+  | <% if article.category != "" %>
+     <%= link_to(article.category_resource.locals[:display_name], article.category_resource) %>  |
+  <% end %>
+  <%= link_to(article.date.strftime("%d %b %Y"), article) %> |
+</section>
