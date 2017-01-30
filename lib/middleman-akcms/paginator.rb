@@ -2,27 +2,6 @@ require 'middleman-akcms/manipulator'
 
 module Middleman::Akcms
   class PaginatorManipulator < Manipulator
-
-    module Helpers
-      def render_item(type, label = "-")
-        binding.pry
-        case type
-        when :prev
-          cls = "page-item" + (prev_page.nil?) ? ' disabled' : ''
-          content_tag(:li, link_to(label, prev_page), :class => cls)
-        when :next
-          cls = "page-item" + (next_page.nil?) ? ' disabled' : ''
-          content_tag(:li, link_to(label, next_page), :class => cls)
-        when :pages
-          paginated_resources.map_with_index do |res, i|
-            cls = "page-item"
-            content_tag(:li, link_to(i, res), :class => cls)
-          end
-        else
-          raise
-        end
-      end
-    end
     ################
     
     def create_page_resource(resource, page_num)

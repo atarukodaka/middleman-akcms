@@ -1,10 +1,6 @@
 ## TODO
-- git add 取り消し
-- publishable
 - rubygems
 - pagination: 長いとき
-- url 自動展開抑制
-- コンテナ構成整理
 
 ## master
 ### 0.0.1
@@ -28,3 +24,5 @@
 - pagination: <<,1,2,3,>>
 - bootstrap, js CDN
 - breadcrump: pagination のとき
+- publishable
+- layout構成整理

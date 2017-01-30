@@ -2,23 +2,9 @@
 <footer>
   <nav class="text-center">
     <ul class="pagination">
-      <!-- prev page -->
-      <li class="page-item <%= (paginator.prev_page.nil?) ? 'disabled' : '' %>">
-	<%= link_to("&laquo;", paginator.prev_page) %>
-      </li>
-
-      <% max = 5 %>
-      <% start = [paginator.num_pages - max/2.ceil, 0].max %>
-      <% start = 0 %>
-      <% start.upto(paginator.num_pages-1).each {|i| %>
-      <!-- % paginator.paginated_resources.each_with_index {|res, i| % -->
-      <% res = paginator.paginated_resources[i] %>
-      <li class="page-item <%= (res == current_resource) ? 'active' : '' %>"><%= link_to(i+1, res, :class => "page-link") %></li>
-      <% } %>
-      <!-- next page -->
-      <li class="page-item <%= (paginator.next_page.nil?) ? 'disabled' : '' %>">
-	<%= link_to("&raquo;", paginator.next_page) %>
-      </li>
+      <%= pagination_render_prev("&laquo") %>
+      <%= pagination_render_pages(10) %>
+      <%= pagination_render_next("&raquo;") %>
     </ul>
   </nav>
 </footer>
