@@ -1,7 +1,5 @@
 ## TODO
 - rubygems
-- pagination: 長いとき
-- paginator feature
 
 ## master
 ### 0.0.1
@@ -27,3 +25,5 @@
 - breadcrump: pagination のとき
 - publishable
 - layout構成整理
+- pagination: 長いとき
+- paginator feature
