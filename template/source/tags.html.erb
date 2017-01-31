@@ -8,7 +8,7 @@ group: navigation
 <h1>Tags</h1>
 
 <ul>
-  <% akcms.tags.select.each {|res| %>
-  <li><%= link_to(res.locals[:name], res) %></li>
+  <% akcms.tags.each {|name, res| %>
+  <li><%= link_to(name, res) %></li>
   <% } %>
 </ul>

@@ -28,9 +28,9 @@ module Middleman::Akcms
     def archives
       @manipulators[:archive].try(:archives) || []
     end
-    Contract Array
+    Contract Hash
     def tags
-      @manipulators[:tag].try(:tags) || []
+      @manipulators[:tag].try(:tags) || {}
     end
 
     ## register manipulators

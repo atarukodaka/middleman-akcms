@@ -14,6 +14,18 @@ module Middleman::Akcms
       end
     end
     def manipulate_resource_list(resources)
+      @tags = {}
+      @controller.articles.each {|article|
+        article.tags.each {|tag|
+          # @tags[tag] ||= []
+          @tags[tag] ||= create_proxy_resource(tag, [])
+          @tags[tag].locals[:articles] << article
+        }
+      }
+      resources + @tags.values
+    end
+    
+    def __manipulate_resource_list(resources)
       tags = {}
       @controller.articles.each {|article|
         article.tags.each {|tag|

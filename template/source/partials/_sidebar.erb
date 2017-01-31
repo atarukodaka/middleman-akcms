@@ -20,8 +20,8 @@
   <aside>
     <h2>TAGS</h2>
     <div>
-      <% akcms.tags.select.each {|res| %>
-      <%= link_to(res.locals[:name], res) %>
+      <% akcms.tags.each {|name, res| %>
+      <%= link_to(name, res) %>
       <% } %>
     </div>
   </aside>
