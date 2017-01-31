@@ -63,3 +63,52 @@ Feature: pagination
     And I should not see "- title: 3"    
     And I should not see "next:"
     And I should see "prev: index.html"
+
+
+  Scenario: pagination: use render
+    Given a fixture app "basic-app"
+    And a file named "source/index.html.erb" with:
+      """
+      ---
+      title: home
+      date: 2016/12/31
+      pagination:
+        per_page: 2
+      ---
+      <% page_articles.each {|article| %>
+        - title: <%= article.title %>
+      <% } %>
+      <%= pagination_render_prev("&laquo") %>
+      <%= pagination_render_pages(5) %>
+      <%= pagination_render_next("&raquo;") %>
+      """
+
+    And a file named "source/1.html.md" with:
+      """
+      ---
+      title: 1
+      date: 2017/1/1
+      ---
+      """
+    And a file named "source/2.html.md" with:
+      """
+      ---
+      title: 2
+      date: 2017/1/2
+      ---
+      """
+    And a file named "source/3.html.md" with:
+      """
+      ---
+      title: 3
+      date: 2017/1/3
+      ---
+      """
+    And the Server is running at "basic-app"
+
+    When I go to "/index.html"
+    Then the status code should be "200"
+    And I should see "&raquo;"
+    And I should see "index/page/2"
+
+    
