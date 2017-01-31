@@ -6,16 +6,7 @@ pagination:
 
 <!-- locals: name, short_name, articles -->
 
-<% title = "Category: #{h(current_resource.locals[:display_name])}" %>
-<% content_for :title do %>
-<%= title %>
-<% end %>
+<%= partial("partials/title", locals: {title: "Category: #{h(current_resource.locals[:display_name])}"}) %>
+<%= partial("partials/summary", locals: {articles: (pagination)? page_articles : articles }) %>
 
-<h1><%= title %></h1>
-
-<% if pagination %>
-  <%= partial("partials/summary", locals: {articles: page_articles}) %>
-  <%= partial("partials/pagination") %>
-<% else %>
-  <%= partial("partials/summary", locals: {articles: articles}) %>
-<% end %>
+<%= partial("partials/pagination", locals: {paginator: paginator}) if pagination %>

@@ -15,14 +15,11 @@ body > .container {
 /*****************************************************************/
 /* link */
 
-$color_link_visited: #006ff4; /* rgb(68, 68, 169); */
-$color_link_unvisited: #337fda; /* rgb(100, 100, 222); */
-
 a {
-    color: $color_link_unvisited;
+    color: #006ffa;  /* visited */
 }
 a:visited, a:hover {
-    color: $color_link_visited;
+    color: #337fda;  /* unvisited */
     text-decoration: none;
 }
 
@@ -46,7 +43,6 @@ a:visited, a:hover {
 }
 
 #sidebar {
-    /* margin-top: 30px; */
     font-size: small;
     margin-left: 20px;
     
@@ -57,9 +53,7 @@ a:visited, a:hover {
 	    color: #999999;
 	    font-size: medium;
 	}
-	li {
-	    margin-left: -1em;
-	}
+	li { margin-left: -1em; }
     }
 }
 
@@ -81,6 +75,7 @@ a:visited, a:hover {
     padding-left: 10px;
     padding-right: 10px;
 
+    /* navigation bar */
     nav.crumbs {
 	font-size: small;
 	
@@ -104,7 +99,8 @@ a:visited, a:hover {
 	    }
 	}
     }
-    
+
+    /* table of contents */
     .toc {
 	button {
 	    display: block;

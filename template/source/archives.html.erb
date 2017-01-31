@@ -3,21 +3,14 @@ title: Archives
 layout: layout
 date: 2014/11/1
 group: navigation
-pagination:
-  per_page: 30
+pagination: false
 ---
 
 <h1>Archives</h1>
 
-<% hash = {} %>
+<% articles = (pagination) ? page_articles : akcms.articles %>
 
-<% page_articles.each {|article| %>
- <% ym = Date.new(article.date.year, article.date.month, 1) %>
- <% hash[ym] ||= [] %>
- <% hash[ym].push article %>
-<% } %>
-
-<% hash.each {|date, articles| %>
+<% articles.group_by {|a| Date.new(a.date.year, a.date.month, 1)}.each {|date, articles| %>
   <h3><%= date.strftime("%b %Y") %></h3>
   <ul>
    <% articles.each {|article|%>
@@ -25,5 +18,7 @@ pagination:
    <% } %>
    </ul>
 <% } %>
-<%= partial("partials/pagination", locals: {paginator: paginator}) %>
 
+<% if pagination %>
+<%= partial("partials/pagination", locals: {paginator: paginator}) %>
+<% end %>

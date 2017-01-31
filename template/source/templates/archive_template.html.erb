@@ -5,17 +5,8 @@ pagination: true
 
 <!-- locals: date, articles -->
 
-<% title = "Monthly Archives: " + date.strftime("%b %Y") %>
+<%= partial("partials/title", locals: {title: "Monthly Archives: " + date.strftime("%b %Y")}) %>
 
-<% content_for :title do %>
-<%= title %>
-<% end %>
+<%= partial("partials/summary", locals: {articles: (pagination)? page_articles : articles }) %>
 
-<h1><%= title %></h1>
-
-<% if pagination %>
-  <%= partial("partials/summary", locals: {articles: page_articles}) %>
-  <%= partial("partials/pagination", locals: {articles: articles}) %>
-<% else %>
-  <%= partial("partials/summary", locals: {articles: articles}) %>
-<% end %>
+<%= partial("partials/pagination", locals: {paginator: paginator}) if pagination %>

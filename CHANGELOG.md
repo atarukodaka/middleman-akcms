@@ -1,5 +1,6 @@
 ## TODO
 - rubygems
+- archives の作り再考
 
 ## master
 ### 0.0.1
