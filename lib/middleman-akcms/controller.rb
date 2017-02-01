@@ -24,9 +24,9 @@ module Middleman::Akcms
       @manipulators[:category].try(:categories) || {}
     end
 
-    Contract Array
+    Contract Hash
     def archives
-      @manipulators[:archive].try(:archives) || []
+      @manipulators[:archive].try(:archives) || {}
     end
     Contract Hash
     def tags

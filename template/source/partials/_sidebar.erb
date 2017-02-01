@@ -38,8 +38,8 @@
   <aside>
     <h2>ARCHIVES</h2>
     <ul>
-      <% akcms.archives.each {|res|%>
-      <li> <%= link_to(res.locals[:date].strftime("%b %Y"), res) %></li>
+      <% akcms.archives.each {|date_ym, res|%>
+      <li> <%= link_to(date_ym.strftime("%b %Y"), res) %></li>
       <% } %>
     </ul>
   </aside>

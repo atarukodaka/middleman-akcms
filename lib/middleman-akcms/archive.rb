@@ -4,11 +4,6 @@ module Middleman::Akcms
   class ArchiveManipulator < Manipulator
     attr_reader :archives
 
-    def initialize(controller)
-      super(controller)
-      @archives = []
-    end
-
     def create_proxy_resource(date, articles = [])
       sitemap = @controller.extension.app.sitemap
       template = @controller.options.archive_template
@@ -19,6 +14,15 @@ module Middleman::Akcms
       end
     end
     def manipulate_resource_list(resources)
+      @archives = {}
+
+      @controller.articles.group_by {|a| 
+        Date.new(a.date.year, a.date.month, 1)}.each {|date_ym, articles|
+        @archives[date_ym] = create_proxy_resource(date_ym, articles)
+      }
+      return resources + @archives.values.sort_by {|res| res.locals[:date]}.reverse
+    end
+    def __manipulate_resource_list(resources)
       @archives = []
 
       @controller.articles.group_by {|a| 

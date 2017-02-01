@@ -34,7 +34,6 @@ Feature: archive
     And I should see "title: foo"
     And I should see "date: 2017-01-01"
 
-
     
 
 
