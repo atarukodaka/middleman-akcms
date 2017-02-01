@@ -7,7 +7,7 @@
   <% end %>
   |
   <% if article.category != "" %>
-    <% res = article.category_resource
+    <% res = article.category_resource %>
     <%= link_to(res.locals[:display_name], res) %>  |
   <% end %>
   <%= link_to(article.date.strftime("%d %b %Y"), article) %> |

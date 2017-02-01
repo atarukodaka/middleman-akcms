@@ -10,8 +10,8 @@ type: summary
 
 <div>
   <ul>
-    <% akcms.categories.select {|catres| catres.parent == top_page() }.sort_by{|c| c.locals[:name]}.each {|catres| %>
-    <%= partial("partials/category_list", locals: {category_resource: catres}) %>
+    <% akcms.categories.values.select {|res| res.parent == top_page() }.each {|res| %>
+    <%= partial("partials/category_list", locals: {category_resource: res}) %>
     <% } %>
   </ul>
 </div>

@@ -11,8 +11,8 @@
   <aside>
     <h2>CATEGORIES</h2>
     <ul>
-      <% akcms.categories.select {|catres| catres.parent == top_page() }.sort_by{|c| c.locals[:name]}.each {|catres| %>
-      <%= partial("partials/category_list", locals: {category_resource: catres}) %>
+      <% akcms.categories.values.select {|res| res.parent == top_page() }.each {|res| %>
+      <%= partial("partials/category_list", locals: {category_resource: res}) %>
       <% } %>
     </ul>
   </aside>
@@ -39,7 +39,7 @@
     <h2>ARCHIVES</h2>
     <ul>
       <% akcms.archives.each {|res|%>
-      <li> <%= link_to(res.metadata[:locals][:date].strftime("%b %Y"), res) %></li>
+      <li> <%= link_to(res.locals[:date].strftime("%b %Y"), res) %></li>
       <% } %>
     </ul>
   </aside>

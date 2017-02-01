@@ -36,7 +36,8 @@ module Middleman::Akcms
     end
     Contract Middleman::Sitemap::ProxyResource
     def category_resource
-      @controller.categories.find {|res| res.locals[:name] == category}
+      #@controller.categories.find {|res| res.locals[:name] == category}
+      @controller.categories[category]
     end
     Contract Integer => String
     def summary(length=nil)

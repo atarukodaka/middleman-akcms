@@ -37,7 +37,7 @@ Feature: category
 
     And a file named "source/category_template.html.erb" with:
       """
-      categories: <%= akcms.categories.map {|res| res.locals[:name]}.join(",") %>
+      categories: <%= akcms.categories.map {|category, res| res.locals[:display_name]}.join(",") %>
       """
     And the Server is running at "basic-app"
 
@@ -65,7 +65,7 @@ Feature: category
     And a file named "source/game/category_name.txt" with "GAMEGAMEGAME"
     And a file named "source/category_template.html.erb" with:
       """
-      categories: <%= akcms.categories.map {|res| res.locals[:display_name]}.join(",") %>
+      categories: <%= akcms.categories.map {|category, res| res.locals[:display_name]}.join(",") %>
       """
     And the Server is running at "basic-app"
 

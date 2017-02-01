@@ -19,9 +19,9 @@ module Middleman::Akcms
       @manipulators[:article].articles
     end
 
-    Contract Array
+    Contract Hash
     def categories
-      @manipulators[:category].try(:categories) || []
+      @manipulators[:category].try(:categories) || {}
     end
 
     Contract Array
