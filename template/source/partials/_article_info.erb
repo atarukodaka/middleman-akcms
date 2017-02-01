@@ -1,9 +1,14 @@
 
 <!-- required locals: article -->
 
-<section class="article_info">
-  | <% if article.category != "" %>
-     <%= link_to(article.category_resource.locals[:display_name], article.category_resource) %>  |
+<div class="article_info">
+  <% if ! article.tags.empty? %>
+  [<%= article.tags.map{|tag| link_to(tag, akcms.tags[tag]) }.join(",") %>]
+  <% end %>
+  |
+  <% if article.category != "" %>
+    <% res = article.category_resource
+    <%= link_to(res.locals[:display_name], res) %>  |
   <% end %>
   <%= link_to(article.date.strftime("%d %b %Y"), article) %> |
-</section>
+</div>

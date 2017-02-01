@@ -4,7 +4,7 @@ pagination:
   per_page: 10
 ---
 
-<%= partial("partials/title", locals: {title: "Tag: #{h(current_resource.locals[:name])}"}) %>
+<%= partial("partials/title", locals: {title: "Tag: #{name}"}) %>
 
 <%= partial("partials/summary", locals: {articles: (pagination)? page_articles : articles }) %>
 
