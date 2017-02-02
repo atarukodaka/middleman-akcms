@@ -12,31 +12,15 @@ module Middleman::Akcms
       @template = controller.options.category_template
     end
 
-    Contract Symbol, String, Array => Middleman::Sitemap::ProxyResource
-    def create_proxy_resource(sym, name, articles = [])
-      super(sym, name, articles).tap do |p|
-        short_name = name.split('/').last
-        p.add_metadata(locals: {
-                         name: name, display_name: short_name, articles: articles,
-                         parent: nil, children: []})
-      end
-=begin
-      Middleman::Sitemap::ProxyResource.new(@sitemap, link(name), @template).tap do |p|
-        short_name = name.split('/').last
-        p.add_metadata(locals: {
-                         name: name, display_name: short_name, articles: articles,
-                         parent: nil, children: []})
-      end
-=end
-    end
-
     Contract Array => Array
     def manipulate_resource_list(resources)
       @categories = {}
 
       @controller.articles.group_by {|a| a.category}.each {|category, articles|
         next if category == ""
-        p = create_proxy_resource(:name, category, articles)
+
+        locals = {articles: articles, parent: nil, children: [], display_name: category.split('/').last}
+        p = create_proxy_resource(:name, category, locals)
         add_category_name(p, category)
         @categories[category] = p
       }

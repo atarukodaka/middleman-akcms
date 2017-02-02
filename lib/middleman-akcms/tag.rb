@@ -18,8 +18,7 @@ module Middleman::Akcms
 
       @controller.articles.each {|article|
         article.tags.each {|tag|
-          # @tags[tag] ||= []
-          @tags[tag] ||= create_proxy_resource(:name, tag, [])
+          @tags[tag] ||= create_proxy_resource(:name, tag, articles: [])
           @tags[tag].locals[:articles] << article
         }
       }
@@ -31,7 +30,5 @@ module Middleman::Akcms
     def link(name)
       @controller.options.tag_link % {tag: name}
     end
-
   end # class
-
 end
