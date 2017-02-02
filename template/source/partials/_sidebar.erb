@@ -11,7 +11,7 @@
   <aside>
     <h2>CATEGORIES</h2>
     <ul>
-      <% akcms.categories.values.select {|res| res.locals[:parent].nil? }.each {|res| %>
+      <% akcms.categories.values.select {|res| res.metadata[:tree][:parent].nil? }.each {|res| %>
       <%= partial("partials/category_list", locals: {category_resource: res}) %>
       <% } %>
     </ul>

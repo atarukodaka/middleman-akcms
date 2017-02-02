@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/atarukodaka/middleman-akcms.svg?branch=master)](https://travis-ci.org/atarukodaka/middleman-akcms)
-[![Coverage Status](https://coveralls.io/repos/atarukodaka/middleman-akcms/badge.svg?branch=master)](https://coveralls.io/r/atarukodaka/middleman-akcms?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/atarukodaka/middleman-akcms/badge.svg?branch=master)](https://coveralls.io/github/atarukodaka/middleman-akcms?branch=master)
 [![Code Climate](https://codeclimate.com/github/atarukodaka/middleman-akcms/badges/gpa.svg)](https://codeclimate.com/github/atarukodaka/middleman-akcms)
 
 

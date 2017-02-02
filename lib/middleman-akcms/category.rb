@@ -19,8 +19,14 @@ module Middleman::Akcms
       @controller.articles.group_by {|a| a.category}.each {|category, articles|
         next if category == ""
 
-        locals = {articles: articles, parent: nil, children: [], display_name: category.split('/').last}
-        p = create_proxy_resource(:name, category, locals)
+        locals = {
+          category_name: category,
+          display_name: category.split('/').last,
+          articles: articles
+        }
+        
+        p = create_proxy_resource(link(category), locals)
+        p.add_metadata(tree: { parent: nil, children: [] })
         add_category_name(p, category)
         @categories[category] = p
       }
@@ -31,11 +37,12 @@ module Middleman::Akcms
         parent_cat = $1
 
         if parent = @categories[parent_cat]
-          res.add_metadata(locals: {parent: parent})
-          parent.locals[:children] << res
+          res.add_metadata(tree: {parent: parent})
+          #parent.locals[:children] << res
+          parent.metadata[:tree][:children] << res
         end
       }
-      resources + @categories.values.sort_by {|res| res.locals[:name] }
+      resources + @categories.values.sort_by {|res| res.locals[:category_name] }
     end
 
     ################

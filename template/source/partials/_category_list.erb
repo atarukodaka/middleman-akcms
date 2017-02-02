@@ -4,7 +4,7 @@
 
 <li>
   <%= link_to(res.locals[:display_name], res) %>
-  <% children = res.locals[:children] %>
+  <% children = res.metadata[:tree][:children] %>
   <% unless children.empty? %>
   <ul>
     <% children.each {|child| %>

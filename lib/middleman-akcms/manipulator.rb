@@ -11,12 +11,12 @@ module Middleman::Akcms
     end
 
     
-    Contract Symbol, Any, Hash => Middleman::Sitemap::ProxyResource
-    def create_proxy_resource(key_sym, key, locals = {})
-#    def create_proxy_resource(key_sym, key, articles = [])
-      Middleman::Sitemap::ProxyResource.new(@sitemap, link(key),@template).tap do |p|
-        p.add_metadata(locals: locals.merge({key_sym => key}))
-        #p.add_metadata(locals: {key_sym => key, articles: articles})
+#    Contract Symbol, Any, Hash => Middleman::Sitemap::ProxyResource
+    def create_proxy_resource(link, locals = {})
+#    def create_proxy_resource(key_sym, key, locals = {})
+      Middleman::Sitemap::ProxyResource.new(@sitemap, link, @template).tap do |p|
+        p.add_metadata(locals: locals)
+#        p.add_metadata(locals: locals.merge({key_sym => key}))
       end
     end
 

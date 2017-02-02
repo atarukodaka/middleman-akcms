@@ -1,6 +1,7 @@
 ## TODO
 - rubygems
 - archives の作り再考
+- category_name.txt -> config.yml
 
 ## master
 ### 0.0.1
@@ -27,3 +28,4 @@
 - pagination: 長いとき
 - paginator feature: done
 - categories, archivies, tags を配列からハッシュに: done
+- category: parent, children: locals -> tree
