@@ -78,9 +78,9 @@ Feature: pagination
       <% page_articles.each {|article| %>
         - title: <%= article.title %>
       <% } %>
-      <%= pagination_render_prev("&laquo") %>
-      <%= pagination_render_pages(5) %>
-      <%= pagination_render_next("&raquo;") %>
+      <%= pagination_render(:prev_page, label: "&laquo;") %>
+      <%= pagination_render(:pages, max_display: 8) %>
+      <%= pagination_render(:next_page, label: "&raquo;") %>
       """
 
     And a file named "source/1.html.md" with:
