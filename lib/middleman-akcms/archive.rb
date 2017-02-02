@@ -13,7 +13,7 @@ module Middleman::Akcms
     end
 
     Contract Date, Array => Middleman::Sitemap::ProxyResource
-    def create_proxy_resource(date, articles = [])
+    def __create_proxy_resource(sym, date, articles = [])
       Middleman::Sitemap::ProxyResource.new(@sitemap, link(date), @template).tap do |p|
         p.add_metadata(locals: {date: date, articles: articles})
       end
@@ -25,7 +25,7 @@ module Middleman::Akcms
 
       @controller.articles.group_by {|a| 
         Date.new(a.date.year, a.date.month, 1)}.each {|date_ym, articles|
-        @archives[date_ym] = create_proxy_resource(date_ym, articles)
+        @archives[date_ym] = create_proxy_resource(:date, date_ym, articles)
       }
       return resources + @archives.values.sort_by {|res| res.locals[:date]}.reverse
     end

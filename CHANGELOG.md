@@ -16,16 +16,14 @@
 - pagination サポート
   - res.data.pagination
   - locals: page_articles, paginator
-- archives, caregories, tags はハッシュの方がいい？
-  - 配列で。
 - source/foo/category_name.txt にカテゴリ表示名を入れられる
 - directory index 対応チェック
 - tags
 - pagination: <<,1,2,3,>>
 - bootstrap, js CDN
 - breadcrump: pagination のとき
-- publishable
-- layout構成整理
+- publishable: done
+- layout構成整理: done
 - pagination: 長いとき
-- paginator feature
-- categories, archivies, tags を配列からハッシュに
+- paginator feature: done
+- categories, archivies, tags を配列からハッシュに: done

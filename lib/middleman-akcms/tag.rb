@@ -12,13 +12,6 @@ module Middleman::Akcms
       @template = controller.options.tag_template
     end
 
-    Contract String, Array => Middleman::Sitemap::ProxyResource
-    def create_proxy_resource(name, articles = [])
-      Middleman::Sitemap::ProxyResource.new(@sitemap, link(name),@template).tap do |p|
-        p.add_metadata(locals: {name: name, articles: articles})
-      end
-    end
-
     Contract Array => Array    
     def manipulate_resource_list(resources)
       @tags = {}
@@ -26,7 +19,7 @@ module Middleman::Akcms
       @controller.articles.each {|article|
         article.tags.each {|tag|
           # @tags[tag] ||= []
-          @tags[tag] ||= create_proxy_resource(tag, [])
+          @tags[tag] ||= create_proxy_resource(:name, tag, [])
           @tags[tag].locals[:articles] << article
         }
       }
