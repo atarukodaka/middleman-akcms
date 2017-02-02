@@ -3,13 +3,13 @@
 <% res = category_resource %>
 
 <li>
-  <%= link_to(res.locals[:display_name] || res.data.title, res) %>
-  <% unless res.locals[:children].empty? %>
-    <ul>
-      <% res.locals[:children].each {|child| %>
-      <%= partial("partials/category_list", locals: {category_resource: child}) %>
-      <% } %>
-    </ul>
+  <%= link_to(res.locals[:display_name], res) %>
+  <% children = res.locals[:children] %>
+  <% unless children.empty? %>
+  <ul>
+    <% children.each {|child| %>
+    <%= partial("partials/category_list", locals: {category_resource: child}) %>
+    <% } %>
+  </ul>
   <% end %>
-
 </li>
