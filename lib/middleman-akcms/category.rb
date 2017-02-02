@@ -48,11 +48,21 @@ module Middleman::Akcms
     ################
     private
     def add_category_name(p, category)
+      require 'yaml'
+      config_res = @sitemap.find_resource_by_path(File.join(category, "config.yml"))
+      if config_res
+        yml = YAML::load(config_res.render(layout: false))
+        p.add_metadata(locals: {display_name: yml["category_name"]})
+      end
+    end
+=begin
+    def _add_category_name(p, category)
       catname_filename = File.join(category, "category_name.txt")
       if txt_res = @controller.app.sitemap.find_resource_by_path(catname_filename)
         p.add_metadata(locals: {display_name: txt_res.render(layout: false).chomp})
       end
     end
+=end
     Contract String => String
     def link(name)
       '%{category}.html' % {category: name }  # link path is NOT configuable to make parent, children to work
