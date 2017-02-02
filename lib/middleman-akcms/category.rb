@@ -8,8 +8,8 @@ module Middleman::Akcms
 
     def create_proxy_resource(name, articles = [])
       template = @controller.options.category_template
-      #link = '%{category}.html' % {category: name }  # link path is NOT configuable
-      link = 'categories/%{category}.html' % {category: name }
+      link = '%{category}.html' % {category: name }  # link path is NOT configuable to make parent, children to work
+      #link = 'categories/%{category}.html' % {category: name }
 
       Middleman::Sitemap::ProxyResource.new(@controller.app.sitemap, link,
                                             template).tap do |p|
