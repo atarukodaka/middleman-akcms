@@ -15,7 +15,7 @@ module Middleman::Akcms
         if res.data.series
           #name = res.data.series[:name] || res.category_resource.locals[:display_name]
           #number = res.data.series[:number] || nil
-          name = res.category_resource.locals[:display_name]
+          name = res.category_resource.try(:locals, :display_name) || File.dirname(res.path)
           fname = File.split(res.path).last
           md = fname.match(/^([0-9]+)[_\-\s]/)
           number = (md.nil?) ? 0 : md[1].to_i

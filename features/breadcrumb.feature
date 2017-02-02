@@ -19,5 +19,5 @@ Feature: breadcrumb
     Then the status code should be "200"
     And I should see "<nav class="
     And I should see "Home"
-    And I should see "game.html"
-    And I should see "wot.html"
+    And I should see "/game/"
+    And I should see "/game/wot/"

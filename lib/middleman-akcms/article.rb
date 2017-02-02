@@ -26,7 +26,7 @@ module Middleman::Akcms
       return @_category = data.category.to_s if data.has_key?(:category)  # by frontmatter
       return @_category = (path.match("/")) ? File.dirname(path) : ""  # by dirname
     end
-    Contract Middleman::Sitemap::ProxyResource
+    Contract Or[Middleman::Sitemap::ProxyResource, nil]
     def category_resource
       @controller.categories[category]
     end

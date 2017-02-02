@@ -31,7 +31,7 @@ Feature: tag
 
     And a file named "source/tag_template.html.erb" with:
       """
-     <%= name %>
+     <%= tag_name %>
 
      <% articles.each {|article| %>
       	 - <%= article.title %>

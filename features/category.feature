@@ -41,7 +41,7 @@ Feature: category
       """
     And the Server is running at "basic-app"
 
-    When I go to "/game.html"
+    When I go to "/game/index.html"
     Then the status code should be "200"
     Then I should see "categories: game"
 
@@ -62,14 +62,17 @@ Feature: category
       playing wot now.
       """
 
-    And a file named "source/game/category_name.txt" with "GAMEGAMEGAME"
+    And a file named "source/game/config.yml" with:
+      """
+      category_name: GAMEGAMEGAME
+      """
     And a file named "source/category_template.html.erb" with:
       """
       categories: <%= akcms.categories.map {|category, res| res.locals[:display_name]}.join(",") %>
       """
     And the Server is running at "basic-app"
 
-    When I go to "/game.html"
+    When I go to "/game/index.html"
     Then the status code should be "200"
     Then I should see "categories: GAMEGAMEGAME"
 
