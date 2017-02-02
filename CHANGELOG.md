@@ -32,3 +32,4 @@
 - categories, archivies, tags を配列からハッシュに: done
 - category: parent, children: locals -> tree
 - source/*/config.yml category_name: foo でカテゴリ表示名を設定
+- category link を game/wot.html から game/wot/index.html に変更
