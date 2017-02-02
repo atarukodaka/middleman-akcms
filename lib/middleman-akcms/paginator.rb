@@ -47,8 +47,8 @@ module Middleman::Akcms
             paginated_resources << new_res
           end
         } # each for per_page
-        paginated_resources.each {|res|
-          res.add_metadata(locals: {paginator: {paginated_resources: paginated_resources}})
+        paginated_resources.each {|p|
+          p.add_metadata(locals: {paginator: {paginated_resources: paginated_resources}})
         }
       }  # resources
       resources + new_resources

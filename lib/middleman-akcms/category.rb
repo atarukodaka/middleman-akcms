@@ -65,7 +65,8 @@ module Middleman::Akcms
 =end
     Contract String => String
     def link(name)
-      '%{category}.html' % {category: name }  # link path is NOT configuable to make parent, children to work
+      #'%{category}.html' % {category: name }  # link path is NOT configuable to make parent, children to work
+      '%{category}/index.html' % {category: name}
     end
 
   end ## class

@@ -40,6 +40,7 @@ module Middleman::Akcms
       require 'middleman-akcms/category'
       require 'middleman-akcms/tag'
       require 'middleman-akcms/paginator'
+      require 'middleman-akcms/series'
       
       ## [enable?, id, class]
       manips = [
@@ -47,7 +48,8 @@ module Middleman::Akcms
                 [options.archive_template, :archive, ArchiveManipulator],
                 [options.category_template, :category, CategoryManipulator],
                 [options.tag_template, :tag, TagManipulator],
-                [true, :paginator, PaginatorManipulator]
+                [true, :paginator, PaginatorManipulator],
+                [true, :series, SeriesManipulator],
                ]
       
       manips.each {|ar|

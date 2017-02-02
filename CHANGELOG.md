@@ -2,6 +2,8 @@
 - rubygems
 - archives の作り再考
 - category_name.txt -> config.yml
+- シリーズ機能
+- pager: within_category を config option へ
 
 ## master
 ### 0.0.1

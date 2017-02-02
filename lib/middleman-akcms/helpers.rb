@@ -45,7 +45,7 @@ module Middleman::Akcms
         cls = "page-item" + ((page.nil?) ? ' disabled' : '')
         content_tag(:li, link_to(label, page), :class => cls)
       when :pages
-        pagination_render_pages()
+        pagination_render_pages(max_display)
       else
         "!!! no such type: #{h(type)} !!!"
       end

@@ -13,6 +13,16 @@
 
   <footer>
     <nav>
+
+      <% if current_resource.data.series %>
+      <div class="list-group" style="font-size: small; ">
+	<% series[:related_articles].each {|res| %>
+	<% cls = "list-group-item" + ((res == current_resource) ? ' active' : '') %>
+	<%= link_to(res.title, res, :class => cls) %>
+	<% } %>
+      </div>
+
+      <% else %>
       <ul class="pager">
 	<% prev_article = current_resource.prev_article({within_category: false}) %>
 	<% if prev_article %>
@@ -28,6 +38,7 @@
 	</li>
 	<% end %>
       </ul>
+      <% end %>
     </nav>
 
   </footer>

@@ -5,7 +5,7 @@
     <meta content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport">
     <!-- Always force latest IE rendering engine or request Chrome Frame -->
     <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
-    <title><%= h(current_page.data.title || yield_content(:title)) %> - <%= h(data.config.site_info.title) %></title>
+    <title><%= h(yield_content(:title) || current_page.data.title) %> - <%= h(data.config.site_info.title) %></title>
    
     <!-- Javascripts to load -->
     <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>

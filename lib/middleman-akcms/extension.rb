@@ -43,6 +43,9 @@ module Middleman::Akcms
     ## pagination settings
     option :pagination_per_page, 5
     option :pagination_page_link, "page/%{page_number}"
+
+    ## series settings
+    option :series_title_template, "%{name} #%{number}: %{title}" 
     
     ################
     def initialize(klass, options_hash={}, &block)
