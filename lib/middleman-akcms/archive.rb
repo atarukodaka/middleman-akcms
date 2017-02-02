@@ -2,6 +2,8 @@ require 'middleman-akcms/manipulator'
 
 module Middleman::Akcms
   class ArchiveManipulator < Manipulator
+    include Contracts
+    
     attr_reader :archives
 
     def create_proxy_resource(date, articles = [])
@@ -13,6 +15,8 @@ module Middleman::Akcms
         p.add_metadata(locals: {date: date, articles: articles})
       end
     end
+
+    Contract Array => Array    
     def manipulate_resource_list(resources)
       @archives = {}
 
@@ -22,15 +26,5 @@ module Middleman::Akcms
       }
       return resources + @archives.values.sort_by {|res| res.locals[:date]}.reverse
     end
-    def __manipulate_resource_list(resources)
-      @archives = []
-
-      @controller.articles.group_by {|a| 
-        Date.new(a.date.year, a.date.month, 1)}.each {|date_ym, articles|
-        @archives << create_proxy_resource(date_ym, articles)
-      }
-      return resources + @archives.sort_by {|res| res.locals[:date]}.reverse
-      
-    end
-  end
+  end # class
 end

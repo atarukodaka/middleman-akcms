@@ -6,52 +6,49 @@ module Middleman::Akcms
 
     attr_reader :categories
 
-    Contract String => Middleman::Sitemap::ProxyResource
-    def create_proxy_resource(name)
+    def create_proxy_resource(name, articles = [])
       template = @controller.options.category_template
-      link = '%{category}.html' % {category: name }  # link path is NOT configuable
+      #link = '%{category}.html' % {category: name }  # link path is NOT configuable
+      link = 'categories/%{category}.html' % {category: name }
 
       Middleman::Sitemap::ProxyResource.new(@controller.app.sitemap, link,
                                             template).tap do |p|
         short_name = name.split('/').last
-        p.add_metadata(locals: {name: name, display_name: short_name, articles: []})
+        p.add_metadata(locals: {
+                         name: name, display_name: short_name, articles: articles,
+                         parent: nil, children: []
+                       })
       end
     end
+
+    Contract Array => Array
     def manipulate_resource_list(resources)
       @categories = {}
 
       @controller.articles.group_by {|a| a.category}.each {|category, articles|
         next if category == ""
-        p = create_proxy_resource(category)
+        p = create_proxy_resource(category, articles)
         add_category_name(p, category)
-        p.add_metadata(locals: {articles: articles})
         @categories[category] = p
       }
+
+      ## build hierarcy
+      @categories.each {|cat, res|
+        cat =~ /(.*)\/([^\/]*)$/
+        parent_cat, display_cat = $1, $2
+
+        if parent = @categories[parent_cat]
+          res.add_metadata(locals: {parent: parent})
+          parent.locals[:children] << res
+        end
+      }
       resources + @categories.values.sort_by {|res| res.locals[:name] }
-    end
-    
-    Contract Array => Array
-    def _manipulate_resource_list(resources)
-      @categories = []
-
-      @controller.articles.map {|res| res.category}
-        .uniq.reject {|res| res == ""}.each {|category|
-        p = create_proxy_resource(category)
-        add_category_name(p, category)
-        @categories << p
-      }
-
-      ## set articles for each category resources
-      @categories.each {|res|
-        res.add_metadata(locals: {articles: @controller.articles.select_by(:category, res.locals[:name])})
-      }
-
-      resources + @categories.sort {|a, b| a.locals[:name] <=> b.locals[:name]}
     end
 
     private
     def add_category_name(p, category)
-      if txt_res = @controller.app.sitemap.find_resource_by_path(File.join(category, "category_name.txt"))
+      catname_filename = File.join(category, "category_name.txt")
+      if txt_res = @controller.app.sitemap.find_resource_by_path(catname_filename)
         p.add_metadata(locals: {display_name: txt_res.render(layout: false).chomp})
       end
     end

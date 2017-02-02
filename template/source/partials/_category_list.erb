@@ -1,13 +1,13 @@
 <!-- locals: category_resource -->
 
+<% res = category_resource %>
+
 <li>
-  <%= link_to(category_resource.locals[:display_name] || category_resource.data.title, category_resource) %>
-  <% unless category_resource.children.empty? %>
+  <%= link_to(res.locals[:display_name] || res.data.title, res) %>
+  <% unless res.locals[:children].empty? %>
     <ul>
-      <% category_resource.children.select {|child| child.ext == ".html"}.each {|child| %>
-      <% unless  child.singleton_class.include? Middleman::Akcms::Article %>
+      <% res.locals[:children].each {|child| %>
       <%= partial("partials/category_list", locals: {category_resource: child}) %>
-      <% end %>
       <% } %>
     </ul>
   <% end %>
