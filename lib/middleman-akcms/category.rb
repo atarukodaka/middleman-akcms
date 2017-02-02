@@ -6,6 +6,7 @@ module Middleman::Akcms
 
     attr_reader :categories
 
+    Contract String, Array => Middleman::Sitemap::ProxyResource 
     def create_proxy_resource(name, articles = [])
       template = @controller.options.category_template
       link = '%{category}.html' % {category: name }  # link path is NOT configuable to make parent, children to work
@@ -17,7 +18,10 @@ module Middleman::Akcms
         p.add_metadata(locals: {
                          name: name, display_name: short_name, articles: articles,
                          parent: nil, children: []
-                       })
+                               # cat =~ /(.*)\/([^\/]*)$/
+        # parent_cat, display_cat = $1, $2
+        #parent_cat, display_cat = cat.match(/(.*)\/([^\/]*)$/){|md| md[1,2]}
+})
       end
     end
 
@@ -34,8 +38,8 @@ module Middleman::Akcms
 
       ## build hierarcy
       @categories.each {|cat, res|
-        cat =~ /(.*)\/([^\/]*)$/
-        parent_cat, display_cat = $1, $2
+        cat.match(/(.*)\/[^\/]*$/)
+        parent_cat = $1
 
         if parent = @categories[parent_cat]
           res.add_metadata(locals: {parent: parent})

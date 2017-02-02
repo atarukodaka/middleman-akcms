@@ -7,9 +7,6 @@ module Middleman::Akcms
       app.extensions[:akcms].controller
     end
     
-#    def articles
-#      app.extensions[:akcms].controller.articles
-#    end
     def page_for(path)
       sitemap.find_resource_by_path(path)
     end
@@ -41,25 +38,23 @@ module Middleman::Akcms
       end
     end
     ## pagination
-    def pagination_render_prev(label = "prev")
-      prev_page = current_resource.locals[:paginator][:prev_page]
-      cls = "page-item" + ((prev_page.nil?) ? ' disabled' : '')
-      content_tag(:li, link_to(label, prev_page), :class => cls)
-    end      
-    def pagination_render_next(label = "next")
-      next_page = current_resource.locals[:paginator][:next_page]
-      cls = "page-item" + ((next_page.nil?) ? ' disabled' : '')
-      content_tag(:li, link_to(label, next_page), :class => cls)
-    end      
+    def pagination_render(type, label: nil, max_display: 10)
+      case type
+      when :prev_page, :next_page
+        page = current_resource.locals[:paginator][type]
+        cls = "page-item" + ((page.nil?) ? ' disabled' : '')
+        content_tag(:li, link_to(label, page), :class => cls)
+      when :pages
+        pagination_render_pages()
+      else
+        "!!! no such type: #{h(type)} !!!"
+      end
+    end
     def pagination_render_pages(max_display = 10)
-      list = []
-      reached_top = false
-      reached_bottom = false
-
       page_number = current_resource.locals[:paginator][:page_number]
       pages = current_resource.locals[:paginator][:paginated_resources]
-      #list << current_resource
-      list << pages[page_number-1]
+
+      list = [pages[page_number-1]]
       i = 1
       cnt = 1
 
@@ -80,15 +75,5 @@ module Middleman::Akcms
         content_tag(:li, link_to(res.locals[:paginator][:page_number], res), :class=>cls)
       end.join
     end
-=begin
-    def _pagination_render_pages(max_display = 10)
-      i = 0
-      current_resource.locals[:paginator][:paginated_resources].map do |res|
-        i += 1
-        cls = "page-item" + ((res == current_resource) ? ' active' : '')
-        content_tag(:li, link_to(i, res), :class=>cls)
-      end.join()
-    end
-=end
   end ## Helpers
 end

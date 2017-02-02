@@ -19,8 +19,7 @@ module Middleman::Akcms
       new_resources = []
       
       resources.each {|res|
-        next if res.ignored?
-        next unless res.data.pagination
+        next if res.ignored? || !res.data.pagination
         
         paginated_resources = []
         md = res.metadata
@@ -29,7 +28,7 @@ module Middleman::Akcms
         per_page = (res.data.pagination.is_a? Hash) ? res.data.pagination[:per_page] : @controller.options.pagination_per_page
 
         articles = res.locals[:articles] || @controller.articles
-        articles.per_page(per_page).each {|items, num, meta, is_last|
+        articles.per_page(per_page).each {|items, num, meta, _is_last|
           meta.prev_page = prev_page
           meta.next_page = nil
 
@@ -41,7 +40,6 @@ module Middleman::Akcms
             new_res = create_page_resource(res, num).tap {|p|
               p.add_metadata(md)
               p.add_metadata(locals: {page_articles: items, paginator: meta})
-              #prev_page.add_metadata(locals: {next_page: p})
               prev_page.locals[:paginator][:next_page] = p
               prev_page = p
             }

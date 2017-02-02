@@ -16,27 +16,18 @@ module Middleman::Akcms
     Contract Date
     def date
       return @_date if @_date
-      
-      @_date = begin; Date.parse(data.date.to_s); rescue; end
-
-      @_date = File.mtime(source_file).to_date if @_date.nil?
-      @_date||= Date.new(1970, 1, 1)    # in the case of nil set
-      return @_date
+      return @_date = begin; Date.parse(data.date.to_s); rescue ArgumentError; end ||
+        File.mtime(source_file).to_date || Date.new(1970, 1, 1)
     end
     
     Contract String
     def category
-      return data.category || (path.match("/")) ? File.dirname(path) : ""
-      
       return @_category if @_category
-      return @_category = data.category.to_s if data.has_key?(:category)
-      # return @_category = parent if parent
-      return @_category = (path.match("/")) ? File.dirname(path) : ""
-
+      return @_category = data.category.to_s if data.has_key?(:category)  # by frontmatter
+      return @_category = (path.match("/")) ? File.dirname(path) : ""  # by dirname
     end
     Contract Middleman::Sitemap::ProxyResource
     def category_resource
-      #@controller.categories.find {|res| res.locals[:name] == category}
       @controller.categories[category]
     end
     Contract Integer => String
@@ -45,7 +36,7 @@ module Middleman::Akcms
       length ||= controller.options.summary_length || 250
       begin
         doc = Oga.parse_html(render(layout: false))
-        doc.xpath('.//text()').text.gsub("\n", '')[0..length]
+        doc.xpath('.//text()').text.delete("\n")[0..length]
       rescue
         "(parser failed)"
       end
