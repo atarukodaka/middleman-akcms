@@ -28,3 +28,4 @@
 - layout構成整理
 - pagination: 長いとき
 - paginator feature
+- categories, archivies, tags を配列からハッシュに

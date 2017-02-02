@@ -6,12 +6,15 @@ module Middleman::Akcms
     
     attr_reader :archives
 
-    def create_proxy_resource(date, articles = [])
-      sitemap = @controller.extension.app.sitemap
-      template = @controller.options.archive_template
-      link = @controller.options.archive_link % {year: date.year, month: date.month}
+    def initialize(controller)
+      super(controller)
 
-      Middleman::Sitemap::ProxyResource.new(sitemap, link, template).tap do |p|
+      @template = controller.options.archive_template
+    end
+
+    Contract Date, Array => Middleman::Sitemap::ProxyResource
+    def create_proxy_resource(date, articles = [])
+      Middleman::Sitemap::ProxyResource.new(@sitemap, link(date), @template).tap do |p|
         p.add_metadata(locals: {date: date, articles: articles})
       end
     end
@@ -25,6 +28,13 @@ module Middleman::Akcms
         @archives[date_ym] = create_proxy_resource(date_ym, articles)
       }
       return resources + @archives.values.sort_by {|res| res.locals[:date]}.reverse
+    end
+    
+    ################################################################
+    private
+    Contract Date => String
+    def link(date)
+      @controller.options.archive_link % {year: date.year, month: date.month}      
     end
   end # class
 end

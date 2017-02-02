@@ -6,22 +6,19 @@ module Middleman::Akcms
 
     attr_reader :categories
 
+    def initialize(controller)
+      super(controller)
+
+      @template = controller.options.category_template
+    end
+
     Contract String, Array => Middleman::Sitemap::ProxyResource 
     def create_proxy_resource(name, articles = [])
-      template = @controller.options.category_template
-      link = '%{category}.html' % {category: name }  # link path is NOT configuable to make parent, children to work
-      #link = 'categories/%{category}.html' % {category: name }
-
-      Middleman::Sitemap::ProxyResource.new(@controller.app.sitemap, link,
-                                            template).tap do |p|
+      Middleman::Sitemap::ProxyResource.new(@sitemap, link(name), @template).tap do |p|
         short_name = name.split('/').last
         p.add_metadata(locals: {
                          name: name, display_name: short_name, articles: articles,
-                         parent: nil, children: []
-                               # cat =~ /(.*)\/([^\/]*)$/
-        # parent_cat, display_cat = $1, $2
-        #parent_cat, display_cat = cat.match(/(.*)\/([^\/]*)$/){|md| md[1,2]}
-})
+                         parent: nil, children: []})
       end
     end
 
@@ -49,6 +46,7 @@ module Middleman::Akcms
       resources + @categories.values.sort_by {|res| res.locals[:name] }
     end
 
+    ################
     private
     def add_category_name(p, category)
       catname_filename = File.join(category, "category_name.txt")
@@ -56,6 +54,11 @@ module Middleman::Akcms
         p.add_metadata(locals: {display_name: txt_res.render(layout: false).chomp})
       end
     end
+    Contract String => String
+    def link(name)
+      '%{category}.html' % {category: name }  # link path is NOT configuable to make parent, children to work
+    end
+
   end ## class
 end
 
