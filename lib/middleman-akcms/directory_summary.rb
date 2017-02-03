@@ -11,7 +11,8 @@ module Middleman::Akcms
         yml = YAML::load(config_res.render(layout: false))
         name = yml["display_name"]
       end
-      name || File.dirname(path).split("/").last
+      return name if name
+      return ((dn = File.dirname(path).split("/").last) == ".") ? nil : dn
     end
   end
   ################################################################
