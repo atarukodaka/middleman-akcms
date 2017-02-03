@@ -4,6 +4,7 @@
 - category_name.txt -> config.yml
 - シリーズ機能
 - pager: within_category を config option へ
+- category から index summary ？
 
 ## master
 ### 0.0.1
