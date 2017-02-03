@@ -36,6 +36,8 @@ module Middleman::Akcms
     ## register manipulators
     def register_manipulators
       require 'middleman-akcms/article'
+      
+#      require 'middleman-akcms/directory_summary'
       require 'middleman-akcms/archive'
       require 'middleman-akcms/category'
       require 'middleman-akcms/tag'
@@ -45,11 +47,12 @@ module Middleman::Akcms
       ## [enable?, id, class]
       manips = [
                 [true, :article, ArticleManipulator], 
+#                [true, :directry_summary, DirectorySummaryManipulator],
                 [options.archive_template, :archive, ArchiveManipulator],
                 [options.category_template, :category, CategoryManipulator],
                 [options.tag_template, :tag, TagManipulator],
                 [true, :paginator, PaginatorManipulator],
-                [true, :series, SeriesManipulator],
+               [true, :series, SeriesManipulator],
                ]
       
       manips.each {|ar|

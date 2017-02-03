@@ -43,6 +43,7 @@ module Middleman::Akcms
         end
       }
       resources + @categories.values.sort_by {|res| res.locals[:category_name] }
+      # resources
     end
 
     ################
