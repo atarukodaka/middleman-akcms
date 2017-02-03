@@ -51,10 +51,10 @@ Feature: pagination
     And I should see "- title: 3"
     And I should see "- title: 2"    
     And I should not see "- title: 1"    
-    And I should see "next: index/page/2.html"
+    And I should see "next: index-page-2.html"
     And I should not see "prev:"
 
-    When I go to "/index/page/2.html"
+    When I go to "/index-page-2.html"
     Then the status code should be "200"
     And I should see "2 / 2"
     And I should see "- title: 1"
@@ -109,6 +109,6 @@ Feature: pagination
     When I go to "/index.html"
     Then the status code should be "200"
     And I should see "&raquo;"
-    And I should see "index/page/2"
+    And I should see "index-page-2"
 
     

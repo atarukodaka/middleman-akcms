@@ -1,7 +1,7 @@
 Feature: archive
 
   Scenario: archive template
-    Given a fixture app "empty-app"
+    Given a fixture app "basic-app"
     And a file named "config.rb" with:
       """
       activate :akcms do |akcms|
@@ -27,7 +27,7 @@ Feature: archive
       <% } %>
       
       """
-    And the Server is running at "empty-app"
+    And the Server is running at "basic-app"
 
     When I go to "/archives/2017-01.html"
     Then the status code should be "200"

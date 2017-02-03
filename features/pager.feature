@@ -6,6 +6,7 @@ Feature: pager
       """
       activate :akcms do |akcms|
         akcms.layout = false
+	akcms.directory_summary_template = nil
       end
       
       """

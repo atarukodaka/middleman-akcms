@@ -5,7 +5,6 @@ Feature: breadcrumb
     And a file named "config.rb" with:
       """
       activate :akcms do |akcms|
-        akcms.category_template = "category_template.html"
 	akcms.layout = false
       end
       """

@@ -47,7 +47,7 @@ module Middleman::Akcms
       ## [enable?, id, class]
       manips = [
                 [true, :article, ArticleManipulator], 
-                [true, :directry_summary, DirectorySummaryManipulator],
+                [options.directory_summary_template, :directry_summary, DirectorySummaryManipulator],
                 [options.archive_template, :archive, ArchiveManipulator],
                 [options.tag_template, :tag, TagManipulator],
                 [true, :paginator, PaginatorManipulator],

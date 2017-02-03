@@ -30,7 +30,7 @@ module Middleman::Akcms
     option :summary_length, 250      # length of charactor to summrize
 
     ## directory summary settings
-    option :directory_summary_template, nil # 'templates/directory_summary_template.html'
+    option :directory_summary_template, 'templates/directory_summary_template.html'
     
     ## archive settings
     option :archive_template, nil # 'templates/archive_template.html'
