@@ -6,7 +6,7 @@ pagination:
 
 <!-- locals: name, short_name, articles -->
 
-<%= partial("partials/title", locals: {title: "Category: #{h(current_resource.locals[:display_name])}"}) %>
+<%= partial("partials/title", locals: {title: "Directory: #{current_resource.dir_name}"}) %>
 <%= partial("partials/summary", locals: {articles: (pagination)? page_articles : articles }) %>
 
 <%= partial("partials/pagination", locals: {paginator: paginator}) if pagination %>

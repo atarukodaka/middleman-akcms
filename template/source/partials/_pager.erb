@@ -1,27 +1,15 @@
-<footer>
-  <nav>
-    <% if current_resource.data.series %>
-    <div class="list-group" style="font-size: small; ">
-      <% series[:related_articles].each {|res| %>
-      <% cls = "list-group-item" + ((res == current_resource) ? ' active' : '') %>
-      <%= link_to(res.title, res, :class => cls) %>
-      <% } %>
-    </div>
-    
-    <% else %>
-    <ul class="pager">
-      <% if prev_article = current_resource.prev_article() %>
-      <li class="previous">
-	<%= link_to("&larr;" + prev_article.title,  prev_article, title: h(prev_article.title))%>
-      </li>
-      <% end %>
-      
-      <% if next_article = current_resource.next_article() %>
-      <li class="next">
-	<%= link_to(next_article.title + "&rarr;",  next_article, title: h(next_article.title)) %>
-      </li>
-      <% end %>
-    </ul>
+<nav>
+  <ul class="pager">
+    <% if prev_article = current_resource.prev_article() %>
+    <li class="previous">
+      <%= link_to("&larr;" + prev_article.title,  prev_article, title: h(prev_article.title))%>
+    </li>
     <% end %>
-  </nav>
-</footer>
+    
+    <% if next_article = current_resource.next_article() %>
+    <li class="next">
+      <%= link_to(next_article.title + "&rarr;",  next_article, title: h(next_article.title)) %>
+      </li>
+    <% end %>
+  </ul>
+</nav>

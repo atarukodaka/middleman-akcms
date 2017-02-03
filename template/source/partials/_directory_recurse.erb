@@ -1,0 +1,14 @@
+
+<% res = resource %>
+
+<li>
+  <%= link_to(res.dir_name, res) %>
+  <% children = res.children %>
+  <% unless children.empty? %>
+  <ul>
+    <% children.select {|c| c.path =~ /#{config[:index_file]}$/}.each {|child| %>
+    <%= partial("partials/directory_recurse", locals: {resource: child}) %>
+    <% } %>
+  </ul>
+  <% end %>
+</li>

@@ -9,10 +9,10 @@
   </aside>
   <!-- ================ -->
   <aside>
-    <h2>CATEGORIES</h2>
+    <h2>DIRECTORIES</h2>
     <ul>
-      <% akcms.categories.values.select {|res| res.metadata[:tree][:parent].nil? }.each {|res| %>
-      <%= partial("partials/category_list", locals: {category_resource: res}) %>
+      <% top_page().children.select {|r| r.path =~ /index\.html$/}.each {|res| %>
+      <%= partial("partials/directory_recurse", locals: {resource: res}) %>
       <% } %>
     </ul>
   </aside>
@@ -30,7 +30,7 @@
     <h2>RECENT</h2>
     <ul>
       <% akcms.articles.first(10).each {|page| %>
-      <li> <%= link_to(h(page.title), page) %></li>
+      <li> <%= link_to(page.title, page) %></li>
       <% } %>
     </ul>
   </aside>

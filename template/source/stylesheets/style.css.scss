@@ -171,6 +171,15 @@ a:visited, a:hover {
 	    margin-bottom: 5px;
 	}
     }
+    .references {
+	border-top: 10px solid #e4e4e4;
+	background-color: #f8f8f8;
+	padding: 16px;
+
+	.header {
+	    font-weight: bold;
+	}
+    }
 }
 
 /*****************************************************************/

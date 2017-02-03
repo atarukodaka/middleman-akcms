@@ -29,8 +29,8 @@ module Middleman::Akcms
     option :layout, "article"
     option :summary_length, 250      # length of charactor to summrize
 
-    ## category settings
-    option :category_template, nil # 'templates/category_template.html'
+    ## directory summary settings
+    option :directory_summary_template, nil # 'templates/directory_summary_template.html'
     
     ## archive settings
     option :archive_template, nil # 'templates/archive_template.html'
@@ -42,7 +42,7 @@ module Middleman::Akcms
 
     ## pagination settings
     option :pagination_per_page, 5
-    option :pagination_page_link, "page/%{page_number}"
+    option :pagination_page_link, "page-%{page_number}"
 
     ## series settings
     option :series_title_template, "%{name} #%{number}: %{title}" 

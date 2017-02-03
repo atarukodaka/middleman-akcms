@@ -6,9 +6,8 @@
   [<%= article.tags.map{|tag| link_to(tag, akcms.tags[tag]) }.join(",") %>]
   <% end %>
   |
-  <% if article.category != "" %>
-    <% res = article.category_resource %>
-    <%= link_to(res.locals[:display_name], res) %>  |
+  <% if ! article.parent.nil? %>
+  <%= link_to(article.dir_name, article.parent) %> |
   <% end %>
   <%= link_to(article.date.strftime("%d %b %Y"), article) %> |
 </div>

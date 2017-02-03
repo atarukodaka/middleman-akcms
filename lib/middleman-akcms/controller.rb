@@ -37,9 +37,9 @@ module Middleman::Akcms
     def register_manipulators
       require 'middleman-akcms/article'
       
-#      require 'middleman-akcms/directory_summary'
+      require 'middleman-akcms/directory_summary'
       require 'middleman-akcms/archive'
-      require 'middleman-akcms/category'
+#      require 'middleman-akcms/category'
       require 'middleman-akcms/tag'
       require 'middleman-akcms/paginator'
       require 'middleman-akcms/series'
@@ -47,12 +47,11 @@ module Middleman::Akcms
       ## [enable?, id, class]
       manips = [
                 [true, :article, ArticleManipulator], 
-#                [true, :directry_summary, DirectorySummaryManipulator],
+                [true, :directry_summary, DirectorySummaryManipulator],
                 [options.archive_template, :archive, ArchiveManipulator],
-                [options.category_template, :category, CategoryManipulator],
                 [options.tag_template, :tag, TagManipulator],
                 [true, :paginator, PaginatorManipulator],
-               [true, :series, SeriesManipulator],
+                [true, :series, SeriesManipulator],
                ]
       
       manips.each {|ar|
@@ -63,7 +62,7 @@ module Middleman::Akcms
         end
         ## ignore template
         app.ignore options.archive_template if options.archive_template
-        app.ignore options.category_template if options.category_template
+        app.ignore options.directory_summary_template if options.directory_summary_template
         app.ignore options.tag_template if options.tag_template
       }
     end

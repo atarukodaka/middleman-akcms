@@ -11,7 +11,27 @@
     <%= yield %>
   </div>
 
-  <%= partial("partials/pager") %>
+  <footer>
+    <%= partial("partials/pager") %>
+
+ 
+    <% if current_resource.data.series %>
+    <div class="references">
+      <div class="header">連載記事：<%=  current_resource.dir_name %></div>
+      <ul>
+      <% series[:related_articles].each {|res| %>
+	<li>
+	<% if res == current_resource %>
+	<%= res.title %>
+	<% else %>
+	<%= link_to(res.title, res) %>
+	<% end %>
+	</li>
+      <% } %>
+      </ul>
+    </div>
+    <% end %>
+  </footer>
 </article>
 
 <% end %>

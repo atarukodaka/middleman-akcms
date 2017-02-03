@@ -19,17 +19,6 @@ module Middleman::Akcms
       return @_date = begin; Date.parse(data.date.to_s); rescue ArgumentError; end ||
         File.mtime(source_file).to_date || Date.new(1970, 1, 1)
     end
-    
-    Contract String
-    def category
-      return @_category if @_category
-      return @_category = data.category.to_s if data.has_key?(:category)  # by frontmatter
-      return @_category = (path.match("/")) ? File.dirname(path) : ""  # by dirname
-    end
-    Contract Or[Middleman::Sitemap::ProxyResource, nil]
-    def category_resource
-      @controller.categories[category]
-    end
     Contract Integer => String
     def summary(length=nil)
       require 'oga'
@@ -91,7 +80,6 @@ module Middleman::Akcms
   class ArticleManipulator  < Middleman::Akcms::Manipulator
     include Contracts
 
-    ################
     attr_reader :articles
 
     Contract Array => Array
@@ -107,9 +95,6 @@ module Middleman::Akcms
 
         if res.ext == ".html"
           article = convert_to_article(res)
-#          if ! res.data.type.nil?
-#            data.metadata[:page][:type] = "article"
-#          end
           next if article.data.published == false
           articles << article
         end
