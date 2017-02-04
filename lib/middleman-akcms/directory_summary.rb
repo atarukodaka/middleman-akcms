@@ -13,10 +13,26 @@ module Middleman::Akcms
 
     Contract Array => Array
     def manipulate_resource_list(resources)
+      ## directories where any articles exist
       new_resources = []
       index_file = controller.app.config[:index_file]
 
-      ## directories where any articles exist
+      ## create dir summary resources in each dirs
+      get_directories().each {|dir, articles|
+      #      dirs.merge(new_dirs).each {|dir, articles|
+        if articles.find {|a| a.path =~ /#{index_file}$/}.nil?
+          new_resources <<
+            create_proxy_resource("#{dir}/#{index_file}", {articles: articles})
+        end
+      }
+
+      ## put dir info into metadata[:directory] on all resources
+      add_metadata_directory(resources + new_resources)
+    end
+    ################################################################
+    private
+    Contract nil => Hash
+    def get_directories
       dirs = @controller.articles.group_by {|a| File.dirname(a.path)}
 
       ## find parent directories where any articles doesnt exist
@@ -28,18 +44,12 @@ module Middleman::Akcms
           d = File.dirname(d)
         end
       }
-      
-      # dirs.merge! new_dirs
+      return dirs.merge(new_dirs)
+    end
 
-      ## create dir summary resources in each dirs
-      dirs.merge(new_dirs).each {|dir, articles|
-        if articles.find {|a| a.path =~ /#{index_file}$/}.nil?
-          new_resources << create_proxy_resource("#{dir}/#{index_file}", {articles: articles})
-        end
-      }
-
-      ## put dir info into metadata[:directory] on all resources
-      (resources + new_resources).map {|res|
+    Contract Array => Array
+    def add_metadata_directory(resources)
+      resources.map {|res|
         dir_name = nil;
         dir_path = File.dirname(res.path)
         if config_res = @sitemap.find_resource_by_path(File.join(dir_path, "config.yml"))
@@ -50,7 +60,7 @@ module Middleman::Akcms
         res.tap {|r| r.add_metadata(directory: { path: dir_path, name: dir_name})}
       }
     end
-  end
+  end ## class
 end
 
 
