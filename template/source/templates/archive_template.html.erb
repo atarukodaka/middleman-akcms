@@ -3,10 +3,4 @@ layout: layout
 pagination: true
 ---
 
-<!-- locals: date, articles -->
-
-<%= partial("partials/title", locals: {title: "Monthly Archives: " + date.strftime("%b %Y")}) %>
-
-<%= partial("partials/summary", locals: {articles: articles }) %>
-
-<%= partial("partials/pagination") %>
+<%= partial("partials/summary_template", locals: {title: "Monthly Archives: " + date.strftime("%b %Y")}) %>
