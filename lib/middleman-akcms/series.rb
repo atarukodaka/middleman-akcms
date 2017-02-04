@@ -11,7 +11,7 @@ module Middleman::Akcms
 
       resources.each {|res|
         if res.data.series
-          name = res.locals[:dir_name]
+          name = res.metadata[:directory][:name]
           fname = File.split(res.path).last
           md = fname.match(/^([0-9]+)[_\-\s]/)
           number = (md.nil?) ? 0 : md[1].to_i

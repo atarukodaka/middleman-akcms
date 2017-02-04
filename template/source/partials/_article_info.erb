@@ -7,7 +7,7 @@
   <% end %>
   |
   <% if ! article.parent.nil? %>
-  <%= link_to(article.locals[:dir_name], article.parent) %> |
+  <%= link_to(article.metadata[:directory][:name], article.parent) %> |
   <% end %>
   <%= link_to(article.date.strftime("%d %b %Y"), article) %> |
 </div>

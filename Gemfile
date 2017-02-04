@@ -9,6 +9,7 @@ gem 'coveralls', :require => false
 ## Test tools
 gem 'rake', '~> 10.3', require: false
 gem 'middleman-pry', '~> 0.0', group: :development, require: false
+gem 'pry-byebug'
 gem 'aruba', '~> 0.6', require: false
 gem 'capybara', '~> 2.5.0', require: false # middleman-core forces all plugins to declare this
 # gem 'rspec', '~> 3.0', require: false
@@ -21,4 +22,4 @@ platforms :ruby do
   gem 'redcarpet', "~> 3.0"
 end
 
-# gem 'therubyracer', platform: :ruby
+gem 'therubyracer', platform: :ruby

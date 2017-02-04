@@ -9,11 +9,11 @@ module Middleman::Akcms
       page_url = @controller.options.pagination_page_link % {page_number: page_num}
       link = resource.path.sub(%r{(^|/)([^/]*)\.([^/]*)$}, "\\1\\2-#{page_url}.\\3")
 
-      p = if resource.is_a? Middleman::Sitemap::ProxyResource
-            Middleman::Sitemap::ProxyResource.new(sitemap, link, resource.target)
-          else
-            Middleman::Sitemap::Resource.new(sitemap, link, resource.source_file)
-          end
+      if resource.is_a? Middleman::Sitemap::ProxyResource
+        Middleman::Sitemap::ProxyResource.new(sitemap, link, resource.target)
+      else
+        Middleman::Sitemap::Resource.new(sitemap, link, resource.source_file)
+      end
     end
     def manipulate_resource_list(resources)
       new_resources = []
