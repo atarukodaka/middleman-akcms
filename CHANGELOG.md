@@ -1,10 +1,12 @@
 ## TODO
 - rubygems
 - archives の作り再考
-- category_name.txt -> config.yml
 - シリーズ機能
 - pager: within_category を config option へ
-- category から index summary ？
+- pagination の作り再考
+- metadata{} は read only
+- add_metadata で値を入れる
+- summary_template.erb
 
 ## master
 ### 0.0.1
@@ -34,3 +36,5 @@
 - category: parent, children: locals -> tree
 - source/*/config.yml category_name: foo でカテゴリ表示名を設定
 - category link を game/wot.html から game/wot/index.html に変更
+- category から index summary ？
+- category_name.txt -> config.yml

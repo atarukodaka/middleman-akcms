@@ -7,7 +7,7 @@ pagination:
 ---
 
 <% if pagination %>
-  <%= partial("partials/summary", locals: {articles: page_articles}) %>
+  <%= partial("partials/summary", locals: {articles: articles}) %>
   <%= partial("partials/pagination", locals: {paginator: paginator}) %>
 <% else %>
   <%= partial("partials/summary", locals: {articles: akcms.articles.first(10)}) %>

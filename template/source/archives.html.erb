@@ -9,7 +9,7 @@ pagination:
 
 <h1>Archives</h1>
 
-<% articles = (pagination) ? page_articles : akcms.articles %>
+<% articles = articles || akcms.articles %>
 
 <% articles.group_by {|a| Date.new(a.date.year, a.date.month, 1)}.each {|date, articles| %>
   <h3><%= date.strftime("%b %Y") %></h3>
@@ -20,6 +20,4 @@ pagination:
    </ul>
 <% } %>
 
-<% if pagination %>
-<%= partial("partials/pagination", locals: {paginator: paginator}) %>
-<% end %>
+<%= partial("partials/pagination") %>

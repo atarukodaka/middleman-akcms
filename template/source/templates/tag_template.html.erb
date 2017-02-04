@@ -6,7 +6,6 @@ pagination:
 
 <%= partial("partials/title", locals: {title: "Tag: #{tag_name}"}) %>
 
-<%= partial("partials/summary", locals: {articles: (pagination)? page_articles : articles }) %>
+<%= partial("partials/summary", locals: {articles: articles }) %>
 
-<%= partial("partials/pagination", locals: {paginator: paginator}) if pagination %>
-
+<%= partial("partials/pagination") %>
