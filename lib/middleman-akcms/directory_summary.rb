@@ -1,13 +1,11 @@
 require 'middleman-akcms/manipulator'
 
 module Middleman::Akcms
-  ################################################################
   class DirectorySummaryManipulator < Manipulator
     include Contracts
 
     def initialize(controller)
       super(controller)
-
       @template = controller.options.directory_summary_template
     end
 
@@ -19,7 +17,6 @@ module Middleman::Akcms
 
       ## create dir summary resources in each dirs
       get_directories().each {|dir, articles|
-      #      dirs.merge(new_dirs).each {|dir, articles|
         if articles.find {|a| a.path =~ /#{index_file}$/}.nil?
           new_resources <<
             create_proxy_resource("#{dir}/#{index_file}", {articles: articles})
@@ -27,9 +24,9 @@ module Middleman::Akcms
       }
 
       ## put dir info into metadata[:directory] on all resources
-      add_metadata_directory(resources + new_resources)
+      add_directory_metadata(resources + new_resources)
     end
-    ################################################################
+    ################
     private
     Contract nil => Hash
     def get_directories
@@ -48,7 +45,7 @@ module Middleman::Akcms
     end
 
     Contract Array => Array
-    def add_metadata_directory(resources)
+    def add_directory_metadata(resources)
       resources.map {|res|
         dir_name = nil;
         dir_path = File.dirname(res.path)

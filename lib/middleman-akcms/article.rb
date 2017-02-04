@@ -4,13 +4,14 @@ module Middleman::Akcms
   module Article
     include Contracts
 
+    ## Middleman::Sitemap::Resources to have .controller method
     def self.extended(base)
       base.class.send(:attr_accessor, :controller)
     end
     
     Contract String
     def title
-      (metadata[:page][:title] || data.title || "(untitled)").to_s
+      data.title.to_s || "(untitled)"
     end
     
     Contract Date
@@ -19,6 +20,7 @@ module Middleman::Akcms
       return @_date = begin; Date.parse(data.date.to_s); rescue ArgumentError; end ||
         File.mtime(source_file).to_date || Date.new(1970, 1, 1)
     end
+    
     Contract Integer => String
     def summary(length=nil)
       require 'oga'
@@ -30,6 +32,7 @@ module Middleman::Akcms
         "(parser failed)"
       end
     end
+    
     ## tag
     Contract Array
     def tags
@@ -41,6 +44,7 @@ module Middleman::Akcms
         Array(article_tags).map(&:to_s)
       end      
     end
+    
     ## pager
     Contract Hash => Or[Middleman::Sitemap::Resource, NilClass]
     def prev_article(options = {})
@@ -85,11 +89,13 @@ module Middleman::Akcms
 
       used_resources = []
       resources.each {|res|
+        ## ignored res doesnt bother
         if res.ignored?
           used_resources << res
           next
         end
 
+        ## ".html" regarded as 'article'
         if res.ext == ".html"
           article = convert_to_article(res)
           next if article.data.published == false
@@ -103,12 +109,14 @@ module Middleman::Akcms
     end
     
     private
+    Contract Or[Middleman::Sitemap::Resource, Middleman::Sitemap::ProxyResource] => Or[Middleman::Sitemap::Resource, Middleman::Sitemap::ProxyResource]
     def convert_to_article(resource)
-      return resource if resource.is_a?(Article)
+      return resource if resource.is_a?(Article)  # return if its already Article class
 
-      resource.extend Article
-      resource.controller = @controller
-      return resource
+      resource.tap {|r|
+        r.extend Article
+        r.controller = @controller
+      }
     end
   end  ## class
 end

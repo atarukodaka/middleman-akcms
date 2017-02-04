@@ -1,22 +1,5 @@
 module Middleman::Akcms
-  module Helpers
-    include Contracts
-
-    Contract Middleman::Akcms::Controller
-    def akcms
-      app.extensions[:akcms].controller
-    end
-    
-    def page_for(path)
-      sitemap.find_resource_by_path(path)
-    end
-    alias_method :resource_for, :page_for
-
-    def top_page
-      sitemap.find_resource_by_path("/" + config[:index_file])
-    end
-
-    ## breadcrumb
+  module BreadcrumbHelper
     def breadcrumb(page)
       list = []
       ## first, put current title unless this page is top
@@ -37,7 +20,13 @@ module Middleman::Akcms
         content_tag(:ol, list.map {|elem| content_tag(:li, elem)}, :class=>"breadcrumb")
       end
     end
-    ## pagination
+  end  ## module
+end
+
+module Middleman::Akcms
+  module PaginationHelper
+    include Contracts
+    
     def pagination_render(type, label: nil, max_display: 10)
       case type
       when :prev_page, :next_page
@@ -50,6 +39,7 @@ module Middleman::Akcms
         "!!! no such type: #{h(type)} !!!"
       end
     end
+    Contract Integer => String
     def pagination_render_pages(max_display = 10)
       page_number = current_resource.locals[:paginator][:page_number]
       pages = current_resource.locals[:paginator][:paginated_resources]
@@ -74,6 +64,28 @@ module Middleman::Akcms
         cls = "page-item" + ((res == current_resource) ? ' active' : '')
         content_tag(:li, link_to(res.locals[:paginator][:page_number], res), :class=>cls)
       end.join
+    end
+  end  ## module
+end
+
+module Middleman::Akcms
+  module Helpers
+    include BreadcrumbHelper
+    include PaginationHelper
+    include Contracts
+
+    Contract Middleman::Akcms::Controller
+    def akcms
+      app.extensions[:akcms].controller
+    end
+    
+    def page_for(path)
+      sitemap.find_resource_by_path(path)
+    end
+    alias_method :resource_for, :page_for
+
+    def top_page
+      sitemap.find_resource_by_path("/" + config[:index_file])
     end
   end ## Helpers
 end

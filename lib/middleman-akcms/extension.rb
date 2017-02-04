@@ -27,17 +27,17 @@ module Middleman::Akcms
     
     ## default options
     option :layout, "article"
-    option :summary_length, 250      # length of charactor to summrize
+    option :summary_length, 250         # length of charactor to summrize
 
     ## directory summary settings
     option :directory_summary_template, 'templates/directory_summary_template.html'
     
     ## archive settings
-    option :archive_template, nil # 'templates/archive_template.html'
+    option :archive_template, nil       # 'templates/archive_template.html'
     option :archive_link, 'archives/%<year>04d-%<month>02d.html'
 
     ## tag settings
-    option :tag_template, nil # 'templates/tag_template.html'
+    option :tag_template, nil           # 'templates/tag_template.html'
     option :tag_link, 'tags/%{tag}.html'
 
     ## pagination settings
@@ -47,19 +47,11 @@ module Middleman::Akcms
     ## series settings
     option :series_title_template, "%{name} #%{number}: %{title}" 
     
-    ################
-    def initialize(klass, options_hash={}, &block)
-      super
-    end
-    
-    ################
-    # Hooks
+    ## Hooks
     def after_configuration
-      app.logger.debug "- extension: after_configuration"
       Array.include FinderArrayHelper
       
       @controller = Middleman::Akcms::Controller.new(self)
-        # Middleman::Akcms::ResourceMethods.activate
       @controller.register_manipulators
     end
   end  ## class

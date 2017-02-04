@@ -1,4 +1,4 @@
-## TODO
+## memo
 - rubygems
 - archives の作り再考
 - シリーズ機能
@@ -7,8 +7,10 @@
 - metadata{} は read only
 - add_metadata で値を入れる
 - summary_template.erb
+- pager: within_category
+- directory summary template のデフォルト値は nil か
 
-## master
+## devel
 ### 0.0.1
 - カテゴリの階層表現
 - tag サポート
