@@ -38,7 +38,7 @@ module Middleman::Akcms
             prev_page = res
           else
             new_res = create_page_resource(res, num).tap {|p|
-              p.extend ResourceInstanceMethods
+              #p.extend ResourceInstanceMethods
               #p.parent = res.parent
               p.add_metadata(md)
               p.add_metadata(locals: {page_articles: items, paginator: meta})

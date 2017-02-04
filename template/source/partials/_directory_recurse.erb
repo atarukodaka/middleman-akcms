@@ -2,7 +2,7 @@
 <% res = resource %>
 
 <li>
-  <%= link_to(res.dir_name, res) %>
+  <%= link_to(res.locals[:dir_name], res) %>
   <% children = res.children %>
   <% unless children.empty? %>
   <ul>

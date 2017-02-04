@@ -25,7 +25,7 @@ module Middleman::Akcms
       ## add categories
       p = page.parent
       while p && p != top_page()
-        list.unshift(content_tag(:a, p.dir_name || p.data.title, href: url_for(p)))
+        list.unshift(content_tag(:a, p.locals[:dir_name] || p.data.title, href: url_for(p)))
         p = p.parent
       end
       list.unshift(content_tag(:a, "Home", href: url_for(top_page()))) #  unless page == top_page()

@@ -1,20 +1,6 @@
 require 'middleman-akcms/manipulator'
 
 module Middleman::Akcms
-  module ResourceInstanceMethods
-    def dir_path
-      File.dirname(path)
-    end
-    def dir_name
-      name = nil
-      if config_res = @store.find_resource_by_path(File.join(File.dirname(path), "config.yml"))
-        yml = YAML::load(config_res.render(layout: false))
-        name = yml["display_name"]
-      end
-      return name if name
-      return ((dn = File.dirname(path).split("/").last) == ".") ? nil : dn
-    end
-  end
   ################################################################
   class DirectorySummaryManipulator < Manipulator
     include Contracts
@@ -32,10 +18,24 @@ module Middleman::Akcms
 
       @controller.articles.group_by {|a| File.dirname(a.path)}.each {|dir, articles|
         if articles.find {|a| a.path =~ /#{index_file}$/}.nil?
-          new_resources << create_proxy_resource("#{dir}/#{index_file}", {articles: articles})
+          new_resources << create_proxy_resource("#{dir}/#{index_file}", {articles: articles}).tap {|p|
+          }
         end
       }
-      (resources + new_resources).map {|res| res.extend ResourceInstanceMethods }
+      (resources + new_resources).map {|p|
+        dir_name = nil;
+        dir_path = File.dirname(p.path)
+        if config_res = @sitemap.find_resource_by_path(File.join(dir_path, "config.yml"))
+          yml = YAML::load(config_res.render(layout: false))
+          dir_name = yml["display_name"]
+        end
+        dir_name ||= (((dn = dir_path.split("/").last) == ".") ? nil : dn)
+        p.add_metadata(locals: {
+                         dir_path: dir_path,
+                         dir_name: dir_name
+                       })
+        p
+      }
     end
   end
 end
