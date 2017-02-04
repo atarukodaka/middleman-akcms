@@ -41,9 +41,6 @@ module Middleman::Akcms
         Array(article_tags).map(&:to_s)
       end      
     end
-    def tags_resource
-      akcms.tags
-    end
     ## pager
     Contract Hash => Or[Middleman::Sitemap::Resource, NilClass]
     def prev_article(options = {})
