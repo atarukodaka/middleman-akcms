@@ -19,11 +19,14 @@
   <!-- ================ -->
   <aside>
     <h2>TAGS</h2>
-    <div>
-      <% akcms.tags.each {|name, res| %>
-      <%= link_to(name, res) %>
-      <% } %>
-    </div>
+    <ul class="tag_box inline">
+      <li>
+	<% akcms.tags.each {|name, res| %>
+	<% size = res.locals[:articles].size %>
+	<%= link_to("#{name}<span>#{size}</span>", res) %>
+	<% } %>
+      </li>
+    </ul>
   </aside>
   <!-- ================ -->
   <aside>

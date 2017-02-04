@@ -26,7 +26,7 @@ Feature: series
       """
     And a file named "source/layouts/series.erb" with:
       """
-      <% series[:related_articles].each {|res| %>
+      <% series[:series_articles].each {|res| %>
         - <%= res.title %>
       <% } %>
       <%= yield %>
