@@ -20,7 +20,7 @@ module Middleman::Akcms
     def breadcrumb(page)
       list = []
       ## first, put current title unless this page is top
-      unless pagination &&  page.locals[:paginator][:paginated_resources].first == top_page
+      unless page.locals[:paginator] &&  page.locals[:paginator][:paginated_resources].first == top_page
         list.unshift(yield_content(:title) || page.data.title)
       end
 

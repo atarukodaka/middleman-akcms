@@ -34,9 +34,7 @@ module Middleman::Akcms
 
       dirs.each {|dir, articles|
         if articles.find {|a| a.path =~ /#{index_file}$/}.nil?
-          new_resources << create_proxy_resource("#{dir}/#{index_file}", {articles: articles}).tap {|p|
-            p.add_metadata(page: {pagination: nil}) if articles.empty?
-          }
+          new_resources << create_proxy_resource("#{dir}/#{index_file}", {articles: articles})
         end
       }
       
