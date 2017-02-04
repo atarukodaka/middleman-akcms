@@ -20,11 +20,6 @@ module Middleman::Akcms
     end
 
     Contract Hash
-    def categories
-      @manipulators[:category].try(:categories) || {}
-    end
-
-    Contract Hash
     def archives
       @manipulators[:archive].try(:archives) || {}
     end
@@ -39,7 +34,6 @@ module Middleman::Akcms
       
       require 'middleman-akcms/directory_summary'
       require 'middleman-akcms/archive'
-#      require 'middleman-akcms/category'
       require 'middleman-akcms/tag'
       require 'middleman-akcms/paginator'
       require 'middleman-akcms/series'

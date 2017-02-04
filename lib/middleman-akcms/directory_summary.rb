@@ -16,29 +16,27 @@ module Middleman::Akcms
       new_resources = []
       index_file = controller.app.config[:index_file]
 
-
-=begin
-      #require 'pry-byebug'
       dirs = @controller.articles.group_by {|a| File.dirname(a.path)}
+
+      #require 'pry-byebug'
+
       new_dirs = {}
       dirs.each {|dir, _articles|
         d = File.dirname(dir)
         while d != "."
-          new_dirs[d] ||= []
+          #new_dirs[d] = [create_proxy_resource("#{dir}/dummy.html")] if ! dirs.has_key? d
+          new_dirs[d] = [] if ! dirs.has_key? d
           d = File.dirname(d)
         end
       }
-      dirs.merge(new_dirs).each {|dir, articles|
-        if articles.find {|a| a.path =~ /#{index_file}$/}.nil?
-          new_resources << create_proxy_resource("#{dir}/#{index_file}", {articles: articles})
-        end
-      }
-=end
+      
+      dirs.merge! new_dirs
 
-      dirs = @controller.articles.group_by {|a| File.dirname(a.path)}
       dirs.each {|dir, articles|
         if articles.find {|a| a.path =~ /#{index_file}$/}.nil?
-          new_resources << create_proxy_resource("#{dir}/#{index_file}", {articles: articles})
+          new_resources << create_proxy_resource("#{dir}/#{index_file}", {articles: articles}).tap {|p|
+            p.add_metadata(page: {pagination: nil}) if articles.empty?
+          }
         end
       }
       
