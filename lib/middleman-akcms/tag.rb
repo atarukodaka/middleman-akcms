@@ -7,9 +7,8 @@ module Middleman::Akcms
     attr_reader :tags
 
     def initialize(controller)
-      super(controller)
-
       @template = controller.options.tag_template
+      super(controller)
     end
 
     Contract Array => Array    

@@ -9,6 +9,8 @@ module Middleman::Akcms
     def initialize(controller)
       @controller = controller
       @sitemap = controller.extension.app.sitemap
+
+      @controller.app.ignore @template if @template
     end
     
     Contract String, Hash => Middleman::Sitemap::ProxyResource

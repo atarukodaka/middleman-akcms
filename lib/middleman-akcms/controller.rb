@@ -55,9 +55,11 @@ module Middleman::Akcms
         end
       }
       ## ignore template
+=begin
       app.ignore options.archive_template if options.archive_template
       app.ignore options.directory_summary_template if options.directory_summary_template
       app.ignore options.tag_template if options.tag_template
+=end
     end
   end  ## class
 end

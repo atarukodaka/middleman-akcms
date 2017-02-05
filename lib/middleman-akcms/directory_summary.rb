@@ -5,8 +5,8 @@ module Middleman::Akcms
     include Contracts
 
     def initialize(controller)
-      super(controller)
       @template = controller.options.directory_summary_template
+      super(controller)
     end
 
     Contract Array => Array

@@ -7,8 +7,9 @@ module Middleman::Akcms
     attr_reader :archives
 
     def initialize(controller)
-      super(controller)
       @template = controller.options.archive_template
+      
+      super(controller)
     end
 
     Contract Array => Array    
