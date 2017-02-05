@@ -2,7 +2,6 @@ require 'middleman-akcms/manipulator'
 
 module Middleman::Akcms
   module TagInstanceMethods
-    ## tag
     def tags
       article_tags = data.tags || data.tag
       
@@ -16,6 +15,14 @@ module Middleman::Akcms
 
   ################
   class TagManipulator < Manipulator
+    module ControllerInstanceMethods
+      def tags
+        @manipulators[:tag].tags
+      end
+      def tag_resources
+        @manipulators[:tag].tag_resources
+      end
+    end
     class << self
       def enable?(controller)
         controller.extension.options.tag_template
@@ -25,30 +32,28 @@ module Middleman::Akcms
     
     include Contracts
     
-    attr_reader :proxy_resources, :tags
+    attr_reader :tags, :tag_resources
 
     def initialize(controller)
       @template = controller.options.tag_template
       @tags = Hash.new { |h,k| h[k] = [] }
-      def controller.tags
-        @manipulators[:tag].tags
-      end
+      controller.extend ControllerInstanceMethods
       super(controller)
     end
 
     Contract Array => Array    
     def manipulate_resource_list(resources)
-      @proxy_resources = {}
+      @tag_resources = {}
       
       @controller.articles.each {|article|
         article.extend TagInstanceMethods
         article.tags.each {|tag|
-          @proxy_resources[tag] ||= create_proxy_resource(link(tag), tag_name: tag, articles: [])
-          @proxy_resources[tag].locals[:articles] << article
+          @tag_resources[tag] ||= create_proxy_resource(link(tag), tag_name: tag, articles: [])
+          @tag_resources[tag].locals[:articles] << article
           @tags[tag] << article
         }
       }
-      resources + @proxy_resources.values
+      resources + @tag_resources.values
     end
     ################################################################
     private

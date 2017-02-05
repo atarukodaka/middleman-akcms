@@ -10,7 +10,7 @@ pagination:
 
 
 <% if false %>
-<%= partial("partials/article_summary", locals: {articles: (pagination)? articles : akcms.articles.first(10)}) %>
+<%= partial("partials/article_summary", locals: {articles: (pagination)? page_articles : akcms.articles.first(10)}) %>
 
 <%= partial("partials/pagination") %>
 
