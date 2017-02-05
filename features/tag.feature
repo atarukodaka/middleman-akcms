@@ -23,8 +23,8 @@ Feature: tag
     And a file named "source/tags.html.erb" with:
       """
       <ul>
-        <% akcms.tags.each {|name, res| %>
-	  <li><%= link_to(name, res) %></li>
+        <% akcms.tags.each {|name, articles| %>
+	  <li><%= link_to(name, akcms.proxy_resources(:tag)[name]) %></li>
 	<% } %>
       </ul>
       """

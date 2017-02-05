@@ -2,6 +2,13 @@ require 'middleman-akcms/manipulator'
 
 module Middleman::Akcms
   class SeriesManipulator < Manipulator
+    class << self
+      def enable?(controller)
+        true
+      end
+    end
+    Middleman::Akcms::Controller.register(:series, self)
+
     include Contracts
     
     Contract Array => Array    

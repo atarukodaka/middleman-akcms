@@ -33,18 +33,6 @@ module Middleman::Akcms
       end
     end
     
-    ## tag
-    Contract Array
-    def tags
-     article_tags = data.tags || data.tag
-
-      if article_tags.is_a? String
-        article_tags.split(',').map(&:strip)
-      else
-        Array(article_tags).map(&:to_s)
-      end      
-    end
-    
     ## pager
     Contract Hash => Or[Middleman::Sitemap::Resource, NilClass]
     def prev_article(options = {})
@@ -78,7 +66,13 @@ module Middleman::Akcms
 end
 ################################################################
 module Middleman::Akcms
-  class ArticleManipulator  < Middleman::Akcms::Manipulator
+  class ArticleManipulator < Middleman::Akcms::Manipulator
+    class << self
+      def enable?(controller)
+        true
+      end
+    end
+    
     include Contracts
 
     attr_reader :articles
@@ -109,7 +103,6 @@ module Middleman::Akcms
     end
     
     private
-    Contract Or[Middleman::Sitemap::Resource, Middleman::Sitemap::ProxyResource] => Or[Middleman::Sitemap::Resource, Middleman::Sitemap::ProxyResource]
     def convert_to_article(resource)
       return resource if resource.is_a?(Article)  # return if its already Article class
 
@@ -118,5 +111,8 @@ module Middleman::Akcms
         r.controller = @controller
       }
     end
+
+    Middleman::Akcms::Controller.register(:article, self)
   end  ## class
 end
+

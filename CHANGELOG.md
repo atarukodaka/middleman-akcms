@@ -40,3 +40,9 @@
 - category link を game/wot.html から game/wot/index.html に変更
 - category から index summary ？
 - category_name.txt -> config.yml
+
+#### feature-extensions branch
+- tags[], archives[] の中身を proxy ではなく articles に
+- 各proxy は akcms.proxy_resources[:tag][tag_name] で取るように
+
+- 

@@ -2,8 +2,13 @@ require 'middleman-akcms/manipulator'
 
 module Middleman::Akcms
   class PaginatorManipulator < Manipulator
-    ################
-    
+    class << self
+      def enable?(controller)
+        true
+      end
+    end
+    Middleman::Akcms::Controller.register(:paginator, self)
+
     def create_page_resource(resource, page_num)
       sitemap = @controller.extension.app.sitemap
       page_url = @controller.options.pagination_page_link % {page_number: page_num}

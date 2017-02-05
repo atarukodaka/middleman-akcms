@@ -2,6 +2,13 @@ require 'middleman-akcms/manipulator'
 
 module Middleman::Akcms
   class DirectorySummaryManipulator < Manipulator
+    class << self
+      def enable?(controller)
+        controller.extension.options.directory_summary_template
+      end
+    end
+
+    
     include Contracts
 
     def initialize(controller)
@@ -57,6 +64,7 @@ module Middleman::Akcms
         res.tap {|r| r.add_metadata(directory: { path: dir_path, name: dir_name})}
       }
     end
+    Middleman::Akcms::Controller.register(:directory_summary, self)
   end ## class
 end
 
