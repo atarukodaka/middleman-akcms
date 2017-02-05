@@ -3,7 +3,9 @@ module Middleman::Akcms
     def breadcrumb(page)
       list = []
       ## first, put current title unless this page is top
-      unless page.locals[:paginator] &&  page.locals[:paginator][:paginated_resources].first == top_page
+      #unless page.locals[:paginator] &&  page.locals[:paginator][:paginated_resources].first == top_page
+      unless pagination? && page.locals[:paginator][:paginated_resources].first == top_page
+        
         list.unshift(yield_content(:title) || page.data.title)
       end
 
@@ -24,54 +26,9 @@ module Middleman::Akcms
 end
 
 module Middleman::Akcms
-  module PaginationHelper
-    include Contracts
-    
-    def pagination_render(type, label: nil, max_display: 10)
-      case type
-      when :prev_page, :next_page
-        page = current_resource.locals[:paginator][type]
-        cls = "page-item" + ((page.nil?) ? ' disabled' : '')
-        content_tag(:li, link_to(label, page), :class => cls)
-      when :pages
-        pagination_render_pages(max_display)
-      else
-        "!!! no such type: #{h(type)} !!!"
-      end
-    end
-    Contract Integer => String
-    def pagination_render_pages(max_display = 10)
-      page_number = current_resource.locals[:paginator][:page_number]
-      pages = current_resource.locals[:paginator][:paginated_resources]
-
-      list = [pages[page_number-1]]
-      i = 1
-      cnt = 1
-
-      while cnt < max_display
-        if unreached_bottom = (page_number+i-1 < pages.size)
-          list.push pages[page_number+i-1]
-          cnt = cnt + 1
-        end
-        if unreached_top = (page_number-i > 0)
-          list.unshift pages[page_number-i-1]
-          cnt = cnt + 1
-        end
-        i += 1
-        break if !unreached_bottom && !unreached_top
-      end
-      list.map do |res|
-        cls = "page-item" + ((res == current_resource) ? ' active' : '')
-        content_tag(:li, link_to(res.locals[:paginator][:page_number], res), :class=>cls)
-      end.join
-    end
-  end  ## module
-end
-
-module Middleman::Akcms
   module Helpers
     include BreadcrumbHelper
-    include PaginationHelper
+#    include PaginationHelper
     include Contracts
 
     Contract Middleman::Akcms::Controller

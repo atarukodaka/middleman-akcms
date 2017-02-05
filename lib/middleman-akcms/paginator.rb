@@ -1,5 +1,61 @@
 require 'middleman-akcms/manipulator'
 
+## helper
+
+module Middleman::Akcms
+  module PaginationHelper
+    include Contracts
+
+    Contract Bool
+    def pagination?
+      return false unless current_resource.data.pagination
+      return false unless current_resource.locals.has_key? :pagination
+      true
+    end
+    
+    def pagination_render(type, label: nil, max_display: 10)
+      case type
+      when :prev_page, :next_page
+        page = current_resource.locals[:paginator][type]
+        cls = "page-item" + ((page.nil?) ? ' disabled' : '')
+        content_tag(:li, link_to(label, page), :class => cls)
+      when :pages
+        pagination_render_pages(max_display)
+      else
+        "!!! no such type: #{h(type)} !!!"
+      end
+    end
+    Contract Integer => String
+    def pagination_render_pages(max_display = 10)
+      page_number = current_resource.locals[:paginator][:page_number]
+      pages = current_resource.locals[:paginator][:paginated_resources] || []
+
+      list = [pages[page_number-1]]
+      i = 1
+      cnt = 1
+
+      while cnt < max_display
+        if unreached_bottom = (page_number+i-1 < pages.size)
+          list.push pages[page_number+i-1]
+          cnt = cnt + 1
+        end
+        if unreached_top = (page_number-i > 0)
+          list.unshift pages[page_number-i-1]
+          cnt = cnt + 1
+        end
+        i += 1
+        break if !unreached_bottom && !unreached_top
+      end
+      list.map do |res|
+        cls = "page-item" + ((res == current_resource) ? ' active' : '')
+        content_tag(:li, link_to(res.locals[:paginator][:page_number], res), :class=>cls)
+      end.join
+    end
+  end  ## module
+end
+
+################################################################
+
 module Middleman::Akcms
   class PaginatorManipulator < Manipulator
     class << self
@@ -7,8 +63,14 @@ module Middleman::Akcms
         true
       end
     end
+  
     Middleman::Akcms::Controller.register(:paginator, self)
 
+    def initialize(controller)
+      controller.extension.class.defined_helpers << Middleman::Akcms::PaginationHelper
+      super(controller)
+    end
+    
     def create_page_resource(resource, page_num)
       sitemap = @controller.extension.app.sitemap
       page_url = @controller.options.pagination_page_link % {page_number: page_num}
@@ -28,7 +90,7 @@ module Middleman::Akcms
 
         articles = res.locals[:articles] || @controller.articles
         if articles.empty?
-          res.add_metadata(locals: {page_articles: [], paginator: nil})
+          res.add_metadata(locals: {page_articles: [], paginator: {}})
           next
         end
         

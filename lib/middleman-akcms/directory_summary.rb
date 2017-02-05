@@ -7,7 +7,7 @@ module Middleman::Akcms
         controller.extension.options.directory_summary_template
       end
     end
-
+    Middleman::Akcms::Controller.register(:directory_summary, self)
     
     include Contracts
 
@@ -64,7 +64,6 @@ module Middleman::Akcms
         res.tap {|r| r.add_metadata(directory: { path: dir_path, name: dir_name})}
       }
     end
-    Middleman::Akcms::Controller.register(:directory_summary, self)
   end ## class
 end
 
