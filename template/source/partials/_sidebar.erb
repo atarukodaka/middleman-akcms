@@ -21,9 +21,9 @@
     <h2>TAGS</h2>
     <ul class="tag_box inline">
       <li>
-	<% akcms.tags.each {|name, articles| %>
-	<% size = articles.size %>
-	<%= link_to("#{name}<span>#{size}</span>", akcms.proxy_resources(:tag)[name]) %>
+	<% akcms.proxy_resources(:tag).each {|name, res| %>
+	<% size = res.locals[:articles].size %>
+	<%= link_to("#{name}<span>#{size}</span>", res) %>
 	<% } %>
       </li>
     </ul>
@@ -41,8 +41,8 @@
   <aside>
     <h2>MONTHLY ARCHIVES</h2>
     <ul>
-      <% akcms.archives.each {|date_ym, _articles|%>
-      <li> <%= link_to(date_ym.strftime("%b %Y"), akcms.proxy_resources(:archive)[date_ym]) %></li>
+      <% akcms.proxy_resources(:archive).each {|date_ym, res|%>
+      <li> <%= link_to(date_ym.strftime("%b %Y"), res) %></li>
       <% } %>
     </ul>
   </aside>

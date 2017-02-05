@@ -5,4 +5,5 @@ pagination: true
 
 <% title = "Monthly Archives: #{date.strftime("%b %Y")}" %>
 <%= partial("partials/title", locals: {title: title}) %>
-<%= partial("partials/article_summary", locals: {articles: articles }) %>
+<%= partial("partials/article_summary", locals: {articles: (pagination) ? page_articles : articles }) %>
+

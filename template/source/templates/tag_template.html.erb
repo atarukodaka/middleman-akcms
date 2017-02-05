@@ -1,10 +1,9 @@
 ---
 layout: layout
-pagination:
-  per_page: 10
+pagination: false
 ---
 
-<% title = "Directory: #{current_resource.metadata[:directory][:name]}" %>
+<% title = "Directory: #{tag_name}" %>
 <%= partial("partials/title", locals: {title: title}) %>
-<%= partial("partials/article_summary", locals: {articles: articles }) %>
+<%= partial("partials/article_summary", locals: {articles: (pagination) ? page_articles : articles }) %>
 

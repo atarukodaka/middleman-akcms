@@ -38,13 +38,13 @@ module Middleman::Akcms
           meta.next_page = nil
 
           if num == 1
-            res.add_metadata(locals: {articles: items, paginator: meta})
+            res.add_metadata(locals: {page_articles: items, paginator: meta})
             paginated_resources << res
             prev_page = res
           else
             new_res = create_page_resource(res, num)
             new_res.add_metadata(md)
-            new_res.add_metadata(locals: {articles: items, paginator: meta})
+            new_res.add_metadata(locals: {page_articles: items, paginator: meta})
             prev_page.locals[:paginator][:next_page] = new_res
             prev_page = new_res
 

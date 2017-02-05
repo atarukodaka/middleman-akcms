@@ -8,19 +8,22 @@ module Middleman::Akcms
       end
     end
 
+    module ControllerInstanceMethods
+      def archives
+        @manipulators[:archive].archives
+      end
+    end
     include Contracts
     
     attr_reader :archives, :proxy_resources
-
+    
     def initialize(controller)
       @template = controller.options.archive_template
-
-      def controller.archives
-        @manipulators[:archive].archives
-      end
+      controller.extend ControllerInstanceMethods
       super(controller)
     end
-
+    
+    
     Contract Array => Array    
     def manipulate_resource_list(resources)
       @archives = {}
