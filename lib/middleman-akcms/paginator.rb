@@ -56,15 +56,15 @@ end
 ################################################################
 
 module Middleman::Akcms
-  class PaginatorManipulator < Manipulator
+  class PaginatorManipulator
     Middleman::Akcms::Controller.register(:paginator, self)
-    ################
-    include Contracts
+    include Manipulator
+    include ::Contracts
     C = Middleman::Akcms::Contracts
     
     def initialize(controller)
       controller.extension.class.defined_helpers << Middleman::Akcms::PaginationHelper
-      super(controller)
+      set_attributes(controller)
     end
 
     Contract C::Resource, Integer => C::Resource

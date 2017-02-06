@@ -42,3 +42,4 @@
 - 各proxy は akcms.proxy_resources[:tag][tag_name] で取るように
 - breadcrumb を別に。ancestors を meatdataに持つ
 - type: に "article" 以外を指定すると articles とみなさない
+- manipulator を継承から委譲に変えた

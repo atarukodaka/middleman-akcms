@@ -1,19 +1,21 @@
 require 'middleman-akcms/manipulator'
 
 module Middleman::Akcms
-  class DirectorySummaryManipulator < Manipulator
+  class DirectorySummaryManipulator
     class << self
       def disable?(controller)
         controller.extension.options.directory_summary_template.nil?
       end
     end
     Middleman::Akcms::Controller.register(:directory_summary, self)
-    
-    include Contracts
+
+    ################
+    include Manipulator
+    include ::Contracts
     C = Middleman::Akcms::Contracts
     
     def initialize(controller)
-      super(controller, controller.options.directory_summary_template)
+      set_attributes(controller, controller.options.directory_summary_template)
     end
     
     Contract ArrayOf[C::Resource] => ArrayOf[C::Resource]

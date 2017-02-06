@@ -14,7 +14,7 @@ module Middleman::Akcms
   end
 
   ################
-  class TagManipulator < Manipulator
+  class TagManipulator
     module ControllerInstanceMethods
       include ::Contracts
       C = Middleman::Akcms::Contracts
@@ -29,7 +29,6 @@ module Middleman::Akcms
       end
     end
     class << self
-      Contract Middleman::Akcms::Controller => Bool
       def disable?(controller)
         controller.extension.options.tag_template.nil?
       end
@@ -37,14 +36,15 @@ module Middleman::Akcms
     Middleman::Akcms::Controller.register(:tag, self)
     
     ################
-    include Contracts
+    include Manipulator
+    include ::Contracts
     C = Middleman::Akcms::Contracts
     
     attr_reader :tags, :tag_resources
 
     def initialize(controller)
       controller.extend ControllerInstanceMethods
-      super(controller, controller.options.tag_template)
+      set_attributes(controller, controller.options.tag_template)
     end
 
     Contract ArrayOf[C::Resource] => ArrayOf[C::Resource]
@@ -62,7 +62,6 @@ module Middleman::Akcms
       }
       resources + @tag_resources.values
     end
-    ################################################################
     private
     Contract String => String
     def link(name)

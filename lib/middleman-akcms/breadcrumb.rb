@@ -1,15 +1,16 @@
 require 'middleman-akcms/manipulator'
 
 module Middleman::Akcms
-  class BreadcrumbManipulator < Manipulator
+  class BreadcrumbManipulator
     Middleman::Akcms::Controller.register(:breadcrumb, self)
     
+    include Manipulator
     include ::Contracts
     C = Middleman::Akcms::Contracts
 
     def initialize(controller)
       controller.extension.class.defined_helpers << Middleman::Akcms::BreadcrumbHelper
-      super(controller)
+      set_attributes(controller)
     end
     
     Contract ArrayOf[C::Resource] => ArrayOf[C::Resource]

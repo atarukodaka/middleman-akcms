@@ -1,12 +1,16 @@
 require 'middleman-akcms/manipulator'
 
 module Middleman::Akcms
-  class SeriesManipulator < Manipulator
+  class SeriesManipulator
     Middleman::Akcms::Controller.register(:series, self)
-    ################
 
-    include Contracts
+    include Manipulator
+    include ::Contracts
     C = Middleman::Akcms::Contracts
+    
+    def initialize(controller)
+      set_attributes(controller)
+    end
     
     Contract ArrayOf[C::Resource] => ArrayOf[C::Resource]
     def manipulate_resource_list(resources)

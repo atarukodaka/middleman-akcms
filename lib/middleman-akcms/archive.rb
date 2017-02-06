@@ -1,7 +1,7 @@
 require 'middleman-akcms/manipulator'
 
 module Middleman::Akcms
-  class ArchiveManipulator < Manipulator
+  class ArchiveManipulator
     module ControllerInstanceMethods
       def archives
         @manipulators[:archive].archives
@@ -18,6 +18,7 @@ module Middleman::Akcms
     end
     Middleman::Akcms::Controller.register(:archive, self)
     ################
+    include Manipulator
     include ::Contracts
     C = Middleman::Akcms::Contracts
     
@@ -25,7 +26,7 @@ module Middleman::Akcms
     
     def initialize(controller)
       controller.extend ControllerInstanceMethods
-      super(controller, controller.options.archive_template)
+      set_attributes(controller, controller.options.archive_template)
     end
     
     Contract ArrayOf[C::Resource] => ArrayOf[C::Resource]

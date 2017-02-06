@@ -59,13 +59,18 @@ module Middleman::Akcms
 end
 ################################################################
 module Middleman::Akcms
-  class ArticleManipulator < Middleman::Akcms::Manipulator
+  class ArticleManipulator
     Middleman::Akcms::Controller.register(:article, self)
     ################
+    include Manipulator
     include ::Contracts
     C = Middleman::Akcms::Contracts
     
     attr_reader :articles
+
+    def initialize(controller)
+      set_attributes(controller)
+    end
     
     Contract ArrayOf[C::Resource] => ArrayOf[C::Resource]
     def manipulate_resource_list(resources)
