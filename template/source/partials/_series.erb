@@ -1,14 +1,14 @@
  
 <% if current_resource.data.series %>
 <div class="references">
-  <div class="header">連載記事：<%=  series[:name] %></div>
+  <div class="header">Topic: <%=  h(series[:name]) %></div>
   <ul>
     <% series[:series_articles].each {|res| %>
     <li>
       <% if res == current_resource %>
-      <%= res.title %>
+      <%= h(res.title) %>
       <% else %>
-      <%= link_to(res.title, res) %>
+      <%= link_to(h(res.title), res) %>
       <% end %>
 	</li>
     <% } %>

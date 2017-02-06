@@ -2,13 +2,12 @@
 - rubygems
 - archives の作り再考
 - シリーズ機能
-- pager: within_category を config option へ
-- pagination の作り再考
-- metadata{} は read only
-- add_metadata で値を入れる
-- summary_template.erb
-- pager: within_category
 - directory summary template のデフォルト値は nil か
+- director summary: articles だけではなく resources みるか
+  - exclude_dirs
+- escape
+- tagに <>などが入ってたときの処理
+- pagination render まわり再考
 
 ## devel
 ### 0.0.1
@@ -40,3 +39,10 @@
 - category link を game/wot.html から game/wot/index.html に変更
 - category から index summary ？
 - category_name.txt -> config.yml
+
+#### feature-extensions branch
+- tags[], archives[] の中身を proxy ではなく articles に
+- 各proxy は akcms.proxy_resources[:tag][tag_name] で取るように
+- breadcrumb を別に。ancestors を meatdataに持つ
+- type: に "article" 以外を指定すると articles とみなさない
+- manipulator を継承から委譲に変えた

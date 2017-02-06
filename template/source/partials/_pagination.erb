@@ -1,31 +1,22 @@
-<% if defined? paginator %>
+<% if pagination? %>
 <footer>
   <nav class="text-center">
     <ul class="pagination">
-      <%= pagination_render(:prev_page, label: "&laquo;") %>
-      <%= pagination_render(:pages, max_display: 8) %>
-      <%= pagination_render(:next_page, label: "&raquo;") %>
+      <li class="page-item <%= "disabled" if paginator[:prev_page].nil? %>">
+	<%= link_to("&laquo;", paginator[:prev_page]) %>
+      </li>
+      <!-- % pagination_display_pages(10).each do |res| % -->
+      <% paginator[:paginated_resources_for_navigation].call(current_resource, 10).each do |res| %>
+      <li class="page-item <%= "active" if res == current_resource %>">
+	<%= link_to(res.locals[:paginator][:page_number], res) %>
+      </li>
+      <% end %>
+      <li class="page-item <%= "disabled" if paginator[:next_page].nil? %>">
+	<%= link_to("&raquo;", paginator[:next_page]) %>
+      </li>
     </ul>
   </nav>
 </footer>
 <% end %>
 
 
-<!-- if u dont usepagination_render_* helpers -->
-<% if false %> 
-<footer>
-  <nav>
-    <ul class="pager">
-      <% if paginator.prev_page %>
-      <li class="previous"><%= link_to("prev", paginator.prev_page) if paginator.prev_page %></li>
-      <% end %>
-      <% if paginator.next_page %>
-      <li class="next"><%= link_to("next", paginator.next_page) if paginator.next_page %></li>
-      <% end %>
-    </ul>
-    <div class="text-center">
-      <%= paginator.page_number %> / <%= paginator.num_pages %>
-    </div>
-  </nav>
-</footer>
-<% end %>

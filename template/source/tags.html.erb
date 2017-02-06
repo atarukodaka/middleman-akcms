@@ -1,14 +1,14 @@
 ---
 title: Tags
 layout: layout
-date: 2014/11/1
 group: navigation
+type: summary
 ---
 
 <h1>Tags</h1>
 
 <ul>
-  <% akcms.tags.each {|name, res| %>
-  <li><%= link_to(name, res) %></li>
-  <% } %>
+    <% akcms.tag_resources.each {|name, res| %>
+  <li><%= link_to(name, res) %> (<%= akcms.tags[name].size %>)</li>
+    <% } %>
 </ul>

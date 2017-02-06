@@ -1,21 +1,6 @@
-require 'contracts'
-require 'hashie'
-
 require 'middleman-akcms/controller'
 require 'middleman-akcms/helpers'
-
-################
-# Array Helper
-module Middleman::Akcms
-  module FinderArrayHelper
-    def find_by(type, value)
-      find {|res| res.send(type) == value}
-    end
-    def select_by(type, value)
-      select {|res| res.send(type) == value}
-    end
-  end
-end
+require 'middleman-akcms/contracts'
 
 ################
 module Middleman::Akcms
@@ -49,8 +34,6 @@ module Middleman::Akcms
     
     ## Hooks
     def after_configuration
-      Array.include FinderArrayHelper
-      
       @controller = Middleman::Akcms::Controller.new(self)
       @controller.register_manipulators
     end

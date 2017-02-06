@@ -21,9 +21,9 @@
     <h2>TAGS</h2>
     <ul class="tag_box inline">
       <li>
-	<% akcms.tags.each {|name, res| %>
-	<% size = res.locals[:articles].size %>
-	<%= link_to("#{name}<span>#{size}</span>", res) %>
+	<% akcms.tag_resources.each {|name, res| %>
+	<% size = akcms.tags[name].size %>
+	<%= link_to("#{h(name)}<span>#{size}</span>", res) %>
 	<% } %>
       </li>
     </ul>
@@ -33,7 +33,7 @@
     <h2>RECENT</h2>
     <ul>
       <% akcms.articles.first(10).each {|page| %>
-      <li> <%= link_to(page.title, page) %></li>
+      <li> <%= link_to(h(page.title), page) %></li>
       <% } %>
     </ul>
   </aside>
@@ -41,8 +41,8 @@
   <aside>
     <h2>MONTHLY ARCHIVES</h2>
     <ul>
-      <% akcms.archives.each {|date_ym, res|%>
-      <li> <%= link_to(date_ym.strftime("%b %Y"), res) %></li>
+      <% akcms.archive_resources.each {|month, res|%>
+      <li> <%= link_to(month.strftime("%b %Y"), res) %></li>
       <% } %>
     </ul>
   </aside>

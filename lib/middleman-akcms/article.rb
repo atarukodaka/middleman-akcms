@@ -1,23 +1,25 @@
 require 'middleman-akcms/manipulator'
 
 module Middleman::Akcms
+  ## methods to be extend to Middleman::Sitemap::Resources for each article
   module Article
-    include Contracts
-
-    ## Middleman::Sitemap::Resources to have .controller method
+    include ::Contracts
+    C = Middleman::Akcms::Contracts
+    
+    ## let Middleman::Sitemap::Resources have .controller method
     def self.extended(base)
       base.class.send(:attr_accessor, :controller)
     end
     
     Contract String
     def title
-      data.title.to_s || "(untitled)"
+      (data.title || "(untitled)").to_s
     end
     
     Contract Date
     def date
-      return @_date if @_date
-      return @_date = begin; Date.parse(data.date.to_s); rescue ArgumentError; end ||
+      return @_date ||=
+        begin; Date.parse(data.date.to_s); rescue ArgumentError; end ||
         File.mtime(source_file).to_date || Date.new(1970, 1, 1)
     end
     
@@ -32,35 +34,15 @@ module Middleman::Akcms
         "(parser failed)"
       end
     end
-    
-    ## tag
-    Contract Array
-    def tags
-     article_tags = data.tags || data.tag
 
-      if article_tags.is_a? String
-        article_tags.split(',').map(&:strip)
-      else
-        Array(article_tags).map(&:to_s)
-      end      
-    end
-    
     ## pager
-    Contract Hash => Or[Middleman::Sitemap::Resource, NilClass]
-    def prev_article(options = {})
-      if options[:within_category]
-        @controller.articles.find {|a| a.category == category && a.date < date}
-      else
-        @controller.articles.find {|a| a.date < date}
-      end
+    Contract Hash => Or[C::Resource, nil]
+    def prev_article
+      @controller.articles.find {|a| a.date < date}
     end
-    Contract Hash => Or[Middleman::Sitemap::Resource, NilClass]
-    def next_article(options = {})
-      if options[:within_category]
-        @controller.articles.reverse.find {|a| a.category == category && a.date > date}
-      else
-        @controller.articles.reverse.find {|a| a.date > date}
-      end
+    Contract Hash => Or[C::Resource, nil]
+    def next_article
+      @controller.articles.reverse.find {|a| a.date > date}
     end
 
     ## called automatically from middleman (this code copied from mm-blog)
@@ -78,12 +60,20 @@ module Middleman::Akcms
 end
 ################################################################
 module Middleman::Akcms
-  class ArticleManipulator  < Middleman::Akcms::Manipulator
-    include Contracts
-
+  class ArticleManipulator
+    Middleman::Akcms::Controller.register(:article, self)
+    ################
+    include Manipulator
+    include ::Contracts
+    C = Middleman::Akcms::Contracts
+    
     attr_reader :articles
 
-    Contract Array => Array
+    def initialize(controller)
+      set_attributes(controller)
+    end
+    
+    Contract ArrayOf[C::Resource] => ArrayOf[C::Resource]
     def manipulate_resource_list(resources)
       articles = []
 
@@ -96,7 +86,7 @@ module Middleman::Akcms
         end
 
         ## ".html" regarded as 'article'
-        if res.ext == ".html"
+        if res.ext == ".html" && !(res.data.type && res.data.type != "article")
           article = convert_to_article(res)
           next if article.data.published == false
           articles << article
@@ -109,7 +99,7 @@ module Middleman::Akcms
     end
     
     private
-    Contract Or[Middleman::Sitemap::Resource, Middleman::Sitemap::ProxyResource] => Or[Middleman::Sitemap::Resource, Middleman::Sitemap::ProxyResource]
+    Contract C::Resource => C::Article
     def convert_to_article(resource)
       return resource if resource.is_a?(Article)  # return if its already Article class
 
@@ -120,3 +110,4 @@ module Middleman::Akcms
     end
   end  ## class
 end
+

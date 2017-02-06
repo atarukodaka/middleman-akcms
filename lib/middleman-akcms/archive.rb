@@ -1,36 +1,57 @@
 require 'middleman-akcms/manipulator'
 
 module Middleman::Akcms
-  class ArchiveManipulator < Manipulator
-    include Contracts
-    
-    attr_reader :archives
+  class ArchiveManipulator
 
-    def initialize(controller)
-      @template = controller.options.archive_template
-      
-      super(controller)
+    ## methods to be extened to controller
+    module ControllerInstanceMethods
+      def archives
+        @manipulators[:archive].archives
+      end
+      def archive_resources
+        @manipulators[:archive].archive_resources
+      end
     end
 
-    Contract Array => Array    
+    ## this manipulator will be disabled unless template specified
+    class << self
+      def disable?(controller)
+        controller.extension.options.archive_template.nil?
+      end
+    end
+    Middleman::Akcms::Controller.register(:archive, self)
+    ################
+    include Manipulator
+    include ::Contracts
+    C = Middleman::Akcms::Contracts
+    
+    attr_reader :archives, :archive_resources
+    
+    def initialize(controller)
+      controller.extend ControllerInstanceMethods
+      set_attributes(controller, controller.options.archive_template)
+    end
+    
+    Contract ArrayOf[C::Resource] => ArrayOf[C::Resource]
     def manipulate_resource_list(resources)
       @archives = {}
-
-      group_by_date_ym(@controller.articles).each {|date_ym, articles|
-        @archives[date_ym] = create_proxy_resource(link(date_ym),
-                                                   date: date_ym, articles: articles)
+      @archive_resources = {}
+ 
+      group_by_month(controller.articles).each {|month, articles|
+        @archive_resources[month] = create_proxy_resource(link(month), date: month, articles: articles)
+        @archives[month] = articles
       }
-      return resources + @archives.values.sort_by {|res| res.locals[:date]}.reverse
+      return resources + @archive_resources.values.sort_by {|res| res.locals[:date]}.reverse
     end
     
     ################
     private
     Contract Date => String
-    def link(date)
-      @controller.options.archive_link % {year: date.year, month: date.month}      
+    def link(month)
+      @controller.options.archive_link % {year: month.year, month: month.month}
     end
-    Contract Array => Hash
-    def group_by_date_ym(resources)
+    Contract ArrayOf[C::Resource] => Hash
+    def group_by_month(resources)
       resources.group_by {|a| Date.new(a.date.year, a.date.month, 1)}
     end
   end # class

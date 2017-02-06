@@ -2,12 +2,8 @@
 <!-- required locals: article -->
 
 <div class="article_info">
-  <% if ! article.tags.empty? %>
-  [<%= article.tags.map{|tag| link_to(tag, akcms.tags[tag]) }.join(",") %>]
-  <% end %>
-  |
   <% if ! article.parent.nil? %>
-  <%= link_to(article.metadata[:directory][:name], article.parent) %> |
+  | <%= link_to(h(article.metadata[:directory][:name]), article.parent) %> |
   <% end %>
   <%= link_to(article.date.strftime("%d %b %Y"), article) %> |
 </div>
