@@ -26,6 +26,7 @@ module Middleman::Akcms
     option :tag_link, 'tags/%{tag}.html'
 
     ## pagination settings
+    option :pagination, true
     option :pagination_per_page, 5
     option :pagination_page_link, "page-%{page_number}"
 

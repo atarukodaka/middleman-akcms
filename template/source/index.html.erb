@@ -2,7 +2,6 @@
 title: Home
 layout: false
 date: 2014/11/1
-pagination: true
 type: summary
 ---
 
@@ -14,9 +13,12 @@ type: summary
 <!--   set layout frontmatter as false -->
 <%= akcms.articles.first.render(layout: :article) %>
 
-<% else %>
+<% :summary %>
 <!-- show recent article summary -->
 <!--   set layout frontmatter as layout -->
 <%= partial("partials/article_summary", locals: {articles: (defined?(articles)) ? articles : akcms.articles.first(10)}) %>
 
+<% else %>
+
+WELCOME
 <% end %>

@@ -17,6 +17,7 @@ end
 module Middleman::Akcms
   class PaginatorManipulator
     Middleman::Akcms::Controller.register(:paginator, self)
+    
     include Manipulator
     include ::Contracts
     C = Middleman::Akcms::Contracts

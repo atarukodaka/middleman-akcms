@@ -18,6 +18,7 @@
   </aside>
   <!-- ================ -->
   <aside>
+    <% if akcms.manipulators[:tag] %>
     <h2>TAGS</h2>
     <ul class="tag_box inline">
       <li>
@@ -27,6 +28,7 @@
 	<% } %>
       </li>
     </ul>
+    <% end %>
   </aside>
   <!-- ================ -->
   <aside>
@@ -38,6 +40,7 @@
     </ul>
   </aside>
   <!-- ================ -->
+  <% if akcms.manipulators[:archive] %>
   <aside>
     <h2>MONTHLY ARCHIVES</h2>
     <ul>
@@ -46,5 +49,5 @@
       <% } %>
     </ul>
   </aside>
-    
+  <% end %>
 </div>

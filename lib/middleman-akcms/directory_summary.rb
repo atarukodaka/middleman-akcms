@@ -49,7 +49,7 @@ module Middleman::Akcms
 
       dirs = resources.reject {|r| r.ignored || r.path =~ /^#{re}/}.group_by {|r| File.dirname(r.path)}
 =end
-       dirs = @controller.articles.group_by {|a| File.dirname(a.path)}
+      dirs = @controller.articles.group_by {|a| File.dirname(a.path)}
 
       ## find parent directories where any articles doesnt exist
       new_dirs = {}
@@ -60,6 +60,7 @@ module Middleman::Akcms
           d = File.dirname(d)
         end
       }
+      dirs.delete(".")   # yet ? /index.html
       return dirs.merge(new_dirs)
     end
 

@@ -1,13 +1,11 @@
 ## memo
 - rubygems
-- archives の作り再考
-- シリーズ機能
-- directory summary template のデフォルト値は nil か
-- director summary: articles だけではなく resources みるか
-  - exclude_dirs
-- escape
 - tagに <>などが入ってたときの処理
 - pagination render まわり再考
+- index.html がないとき
+- pagination options
+- app.config on initialize
+- directory summary: get_dirs() "." or "" ?
 
 ## devel
 ### 0.0.1
@@ -29,11 +27,11 @@
 - pagination: <<,1,2,3,>>
 - bootstrap, js CDN
 - breadcrump: pagination のとき
-- publishable: done
-- layout構成整理: done
+- publishable
+- layout構成整理
 - pagination: 長いとき
-- paginator feature: done
-- categories, archivies, tags を配列からハッシュに: done
+- paginator feature
+- categories, archivies, tags を配列からハッシュに
 - category: parent, children: locals -> tree
 - source/*/config.yml category_name: foo でカテゴリ表示名を設定
 - category link を game/wot.html から game/wot/index.html に変更
@@ -46,3 +44,5 @@
 - breadcrumb を別に。ancestors を meatdataに持つ
 - type: に "article" 以外を指定すると articles とみなさない
 - manipulator を継承から委譲に変えた
+- シリーズ機能
+- escape
