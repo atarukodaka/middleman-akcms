@@ -26,8 +26,8 @@ module Middleman::Akcms
       set_attributes(controller)
     end
 
-    Contract C::Resource, Integer => C::Resource
-    def create_page_resource(resource, page_num)
+    Contract C::Resource, Integer, Hash => C::Resource
+    def create_page_resource(resource, page_num, metadata = {})
       #sitemap = @controller.extension.app.sitemap
       page_url = @controller.options.pagination_page_link % {page_number: page_num}
       link = resource.path.sub(%r{(^|/)([^/]*)\.([^/]*)$}, "\\1\\2-#{page_url}.\\3")
@@ -36,11 +36,14 @@ module Middleman::Akcms
         Middleman::Sitemap::ProxyResource.new(@sitemap, link, resource.target)
       else
         Middleman::Sitemap::Resource.new(@sitemap, link, resource.source_file)
+      end.tap do |res|
+        res.add_metadata(metadata) unless metadata.empty?
       end
     end
 
     Contract ArrayOf[C::Resource] => ArrayOf[C::Resource]
     def manipulate_resource_list(resources)
+      controller.app.logger.debug("-- paginator manipulation")
       new_resources = []
       
       resources.each {|res|
@@ -50,30 +53,38 @@ module Middleman::Akcms
         paginated_resources = []
         md = res.metadata
         prev_page = nil
-        per_page = (res.data.pagination.is_a? Hash) ? res.data.pagination[:per_page] : @controller.options.pagination_per_page
+        
+        per_page = if res.data.pagination.is_a? Hash
+                     res.data.pagination[:per_page]
+                   else
+                     @controller.options.pagination_per_page
+                   end
         articles.per_page(per_page).each {|items, num, meta, _is_last|
+          locals = {locals: {articles: items, paginator: meta}}
+          
+          # set pager
           meta.prev_page = prev_page
           meta.next_page = nil
-
-          if num == 1
-            res.add_metadata(locals: {articles: items, paginator: meta})
+          
+          if num == 1      # original resource
+            res.add_metadata(locals)
             paginated_resources << res
             prev_page = res
-          else
-            new_res = create_page_resource(res, num).tap do|p|
-              p.add_metadata(md)
-              p.add_metadata(locals: {articles: items, paginator: meta})
+          else             # new pager resource 2-
+            new_res = create_page_resource(res, num, md).tap do|p|
+              p.add_metadata(locals)
             end
             prev_page.locals[:paginator][:next_page] = new_res
+            paginated_resources << new_res
             prev_page = new_res
 
             new_resources << new_res
-            paginated_resources << new_res
           end
         } # each for per_page
         paginated_resources.each {|p|
           p.locals[:paginator][:paginated_resources] = paginated_resources
-          p.locals[:paginator][:paginated_resources_for_navigation] =  proc {|res| paginated_resources_for_navigation(res)}
+          p.locals[:paginator][:paginated_resources_for_navigation] =  proc {|res|
+            paginated_resources_for_navigation(res)}
         }
       }  # resources
       resources + new_resources
