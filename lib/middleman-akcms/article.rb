@@ -60,11 +60,6 @@ end
 ################################################################
 module Middleman::Akcms
   class ArticleManipulator < Middleman::Akcms::Manipulator
-    class << self
-      def enable?(controller)
-        true
-      end
-    end
     Middleman::Akcms::Controller.register(:article, self)
     ################
     include ::Contracts

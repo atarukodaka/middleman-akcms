@@ -2,11 +2,6 @@ require 'middleman-akcms/manipulator'
 
 module Middleman::Akcms
   class BreadcrumbManipulator < Manipulator
-    class << self
-      def enable?(controller)
-        true
-      end
-    end
     Middleman::Akcms::Controller.register(:breadcrumb, self)
     
     include ::Contracts
