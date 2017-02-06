@@ -12,7 +12,7 @@ module Middleman::Akcms
     include Contracts
 
     def initialize(controller)
-      @template = controller.options.directory_summary_template
+      controller.app.ignore @template = controller.options.directory_summary_template
       super(controller)
     end
 
@@ -26,6 +26,7 @@ module Middleman::Akcms
       get_directories().each {|dir, articles|
         if articles.find {|a| a.path =~ /#{index_file}$/}.nil?
           new_resources <<
+#            app.proxy("#{dir}#{index_file}", @template, locals: {articles: articles}, ignore: true)
             create_proxy_resource("#{dir}/#{index_file}", {articles: articles})
         end
       }

@@ -7,9 +7,9 @@ module Middleman::Akcms
     include Contracts
 
     Contract Bool
-    def pagination?
+    def paginationable?
       return false unless current_resource.data.pagination
-      return false unless current_resource.locals.has_key? :pagination
+      return false unless current_resource.locals.has_key? :paginator
       true
     end
     
@@ -89,8 +89,10 @@ module Middleman::Akcms
         next if res.ignored? || !res.data.pagination
 
         articles = res.locals[:articles] || @controller.articles
+        ## in the case the resource has no articles to show
+        ##   ( that can happen when psedo directory created)
         if articles.empty?
-          res.add_metadata(locals: {page_articles: [], paginator: {}})
+#          res.add_metadata(locals: {paginator: nil})
           next
         end
         
@@ -105,13 +107,15 @@ module Middleman::Akcms
           meta.next_page = nil
 
           if num == 1
-            res.add_metadata(locals: {page_articles: items, paginator: meta})
+            meta[:articles] = items
+            res.add_metadata(locals: {paginator: meta})
             paginated_resources << res
             prev_page = res
           else
+            meta[:articles] = items
             new_res = create_page_resource(res, num)
             new_res.add_metadata(md)
-            new_res.add_metadata(locals: {page_articles: items, paginator: meta})
+            new_res.add_metadata(locals: {paginator: meta})
             prev_page.locals[:paginator][:next_page] = new_res
             prev_page = new_res
 

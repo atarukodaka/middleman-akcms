@@ -25,11 +25,6 @@ module Middleman::Akcms
       @manipulators[:article].articles
     end
 
-=begin
-    def proxy_resources(id)
-      @manipulators[id].proxy_resources
-    end
-=end
     ## register manipulators
     def register_manipulators
       

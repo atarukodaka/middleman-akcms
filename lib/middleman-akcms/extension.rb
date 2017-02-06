@@ -1,11 +1,12 @@
-require 'contracts'
 require 'hashie'
 
 require 'middleman-akcms/controller'
 require 'middleman-akcms/helpers'
+require 'middleman-akcms/contracts'
 
 ################
 # Array Helper
+=begin
 module Middleman::Akcms
   module FinderArrayHelper
     def find_by(type, value)
@@ -16,7 +17,7 @@ module Middleman::Akcms
     end
   end
 end
-
+=end
 ################
 module Middleman::Akcms
   class Extension < Middleman::Extension
@@ -49,7 +50,7 @@ module Middleman::Akcms
     
     ## Hooks
     def after_configuration
-      Array.include FinderArrayHelper
+      #Array.include FinderArrayHelper
       
       @controller = Middleman::Akcms::Controller.new(self)
       @controller.register_manipulators

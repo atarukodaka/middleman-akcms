@@ -10,7 +10,7 @@ module Middleman::Akcms
       @controller = controller
       @sitemap = controller.extension.app.sitemap
 
-      @controller.app.ignore @template if @template
+#      @controller.app.ignore @template if @template
     end
     
     Contract String, Hash => Middleman::Sitemap::ProxyResource
@@ -24,12 +24,6 @@ module Middleman::Akcms
     Contract Array => Array
     def manipulate_resource_list(resources)
       resources
-    end
-
-    ## abstract    
-    Contract String => String
-    def link(name)
-      name
     end
   end
 end

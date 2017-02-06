@@ -35,14 +35,16 @@ module Middleman::Akcms
     attr_reader :tags, :tag_resources
 
     def initialize(controller)
-      @template = controller.options.tag_template
-      @tags = Hash.new { |h,k| h[k] = [] }
+      controller.app.ignore @template = controller.options.tag_template
       controller.extend ControllerInstanceMethods
+
       super(controller)
     end
 
+    
     Contract Array => Array    
     def manipulate_resource_list(resources)
+      @tags = Hash.new { |h,k| h[k] = [] }
       @tag_resources = {}
       
       @controller.articles.each {|article|

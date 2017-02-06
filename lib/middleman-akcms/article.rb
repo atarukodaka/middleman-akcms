@@ -3,8 +3,8 @@ require 'middleman-akcms/manipulator'
 module Middleman::Akcms
   module Article
     include Contracts
-
-    ## Middleman::Sitemap::Resources to have .controller method
+    
+    ## let Middleman::Sitemap::Resources have .controller method
     def self.extended(base)
       base.class.send(:attr_accessor, :controller)
     end
@@ -32,23 +32,15 @@ module Middleman::Akcms
         "(parser failed)"
       end
     end
-    
+
     ## pager
     Contract Hash => Or[Middleman::Sitemap::Resource, NilClass]
     def prev_article(options = {})
-      if options[:within_category]
-        @controller.articles.find {|a| a.category == category && a.date < date}
-      else
-        @controller.articles.find {|a| a.date < date}
-      end
+      @controller.articles.find {|a| a.date < date}
     end
     Contract Hash => Or[Middleman::Sitemap::Resource, NilClass]
     def next_article(options = {})
-      if options[:within_category]
-        @controller.articles.reverse.find {|a| a.category == category && a.date > date}
-      else
-        @controller.articles.reverse.find {|a| a.date > date}
-      end
+      @controller.articles.reverse.find {|a| a.date > date}
     end
 
     ## called automatically from middleman (this code copied from mm-blog)
@@ -72,12 +64,14 @@ module Middleman::Akcms
         true
       end
     end
-    
+    Middleman::Akcms::Controller.register(:article, self)
+
+    ################
     include Contracts
 
     attr_reader :articles
-
-    Contract Array => Array
+    
+    Contract ArrayOf[Middleman::Sitemap::Resource] => ArrayOf[Middleman::Sitemap::Resource]
     def manipulate_resource_list(resources)
       articles = []
 
@@ -103,6 +97,7 @@ module Middleman::Akcms
     end
     
     private
+    Contract Middleman::Sitemap::Resource => Middleman::Akcms::Article
     def convert_to_article(resource)
       return resource if resource.is_a?(Article)  # return if its already Article class
 
@@ -111,8 +106,6 @@ module Middleman::Akcms
         r.controller = @controller
       }
     end
-
-    Middleman::Akcms::Controller.register(:article, self)
   end  ## class
 end
 
