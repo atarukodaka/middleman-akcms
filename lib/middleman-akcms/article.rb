@@ -1,6 +1,7 @@
 require 'middleman-akcms/manipulator'
 
 module Middleman::Akcms
+  ## methods to be extend to Middleman::Sitemap::Resources for each article
   module Article
     include ::Contracts
     C = Middleman::Akcms::Contracts
@@ -17,8 +18,8 @@ module Middleman::Akcms
     
     Contract Date
     def date
-      return @_date if @_date
-      return @_date = begin; Date.parse(data.date.to_s); rescue ArgumentError; end ||
+      return @_date ||=
+        begin; Date.parse(data.date.to_s); rescue ArgumentError; end ||
         File.mtime(source_file).to_date || Date.new(1970, 1, 1)
     end
     

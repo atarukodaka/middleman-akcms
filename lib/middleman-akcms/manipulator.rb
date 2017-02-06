@@ -4,7 +4,7 @@ module Middleman::Akcms
   module Manipulator
     include ::Contracts
     attr_reader :controller, :sitemap, :template
-    
+
     def set_attributes(controller, template=nil)
       @controller = controller
       @sitemap = controller.extension.app.sitemap
@@ -24,6 +24,7 @@ module Middleman::Akcms
       resources
     end
   end
+=begin
   class MManipulator
     include ::Contracts
     
@@ -49,4 +50,5 @@ module Middleman::Akcms
       resources
     end
   end
-end
+=end
+end  ## module

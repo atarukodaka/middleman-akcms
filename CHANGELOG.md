@@ -7,6 +7,7 @@
   - exclude_dirs
 - escape
 - tagに <>などが入ってたときの処理
+- pagination render まわり再考
 
 ## devel
 ### 0.0.1
