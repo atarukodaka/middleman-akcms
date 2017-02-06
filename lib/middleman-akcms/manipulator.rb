@@ -2,7 +2,7 @@
 ## base class of manipulators
 module Middleman::Akcms
   class Manipulator
-    include Contracts
+    include ::Contracts
     
     attr_reader :controller, :sitemap
 

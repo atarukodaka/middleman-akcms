@@ -3,6 +3,7 @@ module Middleman::Akcms
     @registered = {}
     class << self
       attr_reader :registered
+
       def register(id, klass)
         @registered[id] = klass
       end
@@ -27,7 +28,6 @@ module Middleman::Akcms
 
     ## register manipulators
     def register_manipulators
-      
       require 'middleman-akcms/article'
       require 'middleman-akcms/directory_summary'
       require 'middleman-akcms/archive'

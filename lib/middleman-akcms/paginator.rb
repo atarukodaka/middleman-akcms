@@ -4,8 +4,9 @@ require 'middleman-akcms/manipulator'
 
 module Middleman::Akcms
   module PaginationHelper
-    include Contracts
-
+    include ::Contracts
+    C = Middleman::Akcms::Contracts
+    
     Contract Bool
     def paginationable?
       return false unless current_resource.data.pagination
@@ -65,12 +66,16 @@ module Middleman::Akcms
     end
   
     Middleman::Akcms::Controller.register(:paginator, self)
-
+    ################
+    include Contracts
+    C = Middleman::Akcms::Contracts
+    
     def initialize(controller)
       controller.extension.class.defined_helpers << Middleman::Akcms::PaginationHelper
       super(controller)
     end
-    
+
+    Contract C::Resource, Integer => C::Resource
     def create_page_resource(resource, page_num)
       sitemap = @controller.extension.app.sitemap
       page_url = @controller.options.pagination_page_link % {page_number: page_num}
@@ -82,6 +87,8 @@ module Middleman::Akcms
         Middleman::Sitemap::Resource.new(sitemap, link, resource.source_file)
       end
     end
+    
+    Contract ArrayOf[C::Resource] => ArrayOf[C::Resource]
     def manipulate_resource_list(resources)
       new_resources = []
       

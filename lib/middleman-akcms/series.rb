@@ -8,10 +8,12 @@ module Middleman::Akcms
       end
     end
     Middleman::Akcms::Controller.register(:series, self)
+    ################
 
     include Contracts
+    C = Middleman::Akcms::Contracts
     
-    Contract Array => Array    
+    Contract ArrayOf[C::Resource] => ArrayOf[C::Resource]
     def manipulate_resource_list(resources)
       used_resources = []
       modified_resources  = []
