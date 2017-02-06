@@ -3,13 +3,14 @@ title: Archives
 layout: layout
 date: 2014/11/1
 group: navigation
+type: summary
 pagination:
   per_page: 20
 ---
 
 <h1>Archives</h1>
 
-<% articles = articles || akcms.articles %>
+<% articles ||= akcms.articles %>
 
 <% articles.group_by {|a| Date.new(a.date.year, a.date.month, 1)}.each {|date, articles| %>
   <h3><%= date.strftime("%b %Y") %></h3>

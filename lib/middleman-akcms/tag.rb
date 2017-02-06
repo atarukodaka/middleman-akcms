@@ -43,10 +43,8 @@ module Middleman::Akcms
     attr_reader :tags, :tag_resources
 
     def initialize(controller)
-      controller.app.ignore @template = controller.options.tag_template
       controller.extend ControllerInstanceMethods
-
-      super(controller)
+      super(controller, controller.options.tag_template)
     end
 
     Contract ArrayOf[C::Resource] => ArrayOf[C::Resource]

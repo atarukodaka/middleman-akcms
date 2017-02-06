@@ -1,18 +1,17 @@
 ---
 title: Home
-layout: false
+layout: layout
 date: 2014/11/1
-pagination:
-  per_page: 10
+pagination: true
 ---
 
-<% if true %>
+<% if false %>
 <!-- show first article -->
+<!--   change frontmatter as 'layout: false' -->
 <%= akcms.articles.first.render(layout: :article) %>
 
 <% else %>
 <!-- show recent article summary -->
-<!--   change frontmatter as 'layout: false' -->
-<%= partial("partials/article_summary", locals: {articles: (paginationable? )? paginator.articles : akcms.articles.first(10)}) %>
+<%= partial("partials/article_summary", locals: {articles: (defined?(articles)) ? articles : akcms.articles.first(10)}) %>
 
 <% end %>

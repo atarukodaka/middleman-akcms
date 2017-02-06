@@ -12,7 +12,7 @@ module Middleman::Akcms
     end
 
     class << self
-      def disnable?(controller)
+      def disable?(controller)
         controller.extension.options.archive_template.nil?
       end
     end
@@ -24,16 +24,15 @@ module Middleman::Akcms
     attr_reader :archives, :archive_resources
     
     def initialize(controller)
-      controller.app.ignore @template = controller.options.archive_template
       controller.extend ControllerInstanceMethods
-      super(controller)
+      super(controller, controller.options.archive_template)
     end
     
     Contract ArrayOf[C::Resource] => ArrayOf[C::Resource]
     def manipulate_resource_list(resources)
       @archives = {}
       @archive_resources = {}
-
+ 
       group_by_month(controller.articles).each {|month, articles|
         @archive_resources[month] = create_proxy_resource(link(month), date: month, articles: articles)
         @archives[month] = articles

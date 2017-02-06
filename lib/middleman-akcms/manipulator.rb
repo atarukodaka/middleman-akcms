@@ -6,11 +6,11 @@ module Middleman::Akcms
     
     attr_reader :controller, :sitemap
 
-    def initialize(controller)
+    def initialize(controller, template = nil)
       @controller = controller
       @sitemap = controller.extension.app.sitemap
-
-#      @controller.app.ignore @template if @template
+      @template = template
+      @controller.app.ignore @template if @template
     end
     
     Contract String, Hash => Middleman::Sitemap::ProxyResource

@@ -3,7 +3,7 @@ require 'middleman-akcms/manipulator'
 module Middleman::Akcms
   class DirectorySummaryManipulator < Manipulator
     class << self
-      def disnable?(controller)
+      def disable?(controller)
         controller.extension.options.directory_summary_template.nil?
       end
     end
@@ -13,15 +13,14 @@ module Middleman::Akcms
     C = Middleman::Akcms::Contracts
     
     def initialize(controller)
-      controller.app.ignore @template = controller.options.directory_summary_template
-      super(controller)
+      super(controller, controller.options.directory_summary_template)
     end
-
+    
     Contract ArrayOf[C::Resource] => ArrayOf[C::Resource]
     def manipulate_resource_list(resources)
       new_resources = []
       index_file = controller.app.config[:index_file]
-
+      
       ## create directory summary resources in each dirs
       get_directories().each {|dir, articles|
         if articles.find {|a| a.path =~ /#{index_file}$/}.nil?
@@ -33,6 +32,7 @@ module Middleman::Akcms
       #add_directory_metadata(resources + new_resources)
       (resources + new_resources).map {|res|
         add_directory_metadata(res)
+        res
       }
     end
     ################
