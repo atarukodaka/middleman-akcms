@@ -1,9 +1,9 @@
 
-<% res = resource %>
+<!-- required locals: resource -->
 
 <li>
-  <%= link_to(h(res.metadata[:directory][:name]), res) %>
-  <% children = res.children %>
+  <%= link_to(h(resource.metadata[:directory][:name]), resource) %>
+  <% children = resource.children %>
   <% unless children.empty? %>
   <ul>
     <% children.select {|c| c.path =~ /#{config[:index_file]}$/}.each {|child| %>

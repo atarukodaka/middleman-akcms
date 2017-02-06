@@ -1,17 +1,21 @@
 ---
 title: Home
-layout: layout
+layout: false
 date: 2014/11/1
 pagination: true
 ---
 
-<% if false %>
+<% type = :first_article # :summary %>
+
+<% case type %>
+<% when :first_article %>
 <!-- show first article -->
-<!--   change frontmatter as 'layout: false' -->
+<!--   set layout frontmatter as false -->
 <%= akcms.articles.first.render(layout: :article) %>
 
 <% else %>
 <!-- show recent article summary -->
+<!--   set layout frontmatter as layout -->
 <%= partial("partials/article_summary", locals: {articles: (defined?(articles)) ? articles : akcms.articles.first(10)}) %>
 
 <% end %>

@@ -2,6 +2,7 @@ require 'middleman-akcms/manipulator'
 
 module Middleman::Akcms
   class DirectorySummaryManipulator
+    ## this manipulator will be disabled unless template specified
     class << self
       def disable?(controller)
         controller.extension.options.directory_summary_template.nil?

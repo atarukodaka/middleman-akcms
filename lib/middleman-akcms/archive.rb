@@ -2,6 +2,8 @@ require 'middleman-akcms/manipulator'
 
 module Middleman::Akcms
   class ArchiveManipulator
+
+    ## methods to be extened to controller
     module ControllerInstanceMethods
       def archives
         @manipulators[:archive].archives
@@ -11,6 +13,7 @@ module Middleman::Akcms
       end
     end
 
+    ## this manipulator will be disabled unless template specified
     class << self
       def disable?(controller)
         controller.extension.options.archive_template.nil?

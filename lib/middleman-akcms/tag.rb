@@ -1,6 +1,7 @@
 require 'middleman-akcms/manipulator'
 
 module Middleman::Akcms
+  ## methods to be extend to each article
   module TagInstanceMethods
     def tags
       article_tags = data.tags || data.tag
@@ -15,6 +16,7 @@ module Middleman::Akcms
 
   ################
   class TagManipulator
+    ## methods to be extened to controller
     module ControllerInstanceMethods
       include ::Contracts
       C = Middleman::Akcms::Contracts
@@ -28,6 +30,8 @@ module Middleman::Akcms
         @manipulators[:tag].tag_resources
       end
     end
+
+    ## this manipulator will be disabled unless template specified
     class << self
       def disable?(controller)
         controller.extension.options.tag_template.nil?

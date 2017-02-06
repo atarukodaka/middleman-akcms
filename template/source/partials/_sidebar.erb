@@ -41,8 +41,8 @@
   <aside>
     <h2>MONTHLY ARCHIVES</h2>
     <ul>
-      <% akcms.archive_resources.each {|date_ym, res|%>
-      <li> <%= link_to(date_ym.strftime("%b %Y"), res) %></li>
+      <% akcms.archive_resources.each {|month, res|%>
+      <li> <%= link_to(month.strftime("%b %Y"), res) %></li>
       <% } %>
     </ul>
   </aside>
