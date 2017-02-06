@@ -3,8 +3,8 @@ require 'middleman-akcms/manipulator'
 module Middleman::Akcms
   class DirectorySummaryManipulator < Manipulator
     class << self
-      def enable?(controller)
-        controller.extension.options.directory_summary_template
+      def disnable?(controller)
+        controller.extension.options.directory_summary_template.nil?
       end
     end
     Middleman::Akcms::Controller.register(:directory_summary, self)
@@ -23,7 +23,7 @@ module Middleman::Akcms
       index_file = controller.app.config[:index_file]
 
       ## create directory summary resources in each dirs
-      get_directories(resources).each {|dir, articles|
+      get_directories().each {|dir, articles|
         if articles.find {|a| a.path =~ /#{index_file}$/}.nil?
           new_resources <<
             create_proxy_resource("#{dir}/#{index_file}", {articles: articles})
@@ -38,8 +38,8 @@ module Middleman::Akcms
     ################
     private
     ## directories where any articles exist
-    Contract ArrayOf[C::Resource] => Hash
-    def get_directories(resources)
+    Contract nil => Hash
+    def get_directories
 =begin
       exclude_dirs = ['templates', 'stylesheets', 'javascripts', 'images']
       re = exclude_dirs.join("|")

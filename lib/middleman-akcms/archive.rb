@@ -12,8 +12,8 @@ module Middleman::Akcms
     end
 
     class << self
-      def enable?(controller)
-        controller.extension.options.archive_template
+      def disnable?(controller)
+        controller.extension.options.archive_template.nil?
       end
     end
     Middleman::Akcms::Controller.register(:archive, self)

@@ -37,7 +37,7 @@ module Middleman::Akcms
       require 'middleman-akcms/breadcrumb'
       
       self.class.registered.each {|id, klass|
-        if klass.enable?(self)
+        unless klass.respond_to?(:disable?) && klass.disable?(self)
           app.sitemap.register_resource_list_manipulator(id, @manipulators[id] = klass.new(self))
         end
       }

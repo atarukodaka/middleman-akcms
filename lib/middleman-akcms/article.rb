@@ -36,11 +36,11 @@ module Middleman::Akcms
 
     ## pager
     Contract Hash => Or[C::Resource, nil]
-    def prev_article(options = {})
+    def prev_article
       @controller.articles.find {|a| a.date < date}
     end
     Contract Hash => Or[C::Resource, nil]
-    def next_article(options = {})
+    def next_article
       @controller.articles.reverse.find {|a| a.date > date}
     end
 

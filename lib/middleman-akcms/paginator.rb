@@ -57,12 +57,6 @@ end
 
 module Middleman::Akcms
   class PaginatorManipulator < Manipulator
-    class << self
-      def enable?(controller)
-        true
-      end
-    end
-  
     Middleman::Akcms::Controller.register(:paginator, self)
     ################
     include Contracts
@@ -94,19 +88,10 @@ module Middleman::Akcms
         next if res.ignored? || !res.data.pagination
 
         articles = res.locals[:articles] || @controller.articles
-        ## in the case the resource has no articles to show
-        ##   ( that can happen when psedo directory created)
-        if articles.empty?
-#          res.add_metadata(locals: {paginator: nil})
-          next
-        end
-        
         paginated_resources = []
         md = res.metadata
         prev_page = nil
-
         per_page = (res.data.pagination.is_a? Hash) ? res.data.pagination[:per_page] : @controller.options.pagination_per_page
-
         articles.per_page(per_page).each {|items, num, meta, _is_last|
           meta.prev_page = prev_page
           meta.next_page = nil

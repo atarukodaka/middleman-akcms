@@ -30,8 +30,8 @@ module Middleman::Akcms
     end
     class << self
       Contract Middleman::Akcms::Controller => Bool
-      def enable?(controller)
-        ! controller.extension.options.tag_template.nil?
+      def disable?(controller)
+        controller.extension.options.tag_template.nil?
       end
     end
     Middleman::Akcms::Controller.register(:tag, self)
