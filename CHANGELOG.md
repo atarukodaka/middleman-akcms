@@ -2,13 +2,9 @@
 - rubygems
 - archives の作り再考
 - シリーズ機能
-- pager: within_category を config option へ
-- pagination の作り再考
-- metadata{} は read only
-- add_metadata で値を入れる
-- summary_template.erb
-- pager: within_category
 - directory summary template のデフォルト値は nil か
+- director summary: articles だけではなく resources みるか
+  - exclude_dirs
 
 ## devel
 ### 0.0.1

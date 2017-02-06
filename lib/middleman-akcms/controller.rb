@@ -29,11 +29,12 @@ module Middleman::Akcms
     ## register manipulators
     def register_manipulators
       require 'middleman-akcms/article'
-      require 'middleman-akcms/directory_summary'
       require 'middleman-akcms/archive'
       require 'middleman-akcms/tag'
+      require 'middleman-akcms/directory_summary'
       require 'middleman-akcms/paginator'
       require 'middleman-akcms/series'
+      require 'middleman-akcms/breadcrumb'
       
       self.class.registered.each {|id, klass|
         if klass.enable?(self)

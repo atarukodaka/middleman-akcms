@@ -10,13 +10,14 @@ module Middleman::Akcms
     Middleman::Akcms::Controller.register(:directory_summary, self)
     
     include Contracts
-
+    C = Middleman::Akcms::Contracts
+    
     def initialize(controller)
       controller.app.ignore @template = controller.options.directory_summary_template
       super(controller)
     end
 
-    Contract Array => Array
+    Contract ArrayOf[C::Resource] => ArrayOf[C::Resource]
     def manipulate_resource_list(resources)
       new_resources = []
       index_file = controller.app.config[:index_file]
@@ -30,7 +31,10 @@ module Middleman::Akcms
       }
 
       ## put dir info into metadata[:directory] on all resources
-      add_directory_metadata(resources + new_resources)
+      #add_directory_metadata(resources + new_resources)
+      (resources + new_resources).map {|res|
+        add_directory_metadata(res)
+      }
     end
     ################
     private
@@ -51,18 +55,18 @@ module Middleman::Akcms
       return dirs.merge(new_dirs)
     end
 
-    Contract Array => Array
-    def add_directory_metadata(resources)
-      resources.map {|res|
-        dir_name = nil;
-        dir_path = File.dirname(res.path)
-        if config_res = @sitemap.find_resource_by_path(File.join(dir_path, "config.yml"))
-          yml = YAML::load(config_res.render(layout: false))
-          dir_name = yml["display_name"]
-        end
-        dir_name ||= (((dn = dir_path.split("/").last) == ".") ? nil : dn)
-        res.tap {|r| r.add_metadata(directory: { path: dir_path, name: dir_name})}
-      }
+    Contract C::Resource => C::Resource
+    def add_directory_metadata(resource)
+      dir_name = nil;
+      dir_path = File.dirname(resource.path)
+
+      if config_res = @sitemap.find_resource_by_path(File.join(dir_path, "config.yml"))
+        yml = YAML::load(config_res.render(layout: false))
+        dir_name = yml["display_name"]
+      end
+      dir_name ||= (((dn = dir_path.split("/").last) == ".") ? nil : dn)
+#      {directory: { path: dir_path, name: dir_name}}
+      resource.tap {|r| r.add_metadata(directory: { path: dir_path, name: dir_name})}
     end
   end ## class
 end
