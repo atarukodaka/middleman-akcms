@@ -1,0 +1,16 @@
+---
+title: Tags
+layout: layout
+group: navigation
+type: page
+---
+
+<h1>Tags</h1>
+
+<ul>
+    <% akcms.tag_resources.each {|name, res| %>
+  <li>
+    <%= link_to(name, res) %> (<%= akcms.tags[name].size %>)
+  </li>
+    <% } %>
+</ul>
