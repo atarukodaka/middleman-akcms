@@ -2,9 +2,9 @@
 <footer>
   <nav class="text-center">
     <ul class="pagination">
-      <%= pagination_render(:prev_page, label: "&laquo;") %>
+      <%= pagination_render(:prev_page, label: "&laquo;".html_safe) %>
       <%= pagination_render(:pages, max_display: 8) %>
-      <%= pagination_render(:next_page, label: "&raquo;") %>
+      <%= pagination_render(:next_page, label: "&raquo;".html_safe) %>
     </ul>
   </nav>
 </footer>

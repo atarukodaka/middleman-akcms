@@ -47,7 +47,7 @@ module Middleman::Akcms
       end
       list.map do |res|
         cls = "page-item" + ((res == current_resource) ? ' active' : '')
-        content_tag(:li, link_to(res.locals[:paginator][:page_number], res), :class=>cls)
+        content_tag(:li, link_to(h(res.locals[:paginator][:page_number]), res), :class=>cls)
       end.join
     end
   end  ## module

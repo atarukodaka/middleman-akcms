@@ -5,6 +5,8 @@
 - directory summary template のデフォルト値は nil か
 - director summary: articles だけではなく resources みるか
   - exclude_dirs
+- escape
+- tagに <>などが入ってたときの処理
 
 ## devel
 ### 0.0.1

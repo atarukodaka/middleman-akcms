@@ -38,7 +38,6 @@ module Middleman::Akcms
       
       self.class.registered.each {|id, klass|
         unless klass.respond_to?(:disable?) && klass.disable?(self)
-          puts klass
           app.sitemap.register_resource_list_manipulator(id, @manipulators[id] = klass.new(self))
         end
       }

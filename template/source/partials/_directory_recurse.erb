@@ -2,7 +2,7 @@
 <% res = resource %>
 
 <li>
-  <%= link_to(res.metadata[:directory][:name], res) %>
+  <%= link_to(h(res.metadata[:directory][:name]), res) %>
   <% children = res.children %>
   <% unless children.empty? %>
   <ul>

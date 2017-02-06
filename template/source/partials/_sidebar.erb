@@ -23,7 +23,7 @@
       <li>
 	<% akcms.tag_resources.each {|name, res| %>
 	<% size = akcms.tags[name].size %>
-	<%= link_to("#{name}<span>#{size}</span>", res) %>
+	<%= link_to("#{h(name)}<span>#{size}</span>", res) %>
 	<% } %>
       </li>
     </ul>
@@ -33,7 +33,7 @@
     <h2>RECENT</h2>
     <ul>
       <% akcms.articles.first(10).each {|page| %>
-      <li> <%= link_to(page.title, page) %></li>
+      <li> <%= link_to(h(page.title), page) %></li>
       <% } %>
     </ul>
   </aside>
