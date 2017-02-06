@@ -47,7 +47,6 @@ module Middleman::Akcms
         content_tag(:li, link_to(res.metadata[:directory][:name] || res.data.title, res))
       }
       items << content_tag(:li, link_to(top_page.data.title, top_page)) if items.empty?
-      
       items << (content_tag(:li, yield_content(:title) || resource.data.title))
       
       return content_tag(:nav, :class=>"crumbs") do

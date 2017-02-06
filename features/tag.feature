@@ -22,11 +22,14 @@ Feature: tag
 
     And a file named "source/tags.html.erb" with:
       """
-      <ul>
-        <% akcms.tag_resources.each {|name, res| %>
-	  <li><%= link_to(name, res) %></li>
-	<% } %>
-      </ul>
+      <% akcms.tag_resources.each {|name, res| %>
+      - <%= link_to(name, res) %>
+      <% } %>
+
+      <% akcms.tags.each {|name, articles| %>
+      - <%= name %>: <%= articles.size %>
+      <% } %>
+
       """
 
     And a file named "source/tag_template.html.erb" with:
@@ -49,6 +52,7 @@ Feature: tag
     Then the status code should be "200"
     And I should see "fps.html"
     And I should see "noobs.html"
+    And I should see "- fps: 1"    
     
     When I go to "/tags/noobs.html"
     Then the status code should be "200"
