@@ -16,7 +16,7 @@ module Middleman::Akcms
 
   ################
   class TagManipulator
-    ## methods to be extened to controller
+    ## methods to be extended to controller
     module ControllerInstanceMethods
       include ::Contracts
       C = Middleman::Akcms::Contracts
@@ -59,7 +59,7 @@ module Middleman::Akcms
       @controller.articles.each {|article|
         article.extend TagInstanceMethods
         article.tags.each {|tag|
-          @tag_resources[tag] ||= create_proxy_resource(link(tag), tag_name: tag, articles: [])
+          @tag_resources[tag] ||= create_proxy_resource(link(tag), locals: {tag_name: tag, articles: []})
           @tag_resources[tag].locals[:articles] << article
           @tags[tag] << article
         }

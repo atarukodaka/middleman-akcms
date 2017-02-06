@@ -3,7 +3,7 @@ require 'middleman-akcms/manipulator'
 module Middleman::Akcms
   class ArchiveManipulator
 
-    ## methods to be extened to controller
+    ## methods to be extended to controller
     module ControllerInstanceMethods
       def archives
         @manipulators[:archive].archives
@@ -38,7 +38,7 @@ module Middleman::Akcms
       @archive_resources = {}
  
       group_by_month(controller.articles).each {|month, articles|
-        @archive_resources[month] = create_proxy_resource(link(month), date: month, articles: articles)
+        @archive_resources[month] = create_proxy_resource(link(month), locals: {date: month, articles: articles})
         @archives[month] = articles
       }
       return resources + @archive_resources.values.sort_by {|res| res.locals[:date]}.reverse

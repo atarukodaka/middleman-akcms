@@ -28,7 +28,7 @@ module Middleman::Akcms
       get_directories().each {|dir, articles|
         if articles.find {|a| a.path =~ /#{index_file}$/}.nil?
           new_resources <<
-            create_proxy_resource("#{dir}/#{index_file}", {articles: articles})
+            create_proxy_resource("#{dir}/#{index_file}", locals: {articles: articles})
         end
       }
       ## put dir info into metadata[:directory] on all resources
