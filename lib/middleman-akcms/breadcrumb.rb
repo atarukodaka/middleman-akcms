@@ -21,12 +21,11 @@ module Middleman::Akcms
     def manipulate_resource_list(resources)
       resources.each {|res|
         ancestors = []
-        if true  # resource.source_file != controller.app.sitemap.find_resource_by_path("/").source_file
-          p = res.parent
-          while p
-            ancestors.unshift(p)
-            p = p.parent
-          end
+        #if resource.source_file != controller.app.sitemap.find_resource_by_path("/").source_file
+        p = res.parent
+        while p
+          ancestors.unshift(p)
+          p = p.parent
         end
         res.add_metadata({ancestors: ancestors})
       }
@@ -45,10 +44,10 @@ module Middleman::Akcms
     def breadcrumb(resource)
       ## return content tags
       items = resource.metadata[:ancestors].map {|res|
-        content_tag(:li) do
-          link_to(res.metadata[:directory][:name] || res.data.title, res)
-        end
+        content_tag(:li, link_to(res.metadata[:directory][:name] || res.data.title, res))
       }
+      items << content_tag(:li, link_to(top_page.data.title, top_page)) if items.empty?
+      
       items << (content_tag(:li, yield_content(:title) || resource.data.title))
       
       return content_tag(:nav, :class=>"crumbs") do

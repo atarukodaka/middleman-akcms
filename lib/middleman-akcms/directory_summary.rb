@@ -23,13 +23,12 @@ module Middleman::Akcms
       index_file = controller.app.config[:index_file]
 
       ## create directory summary resources in each dirs
-      get_directories().each {|dir, articles|
+      get_directories(resources).each {|dir, articles|
         if articles.find {|a| a.path =~ /#{index_file}$/}.nil?
           new_resources <<
             create_proxy_resource("#{dir}/#{index_file}", {articles: articles})
         end
       }
-
       ## put dir info into metadata[:directory] on all resources
       #add_directory_metadata(resources + new_resources)
       (resources + new_resources).map {|res|
@@ -39,9 +38,15 @@ module Middleman::Akcms
     ################
     private
     ## directories where any articles exist
-    Contract nil => Hash
-    def get_directories
-      dirs = @controller.articles.group_by {|a| File.dirname(a.path)}
+    Contract ArrayOf[C::Resource] => Hash
+    def get_directories(resources)
+=begin
+      exclude_dirs = ['templates', 'stylesheets', 'javascripts', 'images']
+      re = exclude_dirs.join("|")
+
+      dirs = resources.reject {|r| r.ignored || r.path =~ /^#{re}/}.group_by {|r| File.dirname(r.path)}
+=end
+       dirs = @controller.articles.group_by {|a| File.dirname(a.path)}
 
       ## find parent directories where any articles doesnt exist
       new_dirs = {}

@@ -40,5 +40,5 @@
 #### feature-extensions branch
 - tags[], archives[] の中身を proxy ではなく articles に
 - 各proxy は akcms.proxy_resources[:tag][tag_name] で取るように
-
-- 
+- breadcrumb を別に。ancestors を meatdataに持つ
+- type: に "article" 以外を指定すると articles とみなさない

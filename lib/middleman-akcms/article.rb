@@ -85,7 +85,7 @@ module Middleman::Akcms
         end
 
         ## ".html" regarded as 'article'
-        if res.ext == ".html"
+        if res.ext == ".html" && !(res.data.type && res.data.type != "article")
           article = convert_to_article(res)
           next if article.data.published == false
           articles << article
