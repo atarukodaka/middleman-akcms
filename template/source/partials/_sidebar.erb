@@ -22,7 +22,7 @@
     <ul class="tag_box inline">
       <li>
 	<% akcms.tag_resources.each {|name, res| %>
-	<% size = res.locals[:articles].size %>
+	<% size = akcms.tags[name].size %>
 	<%= link_to("#{name}<span>#{size}</span>", res) %>
 	<% } %>
       </li>

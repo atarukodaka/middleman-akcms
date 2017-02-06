@@ -10,7 +10,7 @@ Feature: pagination
       pagination:
         per_page: 2
       ---
-      <% paginator.articles.each {|article| %>
+      <% articles.each {|article| %>
         - title: <%= article.title %>
       <% } %>
       <%= paginator.page_number %> / <%= paginator.num_pages %>
@@ -75,7 +75,7 @@ Feature: pagination
       pagination:
         per_page: 2
       ---
-      <% paginator.articles.each {|article| %>
+      <% articles.each {|article| %>
         - title: <%= article.title %>
       <% } %>
       <%= pagination_render(:prev_page, label: "&laquo;") %>

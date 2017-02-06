@@ -8,10 +8,8 @@ module Middleman::Akcms
     C = Middleman::Akcms::Contracts
     
     Contract Bool
-    def paginationable?
-      return false unless current_resource.data.pagination
-      return false unless current_resource.locals.has_key? :paginator
-      true
+    def pagination?
+      (current_resource.data.pagination && current_resource.locals.has_key?(:paginator)) ? true : false
     end
     
     def pagination_render(type, label: nil, max_display: 10)
@@ -114,15 +112,17 @@ module Middleman::Akcms
           meta.next_page = nil
 
           if num == 1
-            meta[:articles] = items
+            #meta[:articles] = items
+            res.add_metadata(locals: {articles: items})
             res.add_metadata(locals: {paginator: meta})
             paginated_resources << res
             prev_page = res
           else
-            meta[:articles] = items
+            #meta[:articles] = items
             new_res = create_page_resource(res, num)
             new_res.add_metadata(md)
             new_res.add_metadata(locals: {paginator: meta})
+            new_res.add_metadata(locals: {articles: items})
             prev_page.locals[:paginator][:next_page] = new_res
             prev_page = new_res
 

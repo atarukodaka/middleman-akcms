@@ -18,15 +18,13 @@ module Middleman::Akcms
 
     Contract Array => Array
     def manipulate_resource_list(resources)
-      ## directories where any articles exist
       new_resources = []
       index_file = controller.app.config[:index_file]
 
-      ## create dir summary resources in each dirs
+      ## create directory summary resources in each dirs
       get_directories().each {|dir, articles|
         if articles.find {|a| a.path =~ /#{index_file}$/}.nil?
           new_resources <<
-#            app.proxy("#{dir}#{index_file}", @template, locals: {articles: articles}, ignore: true)
             create_proxy_resource("#{dir}/#{index_file}", {articles: articles})
         end
       }
@@ -36,6 +34,7 @@ module Middleman::Akcms
     end
     ################
     private
+    ## directories where any articles exist
     Contract nil => Hash
     def get_directories
       dirs = @controller.articles.group_by {|a| File.dirname(a.path)}

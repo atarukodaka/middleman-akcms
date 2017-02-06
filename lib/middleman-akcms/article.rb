@@ -12,7 +12,7 @@ module Middleman::Akcms
     
     Contract String
     def title
-      data.title.to_s || "(untitled)"
+      (data.title || "(untitled)").to_s
     end
     
     Contract Date
