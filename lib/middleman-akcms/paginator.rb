@@ -85,7 +85,7 @@ module Middleman::Akcms
     def paginated_resources_for_navigation(resource, max_display = 10)
       current_resource = resource
       page_number = current_resource.locals[:paginator][:page_number]
-      pages = current_resource.locals[:paginator][:paginated_resources] || []
+      pages = current_resource.locals[:paginator][:paginated_resources]
 
       list = [pages[page_number-1]]
       i = 1
