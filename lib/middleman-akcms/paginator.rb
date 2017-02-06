@@ -1,42 +1,14 @@
 require 'middleman-akcms/manipulator'
 
 ## helper
-
 module Middleman::Akcms
   module PaginationHelper
     include ::Contracts
-    C = Middleman::Akcms::Contracts
-    
+
     Contract Bool
     def pagination?
       (current_resource.data.pagination && current_resource.locals.has_key?(:paginator)) ? true : false
     end
-    
-=begin
-    Contract Integer => ArrayOf[C::Resource]
-    def pagination_display_pages(max_display = 10)
-      page_number = current_resource.locals[:paginator][:page_number]
-      pages = current_resource.locals[:paginator][:paginated_resources] || []
-
-      list = [pages[page_number-1]]
-      i = 1
-      cnt = 1
-
-      while cnt < max_display
-        if unreached_bottom = (page_number+i-1 < pages.size)
-          list.push pages[page_number+i-1]
-          cnt = cnt + 1
-        end
-        if unreached_top = (page_number-i > 0)
-          list.unshift pages[page_number-i-1]
-          cnt = cnt + 1
-        end
-        i += 1
-        break if !unreached_bottom && !unreached_top
-      end
-      return list
-    end
-=end    
   end  ## module
 end
 
@@ -67,30 +39,6 @@ module Middleman::Akcms
       end
     end
 
-    def paginated_resources_for_navigation(resource, max_display = 10)
-      current_resource = resource
-      page_number = current_resource.locals[:paginator][:page_number]
-      pages = current_resource.locals[:paginator][:paginated_resources] || []
-
-      list = [pages[page_number-1]]
-      i = 1
-      cnt = 1
-
-      while cnt < max_display
-        if unreached_bottom = (page_number+i-1 < pages.size)
-          list.push pages[page_number+i-1]
-          cnt = cnt + 1
-        end
-        if unreached_top = (page_number-i > 0)
-          list.unshift pages[page_number-i-1]
-          cnt = cnt + 1
-        end
-        i += 1
-        break if !unreached_bottom && !unreached_top
-      end
-      return list
-    end
-    
     Contract ArrayOf[C::Resource] => ArrayOf[C::Resource]
     def manipulate_resource_list(resources)
       new_resources = []
@@ -129,6 +77,33 @@ module Middleman::Akcms
         }
       }  # resources
       resources + new_resources
+    end
+
+    ## if u have100 pages for navigation and in 8th resource,
+    ## u will get like 4..13th resources as array
+    Contract C::Resource, Integer => ArrayOf[C::Resource]
+    def paginated_resources_for_navigation(resource, max_display = 10)
+      current_resource = resource
+      page_number = current_resource.locals[:paginator][:page_number]
+      pages = current_resource.locals[:paginator][:paginated_resources] || []
+
+      list = [pages[page_number-1]]
+      i = 1
+      cnt = 1
+
+      while cnt < max_display
+        if unreached_bottom = (page_number+i-1 < pages.size)
+          list.push pages[page_number+i-1]
+          cnt = cnt + 1
+        end
+        if unreached_top = (page_number-i > 0)
+          list.unshift pages[page_number-i-1]
+          cnt = cnt + 1
+        end
+        i += 1
+        break if !unreached_bottom && !unreached_top
+      end
+      return list
     end
   end ## class
 end
