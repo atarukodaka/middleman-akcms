@@ -19,7 +19,7 @@ module Middleman::Akcms
       require 'oga'
       begin
         doc = Oga.parse_html(resource.render(layout: false))
-        doc.xpath('.//text()').text.delete("\n")[0..length]
+        doc.xpath('.//text()').text.delete("\n")[0...length]
       rescue
         "(parser failed)"
       end

@@ -11,7 +11,7 @@ Feature: summary
 
     And a file named "source/summary.html.erb" with:
       """
-      <%= app.sitemap.find_resource_by_path("/index.html").summary(10) %>
+      <%= akcms.summary(top_page, 10) %>
       """
 
     And the Server is running at "basic-app"
@@ -19,4 +19,4 @@ Feature: summary
     When I go to "/summary.html"
     Then the status code should be "200"
     And I should see "1234567890"
-    And I should not see "abcdefg"
+    And I should not see "a"
