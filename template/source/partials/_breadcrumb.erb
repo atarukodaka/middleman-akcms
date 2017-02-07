@@ -1,0 +1,16 @@
+<nav>
+  <ol class="breadcrumb">
+    <li><%= link_to(akcms.options.top_page_default_label, top_page) %></li>
+    <% current_resource.metadata[:ancestors].reverse.map do |res| %>
+    <% next if res == top_page() %>
+    <li>
+      <%= link_to(h(res.data.title || res.metadata[:directory][:name]), res, :class=>"breadcrumb-item") %>
+    </li>
+    <% end%>
+    <li class="active">
+      <%= h(yield_content(:title) || current_resource.data.title) %>
+    </li>
+  </ol>
+</nav>
+
+         

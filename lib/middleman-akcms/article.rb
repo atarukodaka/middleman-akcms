@@ -22,19 +22,6 @@ module Middleman::Akcms
         File.mtime(source_file).to_date || Date.new(1970, 1, 1)
     end
     
-=begin
-    Contract Integer => String
-    def summary(length=nil)
-      require 'oga'
-      length ||= controller.options.summary_length || 250
-      begin
-        doc = Oga.parse_html(render(layout: false))
-        doc.xpath('.//text()').text.delete("\n")[0..length]
-      rescue
-        "(parser failed)"
-      end
-    end
-=end
     ## pager
     Contract Hash => Or[Middleman::Sitemap::Resource, nil]
     def prev_article

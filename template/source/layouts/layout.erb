@@ -35,7 +35,8 @@
       <div class="row">
 	<div class="col-sm-9">
 	  <div id="main">
-	    <%= breadcrumb(current_resource) %>
+	    <!-- %= breadcrumb(current_resource) % -->
+	    <%= partial("partials/breadcrumb") %>
 	    <%= yield %>
 	    <%= partial("partials/pagination") %>
 	  </div>

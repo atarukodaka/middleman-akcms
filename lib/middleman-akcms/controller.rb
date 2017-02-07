@@ -43,7 +43,7 @@ module Middleman::Akcms
       require 'middleman-akcms/directory_summary'
       require 'middleman-akcms/paginator'
       require 'middleman-akcms/series'
-      require 'middleman-akcms/breadcrumb'
+      require 'middleman-akcms/ancestors'
       
       self.class.registered.each {|id, klass|
         unless klass.respond_to?(:disable?) && klass.disable?(self)
