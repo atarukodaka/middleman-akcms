@@ -19,49 +19,25 @@ module Middleman::Akcms
       set_attributes(controller, controller.options.directory_summary_template)
     end
     
-    Contract ArrayOf[C::Resource] => ArrayOf[C::Resource]
     def manipulate_resource_list(resources)
-      new_resources = []
       index_file = controller.app.config[:index_file]
+      new_resources = []
       
-      ## create directory summary resources in each dirs
-      get_directories().each {|dir, articles|
-        if articles.find {|a| a.path =~ /#{index_file}$/}.nil?
-          new_resources <<
-            create_proxy_resource("#{dir}/#{index_file}", locals: {articles: articles})
+      dirs = @controller.articles.group_by {|a| File.dirname(a.path).sub(/^\.$/, "")}
+      dirs.each do |dir, articles|
+        dir.split('/').inject("") do |result, part|
+          dir_index_fname = Middleman::Util.normalize_path(File.join(result, part, index_file))
+          if (resources + new_resources).find {|res| res.path == dir_index_fname}.nil?
+            new_resources <<
+              create_proxy_resource(dir_index_fname, locals: {articles: articles})
+          end
+          [result, part]
         end
-      }
-      ## put dir info into metadata[:directory] on all resources
-      #add_directory_metadata(resources + new_resources)
+      end
       (resources + new_resources).map {|res|
         add_directory_metadata(res)
         res
       }
-    end
-    ################
-    private
-    ## directories where any articles exist
-    Contract nil => Hash
-    def get_directories
-=begin
-      exclude_dirs = ['templates', 'stylesheets', 'javascripts', 'images']
-      re = exclude_dirs.join("|")
-
-      dirs = resources.reject {|r| r.ignored || r.path =~ /^#{re}/}.group_by {|r| File.dirname(r.path)}
-=end
-      dirs = @controller.articles.group_by {|a| File.dirname(a.path)}
-
-      ## find parent directories where any articles doesnt exist
-      new_dirs = {}
-      dirs.each {|dir, _articles|
-        d = File.dirname(dir)
-        while d != "."  # "." means top dir
-          new_dirs[d] = [] if ! dirs.has_key? d
-          d = File.dirname(d)
-        end
-      }
-      dirs.delete(".")   # yet ? /index.html
-      return dirs.merge(new_dirs)
     end
 
     Contract C::Resource => C::Resource
@@ -74,9 +50,56 @@ module Middleman::Akcms
         dir_name = yml["display_name"]
       end
       dir_name ||= (((dn = dir_path.split("/").last) == ".") ? nil : dn)
-#      {directory: { path: dir_path, name: dir_name}}
       resource.tap {|r| r.add_metadata(directory: { path: dir_path, name: dir_name})}
     end
+
+    
+=begin      
+    Contract ArrayOf[C::Resource] => ArrayOf[C::Resource]
+    def _manipulate_resource_list(resources)
+      new_resources = []
+      index_file = controller.app.config[:index_file]
+      
+      ## create directory summary resources in each dirs
+
+      get_directories().each {|dir, articles|
+        #if articles.find {|a| a.path =~ /#{index_file}$/}.nil?
+        if resources.find {|res| res.path == File.join(Middleman::Util.normalize_path(File.join(dir, index_file)))}.nil?
+          puts "-- add proxy: #{dir}/#{index_file}"
+          new_resources <<
+            create_proxy_resource("#{dir}/#{index_file}", locals: {articles: articles})
+        end
+      }
+      ## put dir info into metadata[:directory] on all resources
+      #add_directory_metadata(resources + new_resources)
+      (resources + new_resources).map {|res| add_directory_metadata(res) }
+    end
+    ################
+    private
+    ## directories where any articles exist
+    Contract nil => Hash
+    def get_directories
+
+      new_dirs = {}
+      dirs = @controller.articles.group_by {|a| File.dirname(a.path)}
+
+      ## find parent directories where any articles doesnt exist
+        
+      dirs.each {|dir, _articles|
+        d = File.dirname(dir)
+        while d != "."  # "." means top dir
+          new_dirs[d] = [] if ! dirs.has_key? d
+          d = File.dirname(d)
+        end
+      }
+      #dirs.delete(".")   # yet ? /index.html
+      if dirs.has_key? "."
+        dirs[""] = dirs["."]
+        dirs.delete(".")
+      end
+      return dirs.merge(new_dirs)
+    end
+=end
   end ## class
 end
 

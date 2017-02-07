@@ -29,7 +29,6 @@ module Middleman::Akcms
 
     Contract C::Resource, Integer, Hash => C::Resource
     def create_page_resource(resource, page_num, metadata = {})
-      #sitemap = @controller.extension.app.sitemap
       page_url = @controller.options.pagination_page_link % {page_number: page_num}
       link = resource.path.sub(%r{(^|/)([^/]*)\.([^/]*)$}, "\\1\\2-#{page_url}.\\3")
 
@@ -38,6 +37,7 @@ module Middleman::Akcms
       else
         Middleman::Sitemap::Resource.new(@sitemap, link, resource.source_file)
       end.tap do |res|
+        res.add_metadata(resource.metadata)
         res.add_metadata(metadata) unless metadata.empty?
       end
     end
@@ -72,9 +72,7 @@ module Middleman::Akcms
             paginated_resources << res
             prev_page = res
           else             # new pager resource 2-
-            new_res = create_page_resource(res, num, md).tap do|p|
-              p.add_metadata(locals)
-            end
+            new_res = create_page_resource(res, num, locals)
             prev_page.locals[:paginator][:next_page] = new_res
             paginated_resources << new_res
             prev_page = new_res
@@ -92,7 +90,7 @@ module Middleman::Akcms
     end
 
     ## if u have100 pages for navigation and in 8th resource,
-    ## u will get like 4..13th resources as array
+    ## u wld get like 4..13th resources as array
     Contract C::Resource, Integer => ArrayOf[C::Resource]
     def paginated_resources_for_navigation(resource, max_display = 10)
       current_resource = resource

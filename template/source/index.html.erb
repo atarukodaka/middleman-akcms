@@ -1,11 +1,10 @@
 ---
 title: Home
-layout: false
+layout: layout
 date: 2014/11/1
-type: summary
 ---
 
-<% type = :first_article # :summary %>
+<% type = :summary # :first_article # :summary %>
 
 <% case type %>
 <% when :first_article %>
@@ -13,10 +12,10 @@ type: summary
 <!--   set layout frontmatter as false -->
 <%= akcms.articles.first.render(layout: :article) %>
 
-<% :summary %>
+<% when :summary %>
 <!-- show recent article summary -->
 <!--   set layout frontmatter as layout -->
-<%= partial("partials/article_summary", locals: {articles: (defined?(articles)) ? articles : akcms.articles.first(10)}) %>
+<%= partial("partials/article_summary", locals: {articles: akcms.articles.first(10)}) %>
 
 <% else %>
 
