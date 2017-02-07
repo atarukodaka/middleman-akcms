@@ -6,6 +6,7 @@
 - app.config on initialize
 - paginator feature
 - directory summary: home dir name config ?
+- ancestors, breadcrump まわり、foo.html と foo/index.html のバッティング
 
 ## devel
 ### 0.0.1

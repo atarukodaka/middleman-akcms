@@ -27,6 +27,7 @@ module Middleman::Akcms
       
       @controller.articles.group_by {|a| dirname(a.path) }.each do |dir, articles|
         dir.split('/').inject("") do |result, part|
+
           dir_index_fname = normalize_path(File.join(result, part, index_file))
           ## if directory index doesnt exists, create and add it into new resource
           if (resources + new_resources).find {|res| res.path == dir_index_fname}.nil?
@@ -36,6 +37,8 @@ module Middleman::Akcms
           [result, part]
         end
       end
+      new_resources << create_proxy_resource(index_file) if ! resources.find {|res| res.path == index_file }
+      # binding.pry
       (resources + new_resources).map {|res| add_directory_metadata(res) }
     end
 
