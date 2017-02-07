@@ -10,7 +10,7 @@
   </div>
   <div class="collapse navbar-collapse" id="topHeader">
     <ul class="nav navbar-nav">
-      <li><%= link_to("Home", top_page()) %></li>
+      <li><%= link_to(top_page.data.title || akcms.options.top_page_default_label, top_page) %></li>
       <% sitemap.resources.select {|p|
 	 p.data.group == "navigation" && (!p.locals.has_key?(:paginator) || p.locals[:paginator].page_number == 1)}.
 	 each do |page| %>

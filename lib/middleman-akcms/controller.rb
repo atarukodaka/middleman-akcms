@@ -1,3 +1,6 @@
+require 'contracts'
+require 'middleman-akcms/summary'
+
 module Middleman::Akcms
   class Controller
     @registered = {}
@@ -18,9 +21,15 @@ module Middleman::Akcms
       @app = extension.app
       @options = extension.options
       @manipulators = {}
+
+      @summarize = Summarize.new(options.summarizer || OgaSummaizer)
     end
 
-    ## accessors to contents in each manipulator
+    def summary(resource, length=nil)
+      length ||= options.summary_length || 250
+      @summarize.summary(resource, length)
+    end
+                
     Contract Array
     def articles
       @manipulators[:article].articles

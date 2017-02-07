@@ -32,6 +32,12 @@ module Middleman::Akcms
 
     ## series settings
     option :series_title_template, "%{name} #%{number}: %{title}" 
+
+    ## label
+    option :top_page_default_label, "Home"
+
+    ## summarizer
+    option :summarizer, OgaSummarizer
     
     ## Hooks
     def after_configuration

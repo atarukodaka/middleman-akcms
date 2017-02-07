@@ -6,6 +6,7 @@
 - paginator feature
 - directory summary: home dir name config ?
 - ancestors, breadcrump まわり、foo.html と foo/index.html のバッティング
+- article module 廃止: title, date, summary
 
 ## devel
 ### 0.0.1

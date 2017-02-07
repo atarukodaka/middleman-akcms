@@ -40,7 +40,7 @@ module Middleman::Akcms
       items = resource.metadata[:ancestors].map {|res|
         content_tag(:li, link_to(h(res.metadata[:directory][:name] || res.data.title), res))
       }
-      items << content_tag(:li, link_to(h(top_page.data.title || "Home"), top_page)) if items.empty?
+      items << content_tag(:li, link_to(h(top_page.data.title || akcms.options.top_page_default_label), top_page)) if items.empty?
       items << (content_tag(:li, h(yield_content(:title) || resource.data.title))) unless resource.source_file == top_page.source_file
 
       return content_tag(:nav, :class=>"crumbs") do

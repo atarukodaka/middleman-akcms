@@ -22,6 +22,7 @@ module Middleman::Akcms
         File.mtime(source_file).to_date || Date.new(1970, 1, 1)
     end
     
+=begin
     Contract Integer => String
     def summary(length=nil)
       require 'oga'
@@ -33,7 +34,7 @@ module Middleman::Akcms
         "(parser failed)"
       end
     end
-
+=end
     ## pager
     Contract Hash => Or[Middleman::Sitemap::Resource, nil]
     def prev_article
