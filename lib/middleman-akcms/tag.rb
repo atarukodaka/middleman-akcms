@@ -49,7 +49,7 @@ module Middleman::Akcms
       set_attributes(controller, controller.options.tag_template)
     end
 
-    Contract ArrayOf[Resource] => ArrayOf[Resource]
+    Contract ResourceList => ResourceList
     def manipulate_resource_list(resources)
       @tags = Hash.new { |h,k| h[k] = [] }
       @tag_resources = {}

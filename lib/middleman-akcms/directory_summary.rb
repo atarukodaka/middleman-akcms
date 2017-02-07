@@ -19,7 +19,7 @@ module Middleman::Akcms
       set_attributes(controller, controller.options.directory_summary_template)
     end
 
-    Contract ArrayOf[Resource] => ArrayOf[Resource]
+    Contract ResourceList => ResourceList
     def manipulate_resource_list(resources)
       index_file = controller.app.config[:index_file]
       new_resources = []
@@ -39,7 +39,7 @@ module Middleman::Akcms
       (resources + new_resources).map {|res| add_directory_metadata(res) }
     end
 
-    Contract Resource => Resource
+    Contract C::Resource => C::Resource
     def add_directory_metadata(resource)
       home_dir_name = "Home"  # yet: to be config ??
       dir_path = File.dirname(resource.path)

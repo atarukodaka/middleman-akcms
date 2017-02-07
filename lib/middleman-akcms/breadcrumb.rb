@@ -34,7 +34,7 @@ module Middleman::Akcms
   module BreadcrumbHelper
     include Contracts
     
-    Contract Resource => String
+    Contract C::Resource => String
     def breadcrumb(resource)
       ## return content tags
       items = resource.metadata[:ancestors].map {|res|

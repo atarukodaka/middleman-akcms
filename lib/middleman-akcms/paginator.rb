@@ -26,7 +26,7 @@ module Middleman::Akcms
       set_attributes(controller)
     end
 
-    Contract Resource, Integer, Hash => Resource
+    Contract Middleman::Sitemap::Resource, Integer, Hash => Middleman::Sitemap::Resource
     def create_page_resource(resource, page_num, metadata = {})
       page_url = @controller.options.pagination_page_link % {page_number: page_num}
       link = resource.path.sub(%r{(^|/)([^/]*)\.([^/]*)$}, "\\1\\2-#{page_url}.\\3")
@@ -41,7 +41,7 @@ module Middleman::Akcms
       end
     end
 
-    Contract ArrayOf[Resource] => ArrayOf[Resource]
+    Contract ResourceList => ResourceList
     def manipulate_resource_list(resources)
       controller.app.logger.debug("-- paginator manipulation")
       new_resources = []
@@ -90,7 +90,7 @@ module Middleman::Akcms
 
     ## if u have100 pages for navigation and in 8th resource,
     ## u wld get like 4..13th resources as array
-    Contract Resource, Integer => ArrayOf[Resource]
+    Contract Middleman::Sitemap::Resource, Integer => ResourceList
     def paginated_resources_for_navigation(resource, max_display = 10)
       current_resource = resource
       page_number = current_resource.locals[:paginator][:page_number]

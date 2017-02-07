@@ -35,11 +35,11 @@ module Middleman::Akcms
     end
 
     ## pager
-    Contract Hash => Or[Resource, nil]
+    Contract Hash => Or[Middleman::Sitemap::Resource, nil]
     def prev_article
       @controller.articles.find {|a| a.date < date}
     end
-    Contract Hash => Or[Resource, nil]
+    Contract Hash => Or[Middleman::Sitemap::Resource, nil]
     def next_article
       @controller.articles.reverse.find {|a| a.date > date}
     end
@@ -71,7 +71,7 @@ module Middleman::Akcms
       set_attributes(controller)
     end
     
-    Contract ArrayOf[Resource] => ArrayOf[Resource]
+    Contract ResourceList => ResourceList
     def manipulate_resource_list(resources)
       articles = []
 
@@ -97,7 +97,7 @@ module Middleman::Akcms
     end
     
     private
-    Contract Resource => Article
+    Contract Middleman::Sitemap::Resource => Article
     def convert_to_article(resource)
       return resource if resource.is_a?(Article)  # return if its already Article class
 
