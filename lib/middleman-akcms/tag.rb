@@ -1,3 +1,5 @@
+require 'middleman-core/util/uri_templates'
+
 require 'middleman-akcms/manipulator'
 
 module Middleman::Akcms
@@ -41,6 +43,7 @@ module Middleman::Akcms
     ################
     include Manipulator
     include Contracts
+    include Middleman::Util::UriTemplates
     
     attr_reader :tags, :tag_resources
 
@@ -67,7 +70,10 @@ module Middleman::Akcms
     private
     Contract String => String
     def link(name)
-      @controller.options.tag_link % {tag: name}
+#      binding.pry
+      @controller.options.tag_link % {tag: safe_parameterize(name)}
+#      template = uri_template "tags/{tagname}.html"
+#      apply_uri_template template, tagname: safe_parameterize(name)
     end
   end # class
 end
