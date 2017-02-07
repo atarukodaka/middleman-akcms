@@ -5,15 +5,14 @@ module Middleman::Akcms
     Middleman::Akcms::Controller.register(:breadcrumb, self)
     
     include Manipulator
-    include ::Contracts
-    C = Middleman::Akcms::Contracts
+    include Contracts
 
     def initialize(controller)
       controller.extension.class.defined_helpers << Middleman::Akcms::BreadcrumbHelper
       set_attributes(controller)
     end
     
-    Contract ArrayOf[C::Resource] => ArrayOf[C::Resource]
+    Contract ArrayOf[Resource] => ArrayOf[Resource]
     def manipulate_resource_list(resources)
       resources.each {|res|
         ancestors = []
@@ -33,10 +32,9 @@ end
 ################
 module Middleman::Akcms
   module BreadcrumbHelper
-    include ::Contracts
-    C = Middleman::Akcms::Contracts
+    include Contracts
     
-    Contract C::Resource => String
+    Contract Resource => String
     def breadcrumb(resource)
       ## return content tags
       items = resource.metadata[:ancestors].map {|res|

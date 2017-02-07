@@ -4,7 +4,8 @@
 - pagination render まわり再考
 - index.html がないとき
 - app.config on initialize
-- directory summary: get_dirs() "." or "" ?
+- paginator feature
+- directory summary: home dir name config ?
 
 ## devel
 ### 0.0.1

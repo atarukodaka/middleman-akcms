@@ -22,8 +22,7 @@ module Middleman::Akcms
     Middleman::Akcms::Controller.register(:archive, self)
     ################
     include Manipulator
-    include ::Contracts
-    C = Middleman::Akcms::Contracts
+    include Contracts
     
     attr_reader :archives, :archive_resources
     
@@ -32,7 +31,7 @@ module Middleman::Akcms
       set_attributes(controller, controller.options.archive_template)
     end
     
-    Contract ArrayOf[C::Resource] => ArrayOf[C::Resource]
+    Contract ArrayOf[Resource] => ArrayOf[Resource]
     def manipulate_resource_list(resources)
       @archives = {}
       @archive_resources = {}
@@ -50,7 +49,7 @@ module Middleman::Akcms
     def link(month)
       @controller.options.archive_link % {year: month.year, month: month.month}
     end
-    Contract ArrayOf[C::Resource] => Hash
+    Contract ArrayOf[Resource] => Hash
     def group_by_month(resources)
       resources.group_by {|a| Date.new(a.date.year, a.date.month, 1)}
     end

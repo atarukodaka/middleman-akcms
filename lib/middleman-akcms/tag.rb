@@ -18,8 +18,7 @@ module Middleman::Akcms
   class TagManipulator
     ## methods to be extended to controller
     module ControllerInstanceMethods
-      include ::Contracts
-      C = Middleman::Akcms::Contracts
+      include Contracts
       
       Contract nil => Hash
       def tags
@@ -41,8 +40,7 @@ module Middleman::Akcms
     
     ################
     include Manipulator
-    include ::Contracts
-    C = Middleman::Akcms::Contracts
+    include Contracts
     
     attr_reader :tags, :tag_resources
 
@@ -51,7 +49,7 @@ module Middleman::Akcms
       set_attributes(controller, controller.options.tag_template)
     end
 
-    Contract ArrayOf[C::Resource] => ArrayOf[C::Resource]
+    Contract ArrayOf[Resource] => ArrayOf[Resource]
     def manipulate_resource_list(resources)
       @tags = Hash.new { |h,k| h[k] = [] }
       @tag_resources = {}

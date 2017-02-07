@@ -12,15 +12,17 @@ Feature: pagination
       pagination:
         per_page: 2
       ---
-      <% articles.each {|article| %>
-        - title: <%= article.title %>
-      <% } %>
-      <%= paginator.page_number %> / <%= paginator.num_pages %>
-      <%if paginator.prev_page %>
-        prev: <%= paginator.prev_page.path %>
-      <% end %>
-      <%if paginator.next_page %>
-        next: <%= paginator.next_page.path %>
+      <% if pagination? %>
+        <% articles.each {|article| %>
+         - title: <%= article.title %>
+        <% } %>
+        <%= paginator.page_number %> / <%= paginator.num_pages %>
+        <%if paginator.prev_page %>
+          prev: <%= paginator.prev_page.path %>
+        <% end %>
+        <%if paginator.next_page %>
+          next: <%= paginator.next_page.path %>
+        <% end %>
       <% end %>
       """
 

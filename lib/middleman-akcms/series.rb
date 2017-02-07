@@ -5,14 +5,13 @@ module Middleman::Akcms
     Middleman::Akcms::Controller.register(:series, self)
 
     include Manipulator
-    include ::Contracts
-    C = Middleman::Akcms::Contracts
+    include Contracts
     
     def initialize(controller)
       set_attributes(controller)
     end
     
-    Contract ArrayOf[C::Resource] => ArrayOf[C::Resource]
+    Contract ArrayOf[Resource] => ArrayOf[Resource]
     def manipulate_resource_list(resources)
       used_resources = []
       modified_resources  = []

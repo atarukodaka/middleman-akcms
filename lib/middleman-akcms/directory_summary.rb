@@ -13,19 +13,19 @@ module Middleman::Akcms
     ################
     include Middleman::Util                   # normalize_path
     include Manipulator
-    include ::Contracts
-    C = Middleman::Akcms::Contracts
+    include Contracts
     
     def initialize(controller)
       set_attributes(controller, controller.options.directory_summary_template)
     end
-    
+
+    Contract ArrayOf[Resource] => ArrayOf[Resource]
     def manipulate_resource_list(resources)
       index_file = controller.app.config[:index_file]
       new_resources = []
       
-      dirs = @controller.articles.group_by {|a| File.dirname(a.path).sub(/^\.$/, "")}
-      dirs.each do |dir, articles|
+      
+      @controller.articles.group_by {|a| dirname(a.path) }.each do |dir, articles|
         dir.split('/').inject("") do |result, part|
           dir_index_fname = normalize_path(File.join(result, part, index_file))
           ## if directory index doesnt exists, create and add it into new resource
@@ -39,11 +39,11 @@ module Middleman::Akcms
       (resources + new_resources).map {|res| add_directory_metadata(res) }
     end
 
-    Contract C::Resource => C::Resource
+    Contract Resource => Resource
     def add_directory_metadata(resource)
       home_dir_name = "Home"  # yet: to be config ??
       dir_path = File.dirname(resource.path)
-      dir_name = dir_path.split('/').last.sub(/^\./, home_dir_name)
+      dir_name = dir_path.split('/').last.sub(/^\.$/, home_dir_name)
       
       ## if "display_name: specified in config.yml, use it as directory 'name'
       if config_res = @sitemap.find_resource_by_path(File.join(dir_path, "config.yml"))
@@ -53,6 +53,10 @@ module Middleman::Akcms
       
       resource.add_metadata(directory: { path: dir_path, name: dir_name})
       return resource
+    end
+    Contract String => String
+    def dirname(path)
+      File.dirname(path).sub(/^\.$/, '')
     end
   end ## class
 end
