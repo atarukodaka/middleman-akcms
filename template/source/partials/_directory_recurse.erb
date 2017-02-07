@@ -6,7 +6,8 @@
   <% children = resource.children %>
   <% unless children.empty? %>
   <ul>
-    <% children.select {|c| c.path =~ /#{config[:index_file]}$/}.each {|child| %>
+    <!-- % children.select {|c| c.path =~ /#{config[:index_file]}$/}.each {|child| % -->
+    <% children.select {|c| c.directory_index? }.each {|child| %>
     <%= partial("partials/directory_recurse", locals: {resource: child}) %>
     <% } %>
   </ul>

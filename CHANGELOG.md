@@ -3,7 +3,6 @@
 - tagに <>などが入ってたときの処理
 - pagination render まわり再考
 - index.html がないとき
-- pagination options
 - app.config on initialize
 - directory summary: get_dirs() "." or "" ?
 
