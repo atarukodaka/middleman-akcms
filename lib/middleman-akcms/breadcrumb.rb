@@ -12,7 +12,7 @@ module Middleman::Akcms
       set_attributes(controller)
     end
     
-    Contract ArrayOf[Resource] => ArrayOf[Resource]
+    Contract ArrayOf[C::Resource] => ArrayOf[C::Resource]
     def manipulate_resource_list(resources)
       resources.each {|res|
         ancestors = []
