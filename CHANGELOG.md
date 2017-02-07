@@ -2,7 +2,6 @@
 - rubygems
 - tagに <>などが入ってたときの処理
 - pagination render まわり再考
-- index.html がないとき
 - app.config on initialize
 - paginator feature
 - directory summary: home dir name config ?
@@ -38,6 +37,7 @@
 - category link を game/wot.html から game/wot/index.html に変更
 - category から index summary ？
 - category_name.txt -> config.yml
+- filename template を apply_template を使うか
 
 #### feature-extensions branch
 - tags[], archives[] の中身を proxy ではなく articles に
@@ -46,4 +46,5 @@
 - type: に "article" 以外を指定すると articles とみなさない
 - manipulator を継承から委譲に変えた
 - シリーズ機能
-- escape
+- tag: safe_parametize
+- index.html がないときの処理
