@@ -41,7 +41,7 @@ module Middleman::Akcms
       (resources + new_resources).map {|res| add_directory_metadata(res) }
     end
 
-    Contract C::Resource => C::Resource
+    Contract Middleman::Sitemap::Resource => Middleman::Sitemap::Resource
     def add_directory_metadata(resource)
       home_dir_name = "Home"  # yet: to be config ??
       dir_path = File.dirname(resource.path)

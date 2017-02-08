@@ -1,6 +1,5 @@
 module Middleman::Akcms
   module Helpers
-#    include BreadcrumbHelper
     include Contracts
 
     Contract Middleman::Akcms::Controller

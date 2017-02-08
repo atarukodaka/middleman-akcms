@@ -35,13 +35,17 @@ module Middleman::Akcms
       @controller.articles.reverse.find {|a| a.date > date}
     end
 
+    Contract Integer => String
     def summary(length=nil)
       controller.summary(self, length)
     end
+    
     Contract KeywordArgs[:layout => Or[String, Symbol, nil]] => String
     def body
       render(layoout: false)
     end
+
+    Contract Hash, Hash, Func => String
     ## called automatically from middleman (this code copied from mm-blog)
     def render(opts={}, locs={}, &block)
       unless opts.has_key?(:layout)
@@ -63,8 +67,9 @@ module Middleman::Akcms
     include Manipulator
     include Contracts
     
-    #attr_reader :articles
-    attr_accessor :articles
+    attr_reader :articles
+
+    Contract Controller => Any
     def initialize(controller)
       initialize_manipulator(controller)
     end

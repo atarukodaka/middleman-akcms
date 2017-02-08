@@ -1,6 +1,5 @@
 require 'middleman-akcms/controller'
 require 'middleman-akcms/helpers'
-require 'middleman-akcms/contracts'
 
 ################
 module Middleman::Akcms
