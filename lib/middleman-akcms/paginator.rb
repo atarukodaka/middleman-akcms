@@ -95,11 +95,11 @@ module Middleman::Akcms
       cnt = 1
 
       while cnt < max_display
-        if unreached_bottom = (page_number+i-1 < pages.size) # rubocop:disable all
+        if (unreached_bottom = (page_number+i-1 < pages.size))
           list.push pages[page_number+i-1]
           cnt = cnt + 1
         end
-        if unreached_top = (page_number-i > 0)               # rubocop:disable all
+        if (unreached_top = (page_number-i > 0))
           list.unshift pages[page_number-i-1]
           cnt = cnt + 1
         end
