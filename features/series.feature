@@ -5,7 +5,7 @@ Feature: series
     And a file named "config.rb" with:
       """
       activate :akcms do |akcms|
-        akcms.series_title_template = "%{name} [%{number}]: %{title}"
+        akcms.series_title_template = "%{name} [%{number}]: %{article_title}"
 	akcms.layout = :series
       end
       
