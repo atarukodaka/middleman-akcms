@@ -11,7 +11,6 @@ module Middleman::Akcms
     
     ## default options
     option :layout, "article"
-    option :summary_length, 250         # length of charactor to summrize
 
     ## directory summary settings
     option :directory_summary_template, 'templates/directory_summary_template.html'
@@ -33,9 +32,10 @@ module Middleman::Akcms
     option :series_title_template, "%{name} #%{number}: %{article_title}" 
 
     ## label
-    option :top_page_default_label, "Home"
+    option :top_page_label, "Home"
 
     ## summarizer
+    option :summary_length, 250         # length of charactor to summrize
     option :summarizer, OgaSummarizer
     
     ## Hooks

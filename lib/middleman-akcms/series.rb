@@ -6,14 +6,15 @@ module Middleman::Akcms
 
     include Manipulator
     include Contracts
-    
+
+    Contract Controller => Any
     def initialize(controller)
       initialize_manipulator(controller)
     end
     
     Contract ResourceList => ResourceList
     def manipulate_resource_list(resources)
-      new_resources = []
+      series_articles = []
 
       controller.articles.each do|article|
         if article.data.series
@@ -23,18 +24,19 @@ module Middleman::Akcms
           hash = { name: name, number: number}
           title = apply_title(hash.merge(article_title: article.title))
           article.add_metadata({page: { title: title }, locals: { series: hash }})
-          new_resources << article
+          series_articles << article
         end
       end
 
-      new_resources.each do |res|
+      series_articles.each do |res|
         res_name = res.locals[:series][:name]
-        res.locals[:series][:articles] = new_resources.select {|r|
+        res.locals[:series][:articles] = series_articles.select {|r|
           res_name == r.locals[:series][:name]
         }
       end
       resources
     end
+
     Contract Hash => String
     def apply_title(hash)
       controller.options.series_title_template % hash

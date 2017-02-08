@@ -77,15 +77,20 @@ module Middleman::Akcms
             new_resources << new_res
           end
         } # each for per_page
-        paginated_resources.each {|p|
-          p.locals[:paginator][:paginated_resources] = paginated_resources
-          p.locals[:paginator][:paginated_resources_for_navigation] =  proc {|r|
-            paginated_resources_for_navigation(r)}
-        }
+
+        add_paginated_resources(paginated_resources)
       }  # resources
       resources + new_resources
     end
 
+    Contract ResourceList => Any
+    def add_paginated_resources(paginated_resources)
+      paginated_resources.each {|p|
+        p.locals[:paginator][:paginated_resources] = paginated_resources
+        p.locals[:paginator][:paginated_resources_for_navigation] =  proc {|r|
+          paginated_resources_for_navigation(r)}
+      }
+    end
     ## if u have100 pages for navigation and in 8th resource,
     ## u wld get like 4..13th resources
     Contract Middleman::Sitemap::Resource, Integer => ResourceList

@@ -2,7 +2,7 @@ require 'contracts'
 
 # summerizer
 module Middleman::Akcms
-  # base module
+  ## base module to be included
   module Summarizer
     include Contracts
 
@@ -11,6 +11,8 @@ module Middleman::Akcms
       resource.body[0...length]
     end
   end
+
+  ## summarizer class using Oga
   class OgaSummarizer
     include Summarizer
     include Contracts

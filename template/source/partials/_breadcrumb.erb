@@ -1,6 +1,6 @@
 <nav>
   <ol class="breadcrumb">
-    <li><%= link_to(akcms.options.top_page_default_label, top_page) %></li>
+    <li><%= link_to(akcms.options.top_page_label, top_page) %></li>
     <% current_resource.metadata[:ancestors].reverse.map do |res| %>
     <% next if res == top_page() %>
     <li>

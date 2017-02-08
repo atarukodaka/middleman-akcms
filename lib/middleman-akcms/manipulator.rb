@@ -27,6 +27,5 @@ module Middleman::Akcms
     def manipulate_resource_list(resources)
       resources
     end
- 
   end
 end  ## module

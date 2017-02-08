@@ -2,12 +2,15 @@ require 'middleman-akcms/manipulator'
 
 module Middleman::Akcms
   class ArchiveManipulator
-
     ## methods to be extended to controller
-    module ControllerInstanceMethods
+    module InstanceMethodsToController
+      include Contracts
+      
+      Contract nil => HashOf[Date => ResourceList]
       def archives
         @manipulators[:archive].archives
       end
+      Contract nil => HashOf[Date => Middleman::Sitemap::Resource]
       def archive_resources
         @manipulators[:archive].archive_resources
       end
@@ -27,7 +30,7 @@ module Middleman::Akcms
     attr_reader :archives, :archive_resources
     
     def initialize(controller)
-      controller.extend ControllerInstanceMethods
+      controller.extend InstanceMethodsToController
       initialize_manipulator(controller, template: controller.options.archive_template)
     end
     
