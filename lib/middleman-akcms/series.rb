@@ -17,8 +17,8 @@ module Middleman::Akcms
       controller.articles.each do|article|
         if article.data.series
           name = article.metadata[:directory][:name]
-          File.split(article.path).last =~ /^(\d+)[_\-\s]/
-          number = $1
+          File.split(article.path).last =~ /^([0-9]+)[_\-\s]/
+          number = $1.to_i
           title = apply_title(name: name, number: number, title: article.title)
           article.add_metadata({page: { title: title },
                                  locals: {
