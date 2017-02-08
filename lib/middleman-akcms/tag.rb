@@ -39,7 +39,7 @@ module Middleman::Akcms
     ## this manipulator will be disabled unless template specified
     class << self
       def disable?(controller)
-        controller.extension.options.tag_template.nil?
+        controller.options.tag_template.nil?
       end
     end
     Middleman::Akcms::Controller.register(:tag, self)
@@ -52,8 +52,8 @@ module Middleman::Akcms
     attr_reader :tags, :tag_resources
 
     def initialize(controller)
+      initialize_manipulator(controller, template: controller.options.tag_template)
       controller.extend InstanceMethodsToController
-      set_attributes(controller, controller.options.tag_template)
     end
 
     Contract ResourceList => ResourceList

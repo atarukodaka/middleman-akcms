@@ -20,10 +20,11 @@ module Middleman::Akcms
     
     include Manipulator
     include Contracts
-    
+
+    Contract Controller => Any
     def initialize(controller)
-      controller.extension.class.defined_helpers << Middleman::Akcms::PaginationHelper
-      set_attributes(controller)
+      initialize_manipulator(controller)
+      controller.add_helpers(Middleman::Akcms::PaginationHelper)
     end
 
     Contract Middleman::Sitemap::Resource, Integer, Hash => Middleman::Sitemap::Resource
@@ -49,11 +50,14 @@ module Middleman::Akcms
         pagination = res.data.pagination
         next if res.ignored? || !pagination
 
-        articles = res.locals[:articles] || @controller.articles
         paginated_resources = []
         prev_page = nil
-        per_page = (pagination.is_a? Hash) ? pagination[:per_page] : @controller.options.pagination_per_page
+        per_page = @controller.options.pagination_per_page
+        if pagination.is_a?(Hash) && pagination[:per_page].to_i > 0
+          per_page = pagination[:per_page].to_i
+        end
 
+        articles = res.locals[:articles] || @controller.articles
         articles.per_page(per_page).each {|items, num, meta, _is_last|
           locals = {locals: {articles: items, paginator: meta}}
           
@@ -61,11 +65,11 @@ module Middleman::Akcms
           meta.prev_page = prev_page
           meta.next_page = nil
           
-          if num == 1      # original resource
+          if num == 1                          # original resource
             res.add_metadata(locals)
             paginated_resources << res
             prev_page = res
-          else             # new pager resource 2-
+          else                                 # new pager resource 2-
             new_res = create_page_resource(res, num, locals)
             prev_page.locals[:paginator][:next_page] = new_res
             paginated_resources << new_res
@@ -83,7 +87,7 @@ module Middleman::Akcms
     end
 
     ## if u have100 pages for navigation and in 8th resource,
-    ## u wld get like 4..13th resources as array
+    ## u wld get like 4..13th resources
     Contract Middleman::Sitemap::Resource, Integer => ResourceList
     def paginated_resources_for_navigation(resource, max_display = 10)
       current_resource = resource

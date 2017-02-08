@@ -5,7 +5,7 @@ module Middleman::Akcms
     ## this manipulator will be disabled unless template specified
     class << self
       def disable?(controller)
-        controller.extension.options.directory_summary_template.nil?
+        controller.options.directory_summary_template.nil?
       end
     end
     Middleman::Akcms::Controller.register(:directory_summary, self)
@@ -16,19 +16,19 @@ module Middleman::Akcms
     include Contracts
     
     def initialize(controller)
-      set_attributes(controller, controller.options.directory_summary_template)
+      initialize_manipulator(controller, template: controller.options.directory_summary_template)
     end
 
     Contract ResourceList => ResourceList
     def manipulate_resource_list(resources)
-      index_file = controller.app.config[:index_file]
+      index_file = app.config[:index_file]
       new_resources = []
       
-      
-      @controller.articles.group_by {|a| dirname(a.path) }.each do |dir, articles|
+      controller.articles.group_by {|a| dirname(a.path) }.each do |dir, articles|
         dir.split('/').inject("") do |result, part|
 
           dir_index_fname = normalize_path(File.join(result, part, index_file))
+
           ## if directory index doesnt exists, create and add it into new resource
           if (resources + new_resources).find {|res| res.path == dir_index_fname}.nil?
             new_resources <<
@@ -38,7 +38,6 @@ module Middleman::Akcms
         end
       end
       new_resources << create_proxy_resource(index_file) if ! resources.find {|res| res.path == index_file }
-      # binding.pry
       (resources + new_resources).map {|res| add_directory_metadata(res) }
     end
 
@@ -57,6 +56,7 @@ module Middleman::Akcms
       resource.add_metadata(directory: { path: dir_path, name: dir_name})
       return resource
     end
+
     Contract String => String
     def dirname(path)
       File.dirname(path).sub(/^\.$/, '')

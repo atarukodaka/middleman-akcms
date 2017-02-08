@@ -8,23 +8,21 @@ module Middleman::Akcms
     include Contracts
     
     def initialize(controller)
-      set_attributes(controller)
+      initialize_manipulator(controller)
     end
     
     Contract ResourceList => ResourceList
     def manipulate_resource_list(resources)
       new_resources = []
+
       controller.articles.each do|article|
         if article.data.series
-          name = article.metadata[:directory][:name]
-          File.split(article.path).last =~ /^([0-9]+)[_\-\s]/
-          number = $1.to_i
-          title = apply_title(name: name, number: number, title: article.title)
-          article.add_metadata({page: { title: title },
-                                 locals: {
-                                   series: {
-                                     name: name,
-                                     number: number}}})
+          name = ((article.metadata.has_key?(:directory)) ? article.metadata[:directory][:name] : nil) || File.dirname(article.path).last
+          number = (File.split(article.path).last =~ /^([0-9]+)[_\-\s]/).nil? ? 0 : $1.to_i
+          
+          hash = { name: name, number: number}
+          title = apply_title(hash.merge(article_title: article.title))
+          article.add_metadata({page: { title: title }, locals: { series: hash }})
           new_resources << article
         end
       end
@@ -37,34 +35,6 @@ module Middleman::Akcms
       end
       resources
     end
-=begin
-    Contract ResourceList => ResourceList
-    def _manipulate_resource_list(resources)
-      used_resources = []
-      series_resources  = []
-
-      resources.each {|res|
-        if res.data.series
-          name = res.metadata[:directory][:name]
-          fname = File.split(res.path).last
-          md = fname.match(/^([0-9]+)[_\-\s]/)
-          number = (md.nil?) ? 0 : md[1].to_i
-          title = apply_title(name: name, number: number, title: res.data.title)
-          res.add_metadata({page: {title: title},
-                             locals: {series: {name: name, number: number}}})
-          #res.add_metadata(
-          series_resources << res
-        else
-          used_resources << res
-        end
-      }
-      series_resources.each {|res|
-        res.locals[:series][:articles] = series_resources.select {|r|
-          r.locals[:series][:name] == res.locals[:series][:name]}
-      }
-      used_resources + series_resources
-    end
-=end
     Contract Hash => String
     def apply_title(hash)
       controller.options.series_title_template % hash

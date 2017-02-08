@@ -66,7 +66,7 @@ module Middleman::Akcms
     #attr_reader :articles
     attr_accessor :articles
     def initialize(controller)
-      set_attributes(controller)
+      initialize_manipulator(controller)
     end
     
     Contract ResourceList => ResourceList

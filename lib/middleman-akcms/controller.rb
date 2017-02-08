@@ -14,7 +14,8 @@ module Middleman::Akcms
 
     include Contracts
 
-    attr_reader :app, :extension, :options, :manipulators
+#    attr_reader :app, :extension, :options, :manipulators
+    attr_reader :app, :options, :manipulators
 
     def initialize(extension)
       @extension = extension
@@ -25,6 +26,12 @@ module Middleman::Akcms
       @summarize = Summarize.new(options.summarizer || OgaSummaizer)
     end
 
+    Contract Module => Any
+    def add_helpers(klass)
+      @extension.class.defined_helpers << klass
+    end
+    
+    Contract Middleman::Sitemap::Resource, Integer => String
     def summary(resource, length=nil)
       length ||= options.summary_length || 250
       @summarize.summary(resource, length)
@@ -34,8 +41,9 @@ module Middleman::Akcms
     def articles
       @manipulators[:article].articles
     end
-
+    
     ## register manipulators
+    Contract nil => Any
     def register_manipulators
       require 'middleman-akcms/article'
       require 'middleman-akcms/archive'

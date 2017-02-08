@@ -16,7 +16,7 @@ module Middleman::Akcms
     ## this manipulator will be disabled unless template specified
     class << self
       def disable?(controller)
-        controller.extension.options.archive_template.nil?
+        controller.options.archive_template.nil?
       end
     end
     Middleman::Akcms::Controller.register(:archive, self)
@@ -28,7 +28,7 @@ module Middleman::Akcms
     
     def initialize(controller)
       controller.extend ControllerInstanceMethods
-      set_attributes(controller, controller.options.archive_template)
+      initialize_manipulator(controller, template: controller.options.archive_template)
     end
     
     Contract ResourceList => ResourceList

@@ -9,7 +9,7 @@ module Middleman::Akcms
 
     Contract Middleman::Akcms::Controller => Any
     def initialize(controller)
-      set_attributes(controller)
+      initialize_manipulator(controller)
     end
 
     Contract ResourceList => ResourceList

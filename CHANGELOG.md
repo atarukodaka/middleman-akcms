@@ -1,12 +1,9 @@
 ## memo
 - rubygems
-- tagに <>などが入ってたときの処理
-- pagination render まわり再考
-- app.config on initialize
 - paginator feature
 - directory summary: home dir name config ?
 - ancestors, breadcrump まわり、foo.html と foo/index.html のバッティング
-- tags[:name, :resource]
+- set attributes
 
 
 #### dev branch

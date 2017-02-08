@@ -31,7 +31,7 @@ module Middleman::Akcms
     option :pagination_page_link, "page-%{page_number}"
 
     ## series settings
-    option :series_title_template, "%{name} #%{number}: %{title}" 
+    option :series_title_template, "%{name} #%{number}: %{article_title}" 
 
     ## label
     option :top_page_default_label, "Home"
