@@ -32,9 +32,9 @@ module Middleman::Akcms
       link = resource.path.sub(%r{(^|/)([^/]*)\.([^/]*)$}, "\\1\\2-#{page_url}.\\3")
 
       if resource.is_a? Middleman::Sitemap::ProxyResource
-        Middleman::Sitemap::ProxyResource.new(@sitemap, link, resource.target)
+        Middleman::Sitemap::ProxyResource.new(@app.sitemap, link, resource.target)
       else
-        Middleman::Sitemap::Resource.new(@sitemap, link, resource.source_file)
+        Middleman::Sitemap::Resource.new(@app.sitemap, link, resource.source_file)
       end.tap do |res|
         res.add_metadata(resource.metadata)
         res.add_metadata(metadata) unless metadata.empty?

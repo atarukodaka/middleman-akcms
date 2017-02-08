@@ -2,12 +2,13 @@ require 'contracts'
 
 # summerizer
 module Middleman::Akcms
+  # base module
   module Summarizer
     include Contracts
 
     Contract Middleman::Sitemap::Resource, Integer => String
     def summary(resource, length)
-      ""
+      resource.body[0...length]
     end
   end
   class OgaSummarizer

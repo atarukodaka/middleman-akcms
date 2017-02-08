@@ -3,7 +3,7 @@
 <div class="references">
   <div class="header">Topic: <%=  h(series[:name]) %></div>
   <ul>
-    <% series[:series_articles].each {|res| %>
+    <% series[:articles].each {|res| %>
     <li>
       <% if res == current_resource %>
       <%= h(res.title) %>

@@ -1,25 +1,29 @@
 require 'middleman-core/util/uri_templates'
 
 require 'middleman-akcms/manipulator'
+require 'contracts'
 
 module Middleman::Akcms
-  ## methods to be extend to each article
-  module TagInstanceMethods
-    def tags
-      article_tags = data.tags || data.tag
-      
-      if article_tags.is_a? String
-        article_tags.split(',').map(&:strip)
-      else
-        Array(article_tags).map(&:to_s)
-      end      
-    end
-  end
-
   ################
   class TagManipulator
+    ## methods to be extend to each article
+    module InstanceMethodsToArticle
+      include Contracts
+
+      Contract nil => Array
+      def tags
+        article_tags = data.tags || data.tag
+
+        if article_tags.is_a? String
+          article_tags.split(',').map(&:strip)
+        else
+          Array(article_tags).map(&:to_s)
+        end      
+      end
+    end
+
     ## methods to be extended to controller
-    module ControllerInstanceMethods
+    module InstanceMethodsToController
       include Contracts
       
       Contract nil => Hash
@@ -48,7 +52,7 @@ module Middleman::Akcms
     attr_reader :tags, :tag_resources
 
     def initialize(controller)
-      controller.extend ControllerInstanceMethods
+      controller.extend InstanceMethodsToController
       set_attributes(controller, controller.options.tag_template)
     end
 
@@ -58,7 +62,7 @@ module Middleman::Akcms
       @tag_resources = {}
       
       @controller.articles.each {|article|
-        article.extend TagInstanceMethods
+        article.extend InstanceMethodsToArticle
         article.tags.each {|tag|
           @tag_resources[tag] ||= create_proxy_resource(link(tag), locals: {tag_name: tag, articles: []})
           @tag_resources[tag].locals[:articles] << article
