@@ -49,7 +49,7 @@ module Middleman::Akcms
       dir_name = dir_path.split('/').last.sub(/^\.$/, home_dir_name)
       
       ## if "display_name: specified in config.yml, use it as directory 'name'
-      if config_res = @app.sitemap.find_resource_by_path(File.join(dir_path, "config.yml"))
+      if (config_res = @app.sitemap.find_resource_by_path(File.join(dir_path, "config.yml")))
         yml = YAML::load(config_res.render(layout: false))
         dir_name = yml["display_name"]
       end

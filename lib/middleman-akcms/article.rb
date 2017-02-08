@@ -18,8 +18,11 @@ module Middleman::Akcms
     Contract Date
     def date
       return @_date ||=
-        begin; Date.parse(data.date.to_s); rescue ArgumentError; end ||
-        File.mtime(source_file).to_date || Date.new(1970, 1, 1)
+        begin
+          Date.parse(data.date.to_s)
+        rescue ArgumentError
+          File.mtime(source_file).to_date || Date.new(1970, 1, 1)
+        end
     end
     
     ## pager

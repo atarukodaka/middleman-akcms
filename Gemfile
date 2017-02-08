@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 gemspec
 
 ## Code Quality
+gem 'rubocop', '~> 0.24', require: false
 gem "cane", :platforms => [:mri_19, :mri_20], :require => false
 gem 'coveralls', :require => false
 
@@ -22,4 +23,5 @@ platforms :ruby do
   gem 'redcarpet', "~> 3.0"
 end
 
+## exeJS
 gem 'therubyracer', platform: :ruby

@@ -1,9 +1,12 @@
-require "bundler/gem_tasks"
+require 'rake'
 require 'rake/clean'
-
-require 'cucumber/rake/task'
+require "bundler/gem_tasks"
 require 'middleman-core'
 
+
+## cucumber
+
+require 'cucumber/rake/task'
 Cucumber::Rake::Task.new(:cucumber, 'Run features that should pass') do |t|
   ENV["TEST"] = "true"
 
@@ -14,10 +17,16 @@ Cucumber::Rake::Task.new(:cucumber, 'Run features that should pass') do |t|
   t.cucumber_opts = "--color --tags ~@wip #{exempt_tags} --strict --format #{ENV['CUCUMBER_FORMAT'] || 'pretty'}"
 end
 
-require 'rake/clean'
-
-desc "Run tests, both RSpec and Cucumber"
+desc "Run tests, Cucumber"
 task :test => [:cucumber]
+
+
+## rubocop
+require 'rubocop/rake_task'
+desc "Run rubocop"
+RuboCop::RakeTask.new(:rubocop) do |task|
+  task.fail_on_error = false
+end
 
 
 

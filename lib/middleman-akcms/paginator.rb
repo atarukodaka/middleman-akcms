@@ -43,22 +43,17 @@ module Middleman::Akcms
 
     Contract ResourceList => ResourceList
     def manipulate_resource_list(resources)
-      controller.app.logger.debug("-- paginator manipulation")
       new_resources = []
       
       resources.each {|res|
-        next if res.ignored? || !res.data.pagination
+        pagination = res.data.pagination
+        next if res.ignored? || !pagination
 
         articles = res.locals[:articles] || @controller.articles
         paginated_resources = []
-        md = res.metadata
         prev_page = nil
-        
-        per_page = if res.data.pagination.is_a? Hash
-                     res.data.pagination[:per_page]
-                   else
-                     @controller.options.pagination_per_page
-                   end
+        per_page = (pagination.is_a? Hash) ? pagination[:per_page] : @controller.options.pagination_per_page
+
         articles.per_page(per_page).each {|items, num, meta, _is_last|
           locals = {locals: {articles: items, paginator: meta}}
           
@@ -75,14 +70,13 @@ module Middleman::Akcms
             prev_page.locals[:paginator][:next_page] = new_res
             paginated_resources << new_res
             prev_page = new_res
-
             new_resources << new_res
           end
         } # each for per_page
         paginated_resources.each {|p|
           p.locals[:paginator][:paginated_resources] = paginated_resources
-          p.locals[:paginator][:paginated_resources_for_navigation] =  proc {|res|
-            paginated_resources_for_navigation(res)}
+          p.locals[:paginator][:paginated_resources_for_navigation] =  proc {|r|
+            paginated_resources_for_navigation(r)}
         }
       }  # resources
       resources + new_resources
@@ -101,11 +95,11 @@ module Middleman::Akcms
       cnt = 1
 
       while cnt < max_display
-        if unreached_bottom = (page_number+i-1 < pages.size)
+        if unreached_bottom = (page_number+i-1 < pages.size) # rubocop:disable all
           list.push pages[page_number+i-1]
           cnt = cnt + 1
         end
-        if unreached_top = (page_number-i > 0)
+        if unreached_top = (page_number-i > 0)               # rubocop:disable all
           list.unshift pages[page_number-i-1]
           cnt = cnt + 1
         end
