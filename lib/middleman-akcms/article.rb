@@ -72,12 +72,13 @@ module Middleman::Akcms
     Contract Controller => Any
     def initialize(controller)
       initialize_manipulator(controller)
+      @articles = []
     end
     
     Contract ResourceList => ResourceList
     def manipulate_resource_list(resources)
-      articles = []
-
+      list = []
+      
       used_resources = []
       resources.each {|res|
         ## ignored res doesnt bother
@@ -88,13 +89,13 @@ module Middleman::Akcms
 
         ## ".html" regarded as 'article'
         if res.ext == ".html" && !(res.data.type && res.data.type != "article")
-          article = convert_to_article(res)
+          article = convert_to_article(res)          
           next if article.data.published == false
-          articles << article
+          list << article
         end
         used_resources << res
       }
-      @articles = articles.sort_by(&:date).reverse
+      @articles = list.sort_by(&:date).reverse
 
       return used_resources
     end

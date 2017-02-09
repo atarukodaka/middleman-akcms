@@ -25,11 +25,6 @@ module Middleman::Akcms
 
       @summarize = Summarize.new(options.summarizer || OgaSummaizer)
     end
-
-    Contract Module => Any
-    def add_helpers(klass)
-      @extension.class.defined_helpers << klass
-    end
     
     Contract Middleman::Sitemap::Resource, Integer => String
     def summary(resource, length=nil)
@@ -51,8 +46,7 @@ module Middleman::Akcms
       require 'middleman-akcms/directory_summary'
       require 'middleman-akcms/paginator'
       require 'middleman-akcms/series'
-      require 'middleman-akcms/ancestors'
-      
+
       self.class.registered.each {|id, klass|
         unless klass.respond_to?(:disable?) && klass.disable?(self)
           app.sitemap.register_resource_list_manipulator(id, @manipulators[id] = klass.new(self))

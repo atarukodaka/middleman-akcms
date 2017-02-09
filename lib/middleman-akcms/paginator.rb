@@ -9,6 +9,7 @@ module Middleman::Akcms
     def pagination?
       (current_resource.data.pagination && current_resource.locals.has_key?(:paginator)) ? true : false
     end
+    Middleman::Akcms::Extension.helpers(self)
   end  ## module
 end
 
@@ -24,7 +25,6 @@ module Middleman::Akcms
     Contract Controller => Any
     def initialize(controller)
       initialize_manipulator(controller)
-      controller.add_helpers(Middleman::Akcms::PaginationHelper)
     end
 
     Contract Middleman::Sitemap::Resource, Integer, Hash => Middleman::Sitemap::Resource

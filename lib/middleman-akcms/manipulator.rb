@@ -1,8 +1,9 @@
+#require 'middleman-akcms/controller'
 
 ## base module of manipulators
 module Middleman::Akcms
   module Manipulator
-    include ::Contracts
+    include Contracts
     attr_reader :controller, :app, :template
 
     Contract Controller, KeywordArgs[:template => Optional[String]] => Any

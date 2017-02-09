@@ -3,8 +3,6 @@
 - paginator feature
 - directory summary: home dir name config ?
 - ancestors, breadcrump まわり、foo.html と foo/index.html のバッティング
-- set attributes
-
 
 #### dev branch
 - tags[], archives[] の中身を proxy ではなく articles に
