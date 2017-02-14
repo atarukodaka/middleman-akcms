@@ -43,6 +43,16 @@ Feature: directory summary
     When I go to "/foo/bar/baz/index.html"
     Then the status code should be "200"
     And I should see "parent: foo/bar.html"
+
+  Scenario: enopynous directory index
+    Given a fixture app "basic-app"
+    And a file named "source/foo/bar/baz/index.html.erb" with:
+      """
+      parent: <%= current_resource.parent.path %>
+      """
+    And a file named "source/foo/bar.html" with ""
     
-
-
+    And the Server is running at "basic-app"
+    When I go to "/foo/bar/baz/index.html"
+    Then the status code should be "200"
+    And I should see "parent: foo/bar.html"

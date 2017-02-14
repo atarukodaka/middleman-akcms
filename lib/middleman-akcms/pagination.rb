@@ -40,11 +40,13 @@ module Middleman::Akcms::Pagination
 
         articles = res.locals[:articles] || @app.sitemap.articles || []
 
+=begin        
         if articles.empty?
           ## when directory summary created with no articles, no pagination applied
           res.add_metadata(page: {pagination: nil})
           next
         end
+=end
         articles.per_page(per_page).each {|items, num, meta, _is_last|
           locals = {locals: {page_articles: items, paginator: meta}}
           
