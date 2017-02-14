@@ -7,7 +7,7 @@ module Middleman::Akcms
 
     Contract Middleman::Sitemap::Resource, Integer => String
     def summarize(resource, length)
-       resource.render({layout: false})[0...length]
+       resource.body[0...length]
     end
   end
 

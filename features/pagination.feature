@@ -12,17 +12,15 @@ Feature: pagination
       pagination:
         per_page: 2
       ---
-      <% if pagination? %>
-        <% articles.each {|article| %>
-         - title: <%= article.title %>
-        <% } %>
-        <%= paginator.page_number %> / <%= paginator.num_pages %>
-        <%if paginator.prev_page %>
-          prev: <%= paginator.prev_page.path %>
-        <% end %>
-        <%if paginator.next_page %>
-          next: <%= paginator.next_page.path %>
-        <% end %>
+      <% articles.each {|article| %>
+       - title: <%= article.title %>
+      <% } %>
+      <%= paginator.page_number %> / <%= paginator.num_pages %>
+      <%if paginator.prev_page %>
+        prev: <%= paginator.prev_page.path %>
+      <% end %>
+      <%if paginator.next_page %>
+        next: <%= paginator.next_page.path %>
       <% end %>
       """
 
@@ -69,6 +67,34 @@ Feature: pagination
     And I should see "prev: index.html"
 
 
+  Scenario: dir summary pagination
+    Given a fixture app "directory-summary-app"
+    And a file named "source/foo/1.html" with ""
+    And a file named "source/foo/2.html" with ""    
+    And a file named "source/foo/3.html" with ""
+    And a template named "directory_summary_template.html.erb" with:
+      """
+      ---
+      pagination:
+        per_page: 1
+      ---
+      <% articles.each {|article| %>
+       - title: <%= article.title %>
+      <% } %>
+      <%= paginator.page_number %> / <%= paginator.num_pages %>
+      <%if paginator.prev_page %>
+        prev: <%= paginator.prev_page.path %>
+      <% end %>
+      <%if paginator.next_page %>
+        next: <%= paginator.next_page.path %>
+      <% end %>
+      """      
+    And the Server is running at "directory-summary-app"
+    When I go to "/foo/index.html"
+    Then the status code should be "200"
+    And I should see "1 / 3"
+    And I should see "next: foo/index-page-2.html"
+    
   Scenario: pagination: use render
     Given a fixture app "empty-app"
     And a file named "config.rb" with "activate :akcms"
@@ -80,9 +106,9 @@ Feature: pagination
       type: summary
       date: 2016/12/31
       pagination:
-        per_page: 2
+        per_page: 1
       ---
-      <% paginator[:paginated_resources_for_navigation].call(current_resource, 3).each do |res| %>
+      <% paginator[:paginated_resources_for_navigation].call(current_resource, 2).each do |res| %>
         - <%= res.locals[:paginator][:page_number] %>
       <% end %>
       """
@@ -116,3 +142,13 @@ Feature: pagination
     And I should see "  - 1"
     And I should see "  - 2"
     And I should not see "  - 3"
+
+    When I go to "/index-page-3.html"
+    Then the status code should be "200"
+
+    And I should not see "  - 1"
+    And I should see "  - 2"
+    And I should see "  - 3"
+
+
+      
