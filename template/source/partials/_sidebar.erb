@@ -11,43 +11,27 @@
   <aside>
     <h2>DIRECTORIES</h2>
     <ul>
-      <% top_page().children.select {|r| r.path =~ /index\.html$/}.each {|res| %>
+      <% top_page().children.select {|r| r.directory_index? }.each {|res| %>
       <%= partial("partials/directory_recurse", locals: {resource: res}) %>
       <% } %>
     </ul>
   </aside>
   <!-- ================ -->
   <aside>
-    <% if akcms.manipulators[:tag] %>
-    <h2>TAGS</h2>
-    <ul class="tag_box inline">
-      <li>
-	<% akcms.tag_resources.each {|name, res| %>
-	<% size = akcms.tags[name].size %>
-	<%= link_to("#{h(name)}<span>#{size}</span>", res) %>
-	<% } %>
-      </li>
-    </ul>
-    <% end %>
-  </aside>
-  <!-- ================ -->
-  <aside>
     <h2>RECENT</h2>
     <ul>
-      <% akcms.articles.first(10).each {|page| %>
+      <% sitemap.articles.first(10).each {|page| %>
       <li> <%= link_to(h(page.title), page) %></li>
       <% } %>
     </ul>
   </aside>
   <!-- ================ -->
-  <% if akcms.manipulators[:archive] %>
   <aside>
     <h2>MONTHLY ARCHIVES</h2>
     <ul>
-      <% akcms.archive_resources.each {|month, res|%>
+      <% sitemap.archive_resources.each {|month, res|%>
       <li> <%= link_to(month.strftime("%b %Y"), res) %></li>
       <% } %>
     </ul>
   </aside>
-  <% end %>
 </div>

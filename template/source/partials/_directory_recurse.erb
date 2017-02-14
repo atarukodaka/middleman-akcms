@@ -1,6 +1,7 @@
 
 <!-- required locals: resource -->
 
+<% if resource.metadata.has_key? :directory %>
 <li>
   <%= link_to(h(resource.metadata[:directory][:name]), resource) %>
   <% children = resource.children %>
@@ -8,8 +9,10 @@
   <ul>
     <!-- % children.select {|c| c.path =~ /#{config[:index_file]}$/}.each {|child| % -->
     <% children.select {|c| c.directory_index? }.each {|child| %>
+    <% next unless resource.directory_index? %>
     <%= partial("partials/directory_recurse", locals: {resource: child}) %>
     <% } %>
   </ul>
   <% end %>
 </li>
+<% end %>

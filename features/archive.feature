@@ -29,11 +29,11 @@ Feature: archive
       """
     And a file named "source/archives.html.erb" with:
       """
-      <% akcms.archives.each {|month, articles| %>
+      <% sitemap.archives.each {|month, articles| %>
         - <%= month.strftime("%Y-%m") %>
       <% } %>
 
-      <% akcms.archive_resources.each {|month, res| %>
+      <% sitemap.archive_resources.each {|month, res| %>
         res: <%= res.path %>
       <% } %>
       """

@@ -43,7 +43,6 @@ module Middleman::Akcms::DirectorySummary
       Middleman::Sitemap::Resource.prepend InstanceMethodsToResource
 
       @template = app.config.akcms[:directory_summary_template]
-      #@summarizer = app.config.akcms[:summarizer].new
     end
 
     Contract ResourceList => ResourceList
@@ -59,7 +58,7 @@ module Middleman::Akcms::DirectorySummary
         # add directory metadata for each resources
         hash[:articles].each do |res|
           dir_name = dir.split("/").last
-          res.add_metadata(directory: {name: dir_name, path: dir})
+          res.add_metadata(directory: {name: dirname_by_path(dir), path: dir})
         end
         
         # create new dir summary if the dir doesnt have d/i
@@ -105,10 +104,18 @@ module Middleman::Akcms::DirectorySummary
       end
     end
 
-    Contract KeywordArgs[:path => String, :articles => ResourceList] => Hash
+    def dirname_by_path(path)
+      if (config_yml = @app.sitemap.find_resource_by_path(File.join(path, "config.yml")))
+        yml = YAML::load(config_yml.render(layout: false))
+        yml["display_name"]  ## yet
+      else
+        path.split('/').last
+      end
+    end
+    Contract KeywordArgs[:path => String, :articles => Optional[ResourceList]] => Hash
     def create_metadata(path: "", articles: [])
       {
-        directory: { name: path.split('/').last, path: path},
+        directory: { name: dirname_by_path(path), path: path},
         locals: {articles: articles}
       }
     end

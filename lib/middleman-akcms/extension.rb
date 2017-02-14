@@ -1,5 +1,5 @@
 #require 'middleman-akcms/controller'
-#require 'middleman-akcms/helpers'
+require 'middleman-akcms/helpers'
 require 'middleman-akcms/summarize'
 
 module Middleman::Akcms
@@ -7,7 +7,7 @@ module Middleman::Akcms
     attr_reader :controller
     
     ## helpers for use within templates and layouts.
-    #self.defined_helpers = [ Middleman::Akcms::Helpers ]
+    self.defined_helpers = [ Middleman::Akcms::Helpers ]
     
     ## default options
     option :layout, "article"
@@ -44,7 +44,16 @@ module Middleman::Akcms
       super
       app.config.akcms = {}
       app.extensions.activate(:akcms_article)
-      app.extensions.activate(:akcms_directory_summary)
+      if (t = options.directory_summary_template)
+        app.extensions.activate(:akcms_directory_summary)
+        app.ignore t
+      end
+      if (t = options.archive_template)
+        app.extensions.activate(:akcms_archive)
+        app.ignore t
+      end
+      app.extensions.activate(:akcms_pagination) if options.pagination
+      app.extensions.activate(:akcms_series)
     end
     
     def after_configuration
@@ -52,13 +61,26 @@ module Middleman::Akcms
       app.config[:akcms] = {
         layout: options.layout,
         directory_summary_template: options.directory_summary_template,
-        summary_length: options.summary_length
+        summary_length: options.summary_length,
+        pagination: {
+          per_page: options.pagination_per_page,
+          page_link: options.pagination_page_link
+        },
+        archive: {
+          template: options.archive_template,
+          link: options.archive_link
+        },
+        series: {
+          title_template: options.series_title_template
+        }
       }
 
       @summarizer = options.summarizer.new
     end
+=begin
     def manipulate_resource_list(resources)
       resources
     end
+=end
   end  ## class
 end

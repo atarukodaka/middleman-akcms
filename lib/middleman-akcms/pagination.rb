@@ -13,19 +13,13 @@ end
 
 ################################################################
 
-module Middleman::Akcms
-  class PaginatorManipulator
-    include Manipulator
+module Middleman::Akcms::Pagination
+  class Extension < Middleman::Extension
     include Contracts
-
-    Contract Controller => Any
-    def initialize(controller)
-      initialize_manipulator(controller)
-    end
 
     Contract Middleman::Sitemap::Resource, Integer, Hash => Middleman::Sitemap::Resource
     def create_page_resource(resource, page_num, metadata = {})
-      page_url = @controller.options.pagination_page_link % {page_number: page_num}
+      page_url = @app.config.akcms[:pagination][:page_link] % {page_number: page_num}
       link = resource.path.sub(%r{(^|/)([^/]*)\.([^/]*)$}, "\\1\\2-#{page_url}.\\3")
 
       if resource.is_a? Middleman::Sitemap::ProxyResource
@@ -48,12 +42,12 @@ module Middleman::Akcms
 
         paginated_resources = []
         prev_page = nil
-        per_page = @controller.options.pagination_per_page
+        per_page = @app.config.akcms[:pagination][:per_page]
         if pagination.is_a?(Hash) && pagination[:per_page].to_i > 0
           per_page = pagination[:per_page].to_i
         end
 
-        articles = res.locals[:articles] || @controller.articles
+        articles = res.locals[:articles] || @app.sitemap.articles || []
         articles.per_page(per_page).each {|items, num, meta, _is_last|
           locals = {locals: {articles: items, paginator: meta}}
           

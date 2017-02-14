@@ -19,8 +19,8 @@ Feature: directory summary
 
     When I go to "/game/kancolle/event/2015-summer.html"
     Then the status code should be "200"
-#    And I should see "directory name: EVENT"
-    And I should see "directory name: event"
+    And I should see "directory name: EVENT"
+#    And I should see "directory name: event"
 
     When I go to "/game/kancolle/event/index.html"
     Then the status code should be "200"
@@ -30,7 +30,6 @@ Feature: directory summary
 
     When I go to "/game/index.html"
     Then the status code should be "200"
-
 
     
 

@@ -9,7 +9,7 @@
     <%= partial("partials/article_info", locals: {article: article}) %>
   </header>
   <div>
-    <%= akcms.summary(article) %>...
+    <%= article.summary %>...
   </div>
   <div class="continue_reading">
     <%= link_to("continue reading&rarr;", article) %>

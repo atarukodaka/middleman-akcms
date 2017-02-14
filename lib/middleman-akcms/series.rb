@@ -1,22 +1,12 @@
-require 'middleman-akcms/manipulator'
-
-module Middleman::Akcms
-  class SeriesManipulator
-    Middleman::Akcms::Controller.register(:series, self)
-
-    include Manipulator
+module Middleman::Akcms::Series
+  class Extension < Middleman::Extension
     include Contracts
 
-    Contract Controller => Any
-    def initialize(controller)
-      initialize_manipulator(controller)
-    end
-    
     Contract ResourceList => ResourceList
     def manipulate_resource_list(resources)
       series_articles = []
 
-      controller.articles.each do|article|
+      resources.select {|r| r.is_article? }.each do|article|
         if article.data.series
           name = ((article.metadata.has_key?(:directory)) ? article.metadata[:directory][:name] : nil) || File.dirname(article.path).last
           number = (File.split(article.path).last =~ /^([0-9]+)[_\-\s]/).nil? ? 0 : $1.to_i
@@ -39,7 +29,8 @@ module Middleman::Akcms
 
     Contract Hash => String
     def apply_title(hash)
-      controller.options.series_title_template % hash
+      @app.config.akcms[:series][:title_template] % hash
+      #controller.options.series_title_template % hash
     end
   end # class
 end
