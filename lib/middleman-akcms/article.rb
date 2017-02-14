@@ -38,6 +38,7 @@ module Middleman::Akcms::Article
       data.published != false
     end
     
+    Contract Integer => String
     def summary(length=nil)
       length ||= @app.config.akcms[:summary_length]
       @app.config.akcms[:summarizer].summarize(self, length)
@@ -55,7 +56,7 @@ module Middleman::Akcms::Article
     
     Contract String
     def body
-      render({layout: false})
+      render(layout: false)
     end
 
     Contract Hash, Hash, Or[Proc,nil] => String
@@ -77,7 +78,6 @@ module Middleman::Akcms::Article
   class Extension < Middleman::Extension
     include Contracts
 
-    Contract nil => Any
     def after_configuration
       Middleman::Sitemap::Resource.prepend InstanceMethodsToResource
       Middleman::Sitemap::Store.prepend InstanceMethodsToStore

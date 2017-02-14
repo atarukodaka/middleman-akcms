@@ -1,28 +1,28 @@
 module Middleman::Akcms::Archive
-  class Extension < Middleman::Extension
-    module InstanceMethodsToStore
-      include Contracts
-      
-      Contract nil => HashOf[Date => ResourceList]
-      def archives
-        #@manipulators[:archive].archives
-        @app.extensions[:akcms_archive].archives
-      end
-      Contract nil => HashOf[Date => Middleman::Sitemap::Resource]
-      def archive_resources
-        #@manipulators[:archive].archive_resources
-        @app.extensions[:akcms_archive].archive_resources
-        #template = @app.config.akcms[:archive][:template]
-        #@app.sitemap.resources.select {|r| r.class == Middleman::Sitemap::ProxyResource && r.target == template}
-      end
-      Middleman::Sitemap::Store.prepend self
+  module InstanceMethodsToStore
+    include Contracts
+    
+    Contract nil => HashOf[Date => ResourceList]
+    def archives
+      @app.extensions[:akcms_archive].archives
     end
+    Contract nil => HashOf[Date => Middleman::Sitemap::Resource]
+    def archive_resources
+      @app.extensions[:akcms_archive].archive_resources
+    end
+  end
+end
 
-    ################
+module Middleman::Akcms::Archive
+  class Extension < Middleman::Extension
     include Contracts
     
     attr_reader :archives, :archive_resources
     
+    def after_configuration
+      Middleman::Sitemap::Store.prepend InstanceMethodsToStore
+    end
+
     Contract String, Hash => Middleman::Sitemap::ProxyResource
     def create_proxy_resource(link, metadata = {})
       template = @app.config.akcms[:archive][:template]

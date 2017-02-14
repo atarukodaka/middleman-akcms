@@ -10,10 +10,6 @@ module Middleman::Akcms
     option :archive_template, nil       # 'templates/archive_template.html'
     option :archive_link, 'archives/%<year>04d-%<month>02d.html'
 
-    ## tag settings
-    option :tag_template, nil           # 'templates/tag_template.html'
-    option :tag_link, 'tags/%{tag}.html'
-
     ## pagination settings
     option :pagination, true
     option :pagination_per_page, 5
@@ -27,8 +23,7 @@ module Middleman::Akcms
     option :summary_length, 250, 'length of charactor to summrize'
     option :summarizer, Middleman::Akcms::OgaSummarizer
 
-    #attr_reader :summarizer
-
+    ## helpers
     helpers do
       def resource_for(path)
         sitemap.find_resource_by_path(path)
