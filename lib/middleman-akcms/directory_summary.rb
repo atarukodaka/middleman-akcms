@@ -72,7 +72,7 @@ module Middleman::Akcms::DirectorySummary
         next if dir_to_exclude?(dir_path)
         directories[dir_path] = {
           directory_indices: list.select {|a| a.directory_index?},
-          articles: list.select {|r| r.is_article? }
+          articles: list.select {|r| r.is_article? }.sort_by {|r| r.date }.reverse
         }
       end
       directories

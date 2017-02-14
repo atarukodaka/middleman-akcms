@@ -30,7 +30,7 @@
     <h2>MONTHLY ARCHIVES</h2>
     <ul>
       <% sitemap.archive_resources.each {|month, res|%>
-      <li> <%= link_to(month.strftime("%b %Y"), res) %></li>
+      <li> <%= link_to(month.strftime("%b %Y"), res) %> (<%= res.locals[:articles].size %>)</li>
       <% } %>
     </ul>
   </aside>

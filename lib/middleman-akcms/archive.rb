@@ -37,7 +37,7 @@ module Middleman::Akcms::Archive
       @archive_resources = {}
  
       group_by_month(resources.select {|r| r.is_article?}).each {|month, articles|
-        @archive_resources[month] = create_proxy_resource(link(month), locals: {date: month, articles: articles})
+        @archive_resources[month] = create_proxy_resource(link(month), locals: {date: month, articles: articles.sort_by {|r| r.date}.reverse})
         @archives[month] = articles
       }
       return resources + @archive_resources.values.sort_by {|res| res.locals[:date]}.reverse
