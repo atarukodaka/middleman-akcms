@@ -1,4 +1,5 @@
 require 'middleman-akcms/summarize'
+require 'middleman-akcms/util'
 require 'contracts'
 
 module Middleman::Akcms::DirectorySummary
@@ -21,6 +22,7 @@ end
 ################
 module Middleman::Akcms::DirectorySummary
   class Extension < Middleman::Extension
+    include Middleman::Akcms::Util
     include Contracts
 
     Contract nil => Any
@@ -67,12 +69,12 @@ module Middleman::Akcms::DirectorySummary
     def get_directories(resources)
       ## list up all directories
       directories = {}  ## {directory_indices:, resources:}
-      
-      resources.reject {|r| r.ignored? }.group_by {|r| dirname(resource_eponymous_path(r))}.each do |dir_path, list|
+
+      resources.group_by {|r| dirname(resource_eponymous_path(r))}.each do |dir_path, list|
         next if dir_to_exclude?(dir_path)
         directories[dir_path] = {
           directory_indices: list.select {|a| a.directory_index?},
-          articles: list.select {|r| r.is_article? }.sort_by {|r| r.date }.reverse
+          articles: select_articles(list)
         }
       end
       directories

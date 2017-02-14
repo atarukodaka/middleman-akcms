@@ -1,3 +1,5 @@
+require 'middleman-akcms/util'
+
 module Middleman::Akcms::Archive
   module InstanceMethodsToStore
     include Contracts
@@ -15,6 +17,7 @@ end
 
 module Middleman::Akcms::Archive
   class Extension < Middleman::Extension
+    include Middleman::Akcms::Util
     include Contracts
     
     attr_reader :archives, :archive_resources
@@ -35,9 +38,9 @@ module Middleman::Akcms::Archive
     def manipulate_resource_list(resources)
       @archives = {}
       @archive_resources = {}
- 
-      group_by_month(resources.select {|r| r.is_article?}).each {|month, articles|
-        @archive_resources[month] = create_proxy_resource(link(month), locals: {date: month, articles: articles.sort_by {|r| r.date}.reverse})
+
+      group_by_month(select_articles(resources)).each {|month, articles|
+        @archive_resources[month] = create_proxy_resource(link(month), locals: {date: month, articles: articles})
         @archives[month] = articles
       }
       return resources + @archive_resources.values.sort_by {|res| res.locals[:date]}.reverse
