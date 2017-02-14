@@ -4,8 +4,7 @@ pagination:
   per_page: 10
 ---
 
-
-<% articles ||= page_articles if pagination %>
+<% articles = page_articles if pagination? %>
 
 <% title = "Directory: #{current_resource.metadata[:directory][:name]}" %>
 <%= partial("partials/title", locals: {title: title }) %>

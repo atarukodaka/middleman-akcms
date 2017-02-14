@@ -12,6 +12,8 @@ module Middleman::Akcms::Archive
       def archive_resources
         #@manipulators[:archive].archive_resources
         @app.extensions[:akcms_archive].archive_resources
+        #template = @app.config.akcms[:archive][:template]
+        #@app.sitemap.resources.select {|r| r.class == Middleman::Sitemap::ProxyResource && r.target == template}
       end
       Middleman::Sitemap::Store.prepend self
     end

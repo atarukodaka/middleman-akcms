@@ -34,8 +34,7 @@ module Middleman::Akcms::DirectorySummary
       new_resources = []      
       empty_directories = {}
       
-      directories = get_directories(resources.select {|r| r.is_article?})
-
+      directories = get_directories(resources)
       directories.each do |dir, hash|
         app.logger.debug(" -- checking dir: '#{dir}'...")
         # add directory metadata for each resources
@@ -65,22 +64,23 @@ module Middleman::Akcms::DirectorySummary
     private
 
     Contract ResourceList => Hash
-    def get_directories(articles)
+    def get_directories(resources)
       ## list up all directories
-      directories = {}  ## {directory_indices:, articles:}
+      directories = {}  ## {directory_indices:, resources:}
       
-      articles.group_by {|r| dirname(resource_eponymous_path(r))}.each do |dir_path, list|
+      resources.reject {|r| r.ignored? }.group_by {|r| dirname(resource_eponymous_path(r))}.each do |dir_path, list|
         next if dir_to_exclude?(dir_path)
         directories[dir_path] = {
           directory_indices: list.select {|a| a.directory_index?},
-          articles: list}
+          articles: list.select {|r| r.is_article? }
+        }
       end
       directories
     end
 
     Contract String, Hash => Middleman::Sitemap::ProxyResource
     def create_proxy_resource(link, metadata = {})
-      app.logger.debug(" -- new resource added: #{link} with md: #{metadata}")
+      app.logger.debug(" -- new resource added: #{link}")
       template = app.config.akcms[:directory_summary_template]
       Middleman::Sitemap::ProxyResource.new(app.sitemap, link, template).tap do |p|
         p.add_metadata(metadata)
