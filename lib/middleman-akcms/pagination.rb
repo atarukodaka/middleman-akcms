@@ -1,21 +1,12 @@
-## helper
-module Middleman::Akcms
-  module PaginationHelper
-    include ::Contracts
-
-    Contract Bool
-    def pagination?
-      (current_resource.data.pagination && current_resource.locals.has_key?(:paginator)) ? true : false
-    end
-    Middleman::Akcms::Extension.helpers(self)
-  end  ## module
-end
-
-################################################################
-
 module Middleman::Akcms::Pagination
   class Extension < Middleman::Extension
     include Contracts
+
+    helpers do
+      def pagination?
+        (current_resource.data.pagination && current_resource.locals.has_key?(:paginator)) ? true : false
+      end
+    end
 
     Contract Middleman::Sitemap::Resource, Integer, Hash => Middleman::Sitemap::Resource
     def create_page_resource(resource, page_num, metadata = {})

@@ -3,18 +3,18 @@ module Middleman::Akcms::Article
     def is_article?
       (self.is_a? InstanceMethodsToArticle) ? true : false
     end
-
     def to_article!
       self.extend InstanceMethodsToArticle
+      self
     end
   end  # module
-  ################
+
   module InstanceMethodsToStore
     def articles
       resources.select {|r| r.is_article? }.sort_by {|r| r.date }.reverse
     end
   end  # module
-  ################
+
   module InstanceMethodsToArticle
     include Contracts
 
@@ -33,29 +33,14 @@ module Middleman::Akcms::Article
         end
     end
 
-    Contract Array
-    def tags
-      article_tags = data.tags || data.tag
-      
-      if article_tags.is_a? String
-        article_tags.split(',').map(&:strip)
-      else
-        Array(article_tags).map(&:to_s)
-      end
-    end
-
     Contract Bool
     def published?
       data.published != false
     end
-    Contract String
-    def body
-      render({layout: false})
-    end
-
+    
     def summary(length=nil)
       length ||= @app.config.akcms[:summary_length]
-      @app.extensions[:akcms].summarizer.summarize(self, length)
+      @app.config.akcms[:summarizer].summarize(self, length)
     end
 
     ## pager
@@ -68,11 +53,16 @@ module Middleman::Akcms::Article
       @app.sitemap.articles.reverse.find {|a| a.date > date}
     end
     
+    Contract String
+    def body
+      render({layout: false})
+    end
+
     Contract Hash, Hash, Or[Proc,nil] => String
     def render(opts={}, locs={}, &block)
       unless opts.has_key?(:layout)
         opts[:layout] = metadata[:options][:layout]
-        opts[:layout] = @app.config.akcms[:layout] if opts[:layout].nil? || opts[:layout] == :_auto_layout   ## yet
+        opts[:layout] = @app.config.akcms[:layout] if opts[:layout].nil? || opts[:layout] == :_auto_layout
         # Convert to a string unless it's a boolean
         opts[:layout] = opts[:layout].to_s if opts[:layout].is_a? Symbol
       end
@@ -87,9 +77,6 @@ module Middleman::Akcms::Article
   class Extension < Middleman::Extension
     include Contracts
 
-    option :layout, nil # "article"
-    
-    ## Hooks
     Contract nil => Any
     def after_configuration
       Middleman::Sitemap::Resource.prepend InstanceMethodsToResource
@@ -113,7 +100,7 @@ module Middleman::Akcms::Article
         end
         used_resources << res
       end
-      used_resources
+      return used_resources
     end
   end  ## class  
 end # module

@@ -14,7 +14,7 @@ Feature: helpers
       ---
       layout: false
       ---
-      page_for: <%= page_for("/helpers.html").path %>
+      resource_for: <%= resource_for("/helpers.html").path %>
       top_page: <%= top_page.data.title %>
       """
 
@@ -24,7 +24,7 @@ Feature: helpers
     Then the status code should be "200"
 
     When I go to "/helpers.html"    
-    And I should see "page_for: helpers.html"
+    And I should see "resource_for: helpers.html"
     And I should see "top_page: HOME"
     
 

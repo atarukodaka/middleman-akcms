@@ -23,26 +23,9 @@ module Middleman::Akcms::DirectorySummary
   class Extension < Middleman::Extension
     include Contracts
 
-    #attr_reader :summarizer
-    
-    helpers do
-=begin
-      def summarize(res, length = nil)
-        extension.summarizer.summarize(res, length || app.config[:akcms].summary_length)
-      end
-
-      def pagination?
-        (current_resource.data.pagination && current_resource.locals.has_key?(:paginator)) ? true : false
-      end
-=end
-    end
-    
-    ## Hooks
     Contract nil => Any
     def after_configuration
       Middleman::Sitemap::Resource.prepend InstanceMethodsToResource
-
-      @template = app.config.akcms[:directory_summary_template]
     end
 
     Contract ResourceList => ResourceList
@@ -57,7 +40,6 @@ module Middleman::Akcms::DirectorySummary
         app.logger.debug(" -- checking dir: '#{dir}'...")
         # add directory metadata for each resources
         hash[:articles].each do |res|
-          dir_name = dir.split("/").last
           res.add_metadata(directory: {name: dirname_by_path(dir), path: dir})
         end
         
@@ -99,20 +81,22 @@ module Middleman::Akcms::DirectorySummary
     Contract String, Hash => Middleman::Sitemap::ProxyResource
     def create_proxy_resource(link, metadata = {})
       app.logger.debug(" -- new resource added: #{link} with md: #{metadata}")
-      Middleman::Sitemap::ProxyResource.new(app.sitemap, link, @template).tap do |p|
+      template = app.config.akcms[:directory_summary_template]
+      Middleman::Sitemap::ProxyResource.new(app.sitemap, link, template).tap do |p|
         p.add_metadata(metadata)
       end
     end
 
+    Contract String => String
     def dirname_by_path(path)
       if (config_yml = @app.sitemap.find_resource_by_path(File.join(path, "config.yml")))
         yml = YAML::load(config_yml.render(layout: false))
         yml["display_name"]  ## yet
       else
         path.split('/').last
-      end
+      end.to_s
     end
-    Contract KeywordArgs[:path => String, :articles => Optional[ResourceList]] => Hash
+    Contract KeywordArgs[:path => String, :articles => ResourceList] => Hash
     def create_metadata(path: "", articles: [])
       {
         directory: { name: dirname_by_path(path), path: path},

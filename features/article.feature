@@ -40,20 +40,3 @@ Feature: article methods
     When I go to "/no_date.html"
     Then the status code should be "200"
     And I should not see "date: 2017/01/01"
-
-  Scenario: tags methods
-    Given a fixture app "basic-app"
-    And a file named "source/foobar.html.erb" with:
-      """
-      ---
-      tags: foo, bar
-      ---
-      tags: <%= current_resource.tags.join(", ") %>
-      """
-    And the Server is running at "basic-app"
-    When I go to "/foobar.html"
-    Then the status code should be "200"
-    And I should see "tags: foo, bar"
-
-
-    

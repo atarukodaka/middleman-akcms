@@ -8,7 +8,7 @@ module Middleman::Akcms::Series
 
       resources.select {|r| r.is_article? }.each do|article|
         if article.data.series
-          name = ((article.metadata.has_key?(:directory)) ? article.metadata[:directory][:name] : nil) || File.dirname(article.path).last
+          name = ((article.metadata.has_key?(:directory)) ? article.metadata[:directory][:name] : nil) || File.dirname(article.path).split('/').last
           number = (File.split(article.path).last =~ /^([0-9]+)[_\-\s]/).nil? ? 0 : $1.to_i
           
           hash = { name: name, number: number}

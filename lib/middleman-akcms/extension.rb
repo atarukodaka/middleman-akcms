@@ -1,19 +1,10 @@
-#require 'middleman-akcms/controller'
-require 'middleman-akcms/helpers'
-require 'middleman-akcms/summarize'
-
 module Middleman::Akcms
   class Extension < Middleman::Extension
-    attr_reader :controller
-    
-    ## helpers for use within templates and layouts.
-    self.defined_helpers = [ Middleman::Akcms::Helpers ]
-    
     ## default options
-    option :layout, "article"
+    option :layout, "layout", "article specified layout"  # :_auto_layout
 
     ## directory summary settings
-    option :directory_summary_template, 'templates/directory_summary_template.html'
+    option :directory_summary_template, nil #'templates/directory_summary_template.html'
     
     ## archive settings
     option :archive_template, nil       # 'templates/archive_template.html'
@@ -31,33 +22,26 @@ module Middleman::Akcms
     ## series settings
     option :series_title_template, "%{name} #%{number}: %{article_title}" 
 
-    ## label
-    option :top_page_label, "Home"
-
     ## summarizer
-    option :summary_length, 250         # length of charactor to summrize
+    require 'middleman-akcms/summarize'
+    option :summary_length, 250, 'length of charactor to summrize'
     option :summarizer, Middleman::Akcms::OgaSummarizer
 
-    attr_reader :summarizer
+    #attr_reader :summarizer
 
-    def initialize(app, options_hash = {}, &block)
-      super
-      app.config.akcms = {}
-      app.extensions.activate(:akcms_article)
-      if (t = options.directory_summary_template)
-        app.extensions.activate(:akcms_directory_summary)
-        app.ignore t
+    helpers do
+      def resource_for(path)
+        sitemap.find_resource_by_path(path)
       end
-      if (t = options.archive_template)
-        app.extensions.activate(:akcms_archive)
-        app.ignore t
+
+      def top_page
+        sitemap.find_resource_by_path("/" + config[:index_file])
       end
-      app.extensions.activate(:akcms_pagination) if options.pagination
-      app.extensions.activate(:akcms_series)
     end
     
-    def after_configuration
-      #app.extensions.activate(Middleman::Akcms::ArticleExtension)
+    def initialize(app, options_hash = {}, &block)
+      super
+
       app.config[:akcms] = {
         layout: options.layout,
         directory_summary_template: options.directory_summary_template,
@@ -72,15 +56,22 @@ module Middleman::Akcms
         },
         series: {
           title_template: options.series_title_template
-        }
+        },
+        summarizer: options.summarizer.new
       }
-
-      @summarizer = options.summarizer.new
+      
+      ## activate relevant extensions
+      app.extensions.activate(:akcms_article)
+      if (t = options.directory_summary_template)
+        app.extensions.activate(:akcms_directory_summary)
+        app.ignore t
+      end
+      if (t = options.archive_template)
+        app.extensions.activate(:akcms_archive)
+        app.ignore t
+      end
+      app.extensions.activate(:akcms_pagination) if options.pagination
+      app.extensions.activate(:akcms_series)
     end
-=begin
-    def manipulate_resource_list(resources)
-      resources
-    end
-=end
   end  ## class
 end
