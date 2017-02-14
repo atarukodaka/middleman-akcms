@@ -40,7 +40,7 @@ module Middleman::Akcms::Pagination
 
         articles = res.locals[:articles] || @app.sitemap.articles || []
         articles.per_page(per_page).each {|items, num, meta, _is_last|
-          locals = {locals: {articles: items, paginator: meta}}
+          locals = {locals: {page_articles: items, paginator: meta}}
           
           # set pager
           meta.prev_page = prev_page
@@ -91,31 +91,5 @@ module Middleman::Akcms::Pagination
 
       return pages[start..ed]
     end
-=begin
-    Contract Middleman::Sitemap::Resource, Integer => ResourceList
-    def _paginated_resources_for_navigation(resource, max_display = 10)
-      current_resource = resource
-      page_number = current_resource.locals[:paginator][:page_number]
-      pages = current_resource.locals[:paginator][:paginated_resources]
-
-      list = [pages[page_number-1]]
-      i = 1
-      cnt = 1
-
-      while cnt < max_display
-        if (unreached_bottom = (page_number+i-1 < pages.size))
-          list.push pages[page_number+i-1]
-          cnt = cnt + 1
-        end
-        if (unreached_top = (page_number-i > 0))
-          list.unshift pages[page_number-i-1]
-          cnt = cnt + 1
-        end
-        i += 1
-        break if !unreached_bottom && !unreached_top
-      end
-      return list
-    end
-=end
   end ## class
 end

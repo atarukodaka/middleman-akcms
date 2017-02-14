@@ -1,4 +1,5 @@
 ## memo
+ 
 - rubygems
 - release 準備
 

@@ -3,6 +3,7 @@ title: Ataru Kodaka Site
 layout: layout
 date: 2014/11/1
 pagination: true
+  per_page: 10
 type: summary
 ---
 
@@ -17,7 +18,7 @@ type: summary
 <% when :summary %>
 <!-- show recent article summary -->
 <!--   set layout frontmatter as layout -->
-<%= partial("partials/article_summary", locals: {articles: sitemap.articles.first(10)}) %>
+<%= partial("partials/article_summary", locals: {articles: page_articles }) %>
 
 <% else %>
 

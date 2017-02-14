@@ -13,7 +13,7 @@ Feature: pagination
         per_page: 2
       ---
       <% if pagination %>
-	<% articles.each {|article| %>
+	<% page_articles.each {|article| %>
 	 - title: <%= article.title %>
 	<% } %>
 	<%= paginator.page_number %> / <%= paginator.num_pages %>
@@ -80,7 +80,7 @@ Feature: pagination
       pagination:
         per_page: 1
       ---
-      <% articles.each {|article| %>
+      <% page_articles.each {|article| %>
        - title: <%= article.title %>
       <% } %>
       <%= paginator.page_number %> / <%= paginator.num_pages %>
