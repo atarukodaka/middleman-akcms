@@ -1,23 +1,8 @@
 ## memo
 - rubygems
-- paginator feature
-- directory summary: home dir name config ?
-- ancestors, breadcrump まわり、foo.html と foo/index.html のバッティング
+- release 準備
 
-#### dev branch
-- tags[], archives[] の中身を proxy ではなく articles に
-- 各proxy は akcms.proxy_resources[:tag][tag_name] で取るように
-- breadcrumb を別に。ancestors を meatdataに持つ
-- type: に "article" 以外を指定すると articles とみなさない
-- manipulator を継承から委譲に変えた
-- シリーズ機能
-- tag: safe_parametize
-- index.html がないときの処理
-- tag feature: safe check 
-
-
-## devel
-### 0.0.1
+## 0.0.1
 - カテゴリの階層表現
 - tag サポート
 - 複数tagのサポート
@@ -32,7 +17,6 @@
   - locals: page_articles, paginator
 - source/foo/category_name.txt にカテゴリ表示名を入れられる
 - directory index 対応チェック
-- tags
 - pagination: <<,1,2,3,>>
 - bootstrap, js CDN
 - breadcrump: pagination のとき
@@ -47,3 +31,17 @@
 - category から index summary ？
 - category_name.txt -> config.yml
 - filename template を apply_template を使うか
+- tags[], archives[] の中身を proxy ではなく articles に
+- 各proxy は akcms.proxy_resources[:tag][tag_name] で取るように
+- breadcrumb を別に。ancestors を meatdataに持つ
+- type: に "article" 以外を指定すると articles とみなさない
+- manipulator を継承から委譲に変えた
+- シリーズ機能
+- tag: safe_parametize
+- index.html がないときの処理
+- tag feature: safe check 
+- paginator feature
+- directory summary: home dir name config ?
+- ancestors, breadcrump まわり、foo.html と foo/index.html のバッティング
+- tag 機能drop
+- extension に分ける
