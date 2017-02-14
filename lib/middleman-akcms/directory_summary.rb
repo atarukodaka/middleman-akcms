@@ -5,7 +5,7 @@ module Middleman::Akcms::DirectorySummary
   module InstanceMethodsToResource
     include Contracts
     
-    ## foo/bar/baz/index.html => foo/bar.html as parent
+    ## foo/bar.html as parent of foo/bar/baz/index.html
     Contract nil => Or[Middleman::Sitemap::Resource, nil]
     def parent
       ret = super
@@ -33,7 +33,7 @@ module Middleman::Akcms::DirectorySummary
       index_file = app.config[:index_file]
       new_resources = []      
       empty_directories = {}
-      
+
       directories = get_directories(resources)
       directories.each do |dir, hash|
         app.logger.debug(" -- checking dir: '#{dir}'...")
@@ -91,7 +91,7 @@ module Middleman::Akcms::DirectorySummary
     def dirname_by_path(path)
       if (config_yml = @app.sitemap.find_resource_by_path(File.join(path, "config.yml")))
         yml = YAML::load(config_yml.render(layout: false))
-        yml["display_name"]  ## yet
+        yml["directory_name"]  ## yet
       else
         path.split('/').last
       end.to_s

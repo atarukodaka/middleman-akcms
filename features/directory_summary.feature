@@ -13,7 +13,7 @@ Feature: directory summary
 
     And a file named "source/game/kancolle/event/config.yml" with:
       """
-      display_name: EVENT
+      directory_name: EVENT
       """
     And the Server is running at "directory-summary-app"
 
