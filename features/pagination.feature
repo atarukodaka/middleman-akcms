@@ -12,7 +12,7 @@ Feature: pagination
       pagination:
         per_page: 2
       ---
-      <% if pagination %>
+      <% if pagination? %>
 	<% page_articles.each {|article| %>
 	 - title: <%= article.title %>
 	<% } %>
