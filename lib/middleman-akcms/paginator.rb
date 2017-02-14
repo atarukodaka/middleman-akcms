@@ -1,5 +1,3 @@
-require 'middleman-akcms/manipulator'
-
 ## helper
 module Middleman::Akcms
   module PaginationHelper
@@ -17,8 +15,6 @@ end
 
 module Middleman::Akcms
   class PaginatorManipulator
-    Middleman::Akcms::Controller.register(:paginator, self)
-    
     include Manipulator
     include Contracts
 

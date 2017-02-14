@@ -1,13 +1,13 @@
-require 'middleman-akcms/controller'
-require 'middleman-akcms/helpers'
+#require 'middleman-akcms/controller'
+#require 'middleman-akcms/helpers'
+require 'middleman-akcms/summarize'
 
-################
 module Middleman::Akcms
   class Extension < Middleman::Extension
     attr_reader :controller
     
     ## helpers for use within templates and layouts.
-    self.defined_helpers = [ Middleman::Akcms::Helpers ]
+    #self.defined_helpers = [ Middleman::Akcms::Helpers ]
     
     ## default options
     option :layout, "article"
@@ -36,12 +36,29 @@ module Middleman::Akcms
 
     ## summarizer
     option :summary_length, 250         # length of charactor to summrize
-    option :summarizer, OgaSummarizer
+    option :summarizer, Middleman::Akcms::OgaSummarizer
+
+    attr_reader :summarizer
+
+    def initialize(app, options_hash = {}, &block)
+      super
+      app.config.akcms = {}
+      app.extensions.activate(:akcms_article)
+      app.extensions.activate(:akcms_directory_summary)
+    end
     
-    ## Hooks
     def after_configuration
-      @controller = Middleman::Akcms::Controller.new(self)
-      @controller.register_manipulators
+      #app.extensions.activate(Middleman::Akcms::ArticleExtension)
+      app.config[:akcms] = {
+        layout: options.layout,
+        directory_summary_template: options.directory_summary_template,
+        summary_length: options.summary_length
+      }
+
+      @summarizer = options.summarizer.new
+    end
+    def manipulate_resource_list(resources)
+      resources
     end
   end  ## class
 end

@@ -11,7 +11,8 @@ Feature: summary
 
     And a file named "source/summary.html.erb" with:
       """
-      <%= akcms.summary(top_page, 10) %>
+      <% res = sitemap.find_resource_by_path("/index.html") %>
+      <%= res.summary(10) %>
       """
 
     And the Server is running at "basic-app"

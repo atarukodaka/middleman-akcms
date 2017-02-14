@@ -2,11 +2,6 @@ module Middleman::Akcms
   module Helpers
     include Contracts
 
-    Contract Middleman::Akcms::Controller
-    def akcms
-      app.extensions[:akcms].controller
-    end
-
     Contract String => Middleman::Sitemap::Resource
     def page_for(path)
       sitemap.find_resource_by_path(path)

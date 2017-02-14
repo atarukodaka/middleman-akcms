@@ -1,24 +1,27 @@
 require 'contracts'
 
-# summerizer
 module Middleman::Akcms
   ## base module to be included
   module Summarizer
     include Contracts
 
     Contract Middleman::Sitemap::Resource, Integer => String
-    def summary(resource, length)
-      resource.body[0...length]
+    def summarize(resource, length)
+       resource.render({layout: false})[0...length]
     end
   end
 
+  ## simple summarizer class
+  class SimpleSummarizer
+    include Summarizer
+  end
   ## summarizer class using Oga
   class OgaSummarizer
     include Summarizer
     include Contracts
     
     Contract Middleman::Sitemap::Resource, Integer => String
-    def summary(resource, length)
+    def summarize(resource, length)
       require 'oga'
       begin
         doc = Oga.parse_html(resource.render(layout: false))
@@ -28,21 +31,5 @@ module Middleman::Akcms
       end
     end
   end
-
-  ################
-  class Summarize
-    include Contracts
-
-    Contract Class => Any
-    def initialize(summarizer_klass)
-      @summarizer = summarizer_klass.new
-    end
-
-    Contract Middleman::Sitemap::Resource, Integer => String
-    def summary(resource, length)
-      @summarizer.summary(resource, length)
-    end
-  end
 end
-
 
