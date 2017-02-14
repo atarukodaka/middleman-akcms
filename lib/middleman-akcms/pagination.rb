@@ -68,14 +68,32 @@ module Middleman::Akcms::Pagination
     def add_paginated_resources(paginated_resources)
       paginated_resources.each {|p|
         p.locals[:paginator][:paginated_resources] = paginated_resources
-        p.locals[:paginator][:paginated_resources_for_navigation] =  proc {|r|
-          paginated_resources_for_navigation(r)}
+        p.locals[:paginator][:paginated_resources_for_navigation] =  proc {|r, m|
+          paginated_resources_for_navigation(r, m)}
       }
     end
     ## if u have100 pages for navigation and in 8th resource,
     ## u wld get like 4..13th resources
     Contract Middleman::Sitemap::Resource, Integer => ResourceList
-    def paginated_resources_for_navigation(resource, max_display = 10)
+    def paginated_resources_for_navigation(resource, max_display=10)
+      pages = resource.locals[:paginator][:paginated_resources]
+      size = pages.size
+      page_number = resource.locals[:paginator][:page_number] -1
+
+      half = (max_display/2).ceil
+      start = 0
+
+      0.upto(size - max_display).each do |i|
+        start = i
+        break if i + half >= page_number
+      end
+      ed = start + max_display - 1
+
+      return pages[start..ed]
+    end
+=begin
+    Contract Middleman::Sitemap::Resource, Integer => ResourceList
+    def _paginated_resources_for_navigation(resource, max_display = 10)
       current_resource = resource
       page_number = current_resource.locals[:paginator][:page_number]
       pages = current_resource.locals[:paginator][:paginated_resources]
@@ -98,5 +116,6 @@ module Middleman::Akcms::Pagination
       end
       return list
     end
+=end
   end ## class
 end

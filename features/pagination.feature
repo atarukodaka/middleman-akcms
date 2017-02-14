@@ -77,14 +77,12 @@ Feature: pagination
       ---
       title: home
       layout: false
+      type: summary
       date: 2016/12/31
       pagination:
         per_page: 2
       ---
-      <% articles.each {|article| %>
-        - title: <%= article.title %>
-      <% } %>
-      <% paginator[:paginated_resources_for_navigation].call(current_resource, 1).each do |res| %>
+      <% paginator[:paginated_resources_for_navigation].call(current_resource, 3).each do |res| %>
         - <%= res.locals[:paginator][:page_number] %>
       <% end %>
       """
@@ -117,3 +115,4 @@ Feature: pagination
 
     And I should see "  - 1"
     And I should see "  - 2"
+    And I should not see "  - 3"
