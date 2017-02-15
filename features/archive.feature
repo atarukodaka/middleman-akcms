@@ -5,7 +5,7 @@ Feature: archive
     And a file named "config.rb" with:
       """
       activate :akcms do |akcms|
-        akcms.archive_template = "archive_template.html"
+        akcms.archive_month_template = "archive_template.html"
       end
       """
     And a file named "source/foo.html.md" with:
@@ -29,11 +29,8 @@ Feature: archive
       """
     And a file named "source/archives.html.erb" with:
       """
-      <% sitemap.archives.each {|month, articles| %>
-        - <%= month.strftime("%Y-%m") %>
-      <% } %>
-
-      <% sitemap.archive_resources.each {|month, res| %>
+      <% sitemap.archives(:month).each {|date, res| %>
+        date: <%= date.strftime("%Y-%m") %>
         res: <%= res.path %>
       <% } %>
       """
@@ -47,8 +44,6 @@ Feature: archive
 
     When I go to "/archives.html"
     Then the status code should be "200"
-    And I should see "- 2017-01"
-    And I should see "- 2017-02"
+    And I should see "date: 2017-01"
     And I should see "res: archives/2017-01.html"
-    And I should see "res: archives/2017-02.html"
 

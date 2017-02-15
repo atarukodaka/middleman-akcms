@@ -1,16 +1,15 @@
 require 'middleman-akcms/util'
 
 module Middleman::Akcms::Archive
+  include Contracts
+  TypeSymbol = Or[:year, :month, :day]
+  
   module InstanceMethodsToStore
     include Contracts
     
-    Contract nil => HashOf[Date => ResourceList]
-    def archives
-      @app.extensions[:akcms_archive].archives
-    end
-    Contract nil => HashOf[Date => Middleman::Sitemap::Resource]
-    def archive_resources
-      @app.extensions[:akcms_archive].archive_resources
+    Contract TypeSymbol => HashOf[Date => Middleman::Sitemap::Resource]
+    def archives(type = :month)
+      @app.extensions[:akcms_archive].archives[type]
     end
   end
 end
@@ -20,41 +19,62 @@ module Middleman::Akcms::Archive
     include Middleman::Akcms::Util
     include Contracts
     
-    attr_reader :archives, :archive_resources
+    attr_reader :archives
     
     def after_configuration
       Middleman::Sitemap::Store.prepend InstanceMethodsToStore
     end
 
-    Contract String, Hash => Middleman::Sitemap::ProxyResource
-    def create_proxy_resource(link, metadata = {})
-      template = @app.config.akcms[:archive][:template]
-      Middleman::Sitemap::ProxyResource.new(@app.sitemap, link, template).tap do |p|
+    Contract Middleman::Sitemap::Store, String, String, Hash => Middleman::Sitemap::ProxyResource
+    def create_proxy_resource(sitemap, link, template, metadata = {})
+      Middleman::Sitemap::ProxyResource.new(sitemap, link, template).tap do |p|
         p.add_metadata(metadata)
       end
     end
     
     Contract ResourceList => ResourceList
     def manipulate_resource_list(resources)
-      @archives = {}
-      @archive_resources = {}
+      @archives = {year: {}, month: {}, day: {}}
+      new_resources = []
+      articles = select_articles(resources)
+      
+      [:year, :month, :day].each do |type|
+        template = @app.config.akcms[:archive][type][:template]
+        next if template.nil?
 
-      group_by_month(select_articles(resources)).each {|month, articles|
-        @archive_resources[month] = create_proxy_resource(link(month), locals: {date: month, articles: articles})
-        @archives[month] = articles
-      }
-      return resources + @archive_resources.values.sort_by {|res| res.locals[:date]}.reverse
+        group_by_type(type, articles).each do |date, articles|
+          locals = {locals: {date: date, articles: articles, archive_type: type}}
+          
+          new_resources << @archives[type][date] =
+            create_proxy_resource(@app.sitemap, link_path(type, date), template, locals)
+        end
+      end
+      return resources + new_resources
+      #return resources + @archives.sort_by {|k, _res| k }.reverse.map {|ar| ar[1]}
     end
     
     ################
     private
-    Contract Date => String
-    def link(month)
-      @app.config.akcms[:archive][:link] % {year: month.year, month: month.month}
+    Contract TypeSymbol, Date => String
+    def link_path(type=:month, date)
+      @app.config.akcms[:archive][type][:link] % {year: date.year, month: date.month, day: date.day}
     end
+
+    Contract TypeSymbol, ResourceList => HashOf[Date => ResourceList]
+    def group_by_type(type=:month, resources)
+      case type
+      when :day
+        resources.group_by {|a| Date.new(a.date.year, a.date.month, a.date.day)}        
+      when :month
+        resources.group_by {|a| Date.new(a.date.year, a.date.month, 1)}
+      when :year
+        resources.group_by {|a| Date.new(a.date.year, 1, 1)}
+      end
+    end
+    
     Contract ResourceList => Hash
     def group_by_month(resources)
-      resources.group_by {|a| Date.new(a.date.year, a.date.month, 1)}
+      group_by(:month, resources)
     end
   end # class
 end

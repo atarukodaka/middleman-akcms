@@ -7,8 +7,12 @@ module Middleman::Akcms
     option :directory_summary_template, nil #'templates/directory_summary_template.html'
     
     ## archive settings
-    option :archive_template, nil       # 'templates/archive_template.html'
-    option :archive_link, 'archives/%<year>04d-%<month>02d.html'
+    option :archive_year_template, nil       # 'templates/archive_template.html'
+    option :archive_year_link, 'archives/%<year>04d.html'
+    option :archive_month_template, nil       # 'templates/archive_template.html'
+    option :archive_month_link, 'archives/%<year>04d-%<month>02d.html'
+    option :archive_day_template, nil       # 'templates/archive_template.html'
+    option :archive_day_link, 'archives/%<year>04d-%<month>02d-%<day>02d.html'
 
     ## pagination settings
     option :pagination, true
@@ -46,8 +50,18 @@ module Middleman::Akcms
           page_link: options.pagination_page_link
         },
         archive: {
-          template: options.archive_template,
-          link: options.archive_link
+          year: {
+            template: options.archive_year_template,
+            link: options.archive_year_link
+          },
+          month: {
+            template: options.archive_month_template,
+            link: options.archive_month_link
+          },
+          day: {
+            template: options.archive_day_template,
+            link: options.archive_day_link
+          }
         },
         series: {
           title_template: options.series_title_template
@@ -61,9 +75,12 @@ module Middleman::Akcms
         app.extensions.activate(:akcms_directory_summary)
         app.ignore t
       end
-      if (t = options.archive_template)
+      archive_templates = [options.archive_year_template, options.archive_month_template, options.archive_day_template]
+      if archive_templates.any?
         app.extensions.activate(:akcms_archive)
-        app.ignore t
+        archive_templates.each do |t|
+          app.ignore t if t
+        end
       end
       app.extensions.activate(:akcms_pagination) if options.pagination
       app.extensions.activate(:akcms_series)

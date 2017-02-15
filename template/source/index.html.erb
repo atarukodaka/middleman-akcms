@@ -18,9 +18,11 @@ type: summary
 <% when :summary %>
 <!-- show recent article summary -->
 <!--   set layout frontmatter as layout -->
-<%= partial("partials/article_summary", locals: {articles: page_articles }) %>
+<% articles = page_articles if pagination? %>
+<%= partial("partials/article_summary", locals: {articles: articles }) %>
 
 <% else %>
 
 WELCOME
+
 <% end %>
