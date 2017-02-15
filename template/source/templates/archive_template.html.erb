@@ -6,7 +6,10 @@ pagination:
 
 <% articles = page_articles if pagination? %>
 
-<% title = "Monthly Archives: #{date.strftime("%b %Y")}" %>
+<% titles = {year: "Yearly", month: "Monthly", day: "Daily"} %>
+<% formats = {year: "%Y", month: "%b %Y", day: "%d %b %Y"} %>
+
+<% title = "#{titles[archive_type]} Archives: #{date.strftime(formats[archive_type])}" %>
 <%= partial("partials/title", locals: {title: title}) %>
 <%= partial("partials/article_summary", locals: {articles: articles }) %>
 

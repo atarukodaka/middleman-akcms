@@ -7,9 +7,9 @@ module Middleman::Akcms::Archive
   module InstanceMethodsToStore
     include Contracts
     
-    Contract TypeSymbol => HashOf[Date => Middleman::Sitemap::Resource]
-    def archives(type = :month)
-      @app.extensions[:akcms_archive].archives[type]
+    Contract Hash
+    def archives
+      @app.extensions[:akcms_archive].archives
     end
   end
 end
