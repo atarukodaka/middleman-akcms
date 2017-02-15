@@ -37,8 +37,8 @@ module Middleman::Akcms::Archive
         template = @app.config.akcms[:archive][type][:template]
         next if template.nil?
 
-        group_by_type(type, articles).each do |date, articles|
-          locals = {locals: {date: date, articles: articles, archive_type: type}}
+        group_by_type(type, articles).each do |date, d_articles|
+          locals = {locals: {date: date, articles: d_articles, archive_type: type}}
           
           new_resources << @archives[type][date] =
             create_proxy_resource(@app.sitemap, link_path(type, date), template, locals)

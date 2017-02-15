@@ -4,7 +4,8 @@ module Middleman::Akcms::Pagination
 
     helpers do
       def pagination?
-        (current_resource.data.pagination && current_resource.locals.has_key?(:paginator)) ? true : false
+        res = current_resource
+        (res.data.pagination && res.locals.has_key?(:paginator)) ? true : false
       end
     end
 
@@ -23,6 +24,15 @@ module Middleman::Akcms::Pagination
       end
     end
 
+    Contract Hash => Integer
+    def get_per_page(pagination)
+      if pagination.is_a?(Hash) && pagination[:per_page].to_i > 0
+        pagination[:per_page]
+      else
+        @app.config.akcms[:pagination][:per_page]
+      end.to_i
+    end
+    
     Contract ResourceList => ResourceList
     def manipulate_resource_list(resources)
       new_resources = []
@@ -33,26 +43,14 @@ module Middleman::Akcms::Pagination
         
         paginated_resources = []
         prev_page = nil
-        per_page = @app.config.akcms[:pagination][:per_page]
-        if pagination.is_a?(Hash) && pagination[:per_page].to_i > 0
-          per_page = pagination[:per_page].to_i
-        end
-
+        per_page = get_per_page(pagination)
+        
         articles = res.locals[:articles] || @app.sitemap.articles || []
-
-=begin        
-        if articles.empty?
-          ## when directory summary created with no articles, no pagination applied
-          res.add_metadata(page: {pagination: nil})
-          next
-        end
-=end
         articles.per_page(per_page).each {|items, num, meta, _is_last|
-          locals = {locals: {page_articles: items, paginator: meta}}
-          
           # set pager
           meta.prev_page = prev_page
           meta.next_page = nil
+          locals = {locals: {page_articles: items, paginator: meta}}
           
           if num == 1                          # original resource
             res.add_metadata(locals)
@@ -66,7 +64,6 @@ module Middleman::Akcms::Pagination
             new_resources << new_res
           end
         } # each for per_page
-
         add_paginated_resources(paginated_resources)
       }  # resources
       resources + new_resources

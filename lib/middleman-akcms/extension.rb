@@ -37,10 +37,14 @@ module Middleman::Akcms
         sitemap.find_resource_by_path("/" + config[:index_file])
       end
     end
-    
+
     def initialize(app, options_hash = {}, &block)
       super
+      set_config
+      activate_relevant_extensions
+    end
 
+    def set_config
       app.config[:akcms] = {
         layout: options.layout,
         summarize: {
@@ -71,7 +75,8 @@ module Middleman::Akcms
         }
       }
       
-      ## activate relevant extensions
+    end
+    def activate_relevant_extensions
       app.extensions.activate(:akcms_article)
       if (t = options.directory_summary_template)
         app.extensions.activate(:akcms_directory_summary)
@@ -80,12 +85,12 @@ module Middleman::Akcms
       archive_templates = [options.archive_year_template, options.archive_month_template, options.archive_day_template]
       if archive_templates.any?
         app.extensions.activate(:akcms_archive)
-        archive_templates.each do |t|
-          app.ignore t if t
+        archive_templates.each do |template|
+          app.ignore t if template
         end
       end
       app.extensions.activate(:akcms_pagination) if options.pagination
       app.extensions.activate(:akcms_series)
-    end
+    end      
   end  ## class
 end
