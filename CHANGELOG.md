@@ -2,6 +2,7 @@
  
 - rubygems
 - release 準備
+- tag: archive が収まってきたら再実装？
 
 ## 0.0.1
 - カテゴリの階層表現

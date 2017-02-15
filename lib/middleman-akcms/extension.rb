@@ -74,8 +74,8 @@ module Middleman::Akcms
           title_template: options.series_title_template
         }
       }
-      
     end
+    
     def activate_relevant_extensions
       app.extensions.activate(:akcms_article)
       if (t = options.directory_summary_template)
@@ -86,7 +86,7 @@ module Middleman::Akcms
       if archive_templates.any?
         app.extensions.activate(:akcms_archive)
         archive_templates.each do |template|
-          app.ignore t if template
+          app.ignore template if template
         end
       end
       app.extensions.activate(:akcms_pagination) if options.pagination
