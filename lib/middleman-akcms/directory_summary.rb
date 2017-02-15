@@ -25,7 +25,6 @@ module Middleman::Akcms::DirectorySummary
     include Middleman::Akcms::Util
     include Contracts
 
-    Contract nil => Any
     def after_configuration
       Middleman::Sitemap::Resource.prepend InstanceMethodsToResource
     end
@@ -35,36 +34,39 @@ module Middleman::Akcms::DirectorySummary
       index_file = app.config[:index_file]
       new_resources = []      
       empty_directories = {}
-
+      template = app.config.akcms[:directory_summary_template]
+      
       directories = get_directories(resources)
       directories.each do |dir, hash|
         app.logger.debug(" -- checking dir: '#{dir}'...")
-        # add directory metadata for each resources
+        ## add directory metadata for each resources
         hash[:articles].each do |res|
           res.add_metadata(directory: {name: dirname_by_path(dir), path: dir})
         end
         
-        # create new dir summary if the dir doesnt have d/i
+        ## create new dir summary if the dir doesnt have d/i
         if hash[:directory_indices].empty?
           md = create_metadata(path: dir, articles: hash[:articles])
-          new_resources << create_proxy_resource(File.join(dir, index_file), md)
+          new_resources << create_proxy_resource(app.sitemap, File.join(dir, index_file), template, md)
         end
 
-        # travsere ancestors
+        ## travsere ancestors
         dir.split('/').inject("") do |result, part|
           dir_path = Middleman::Util.normalize_path([result, part].join('/'))
           app.logger.debug("   -- traversing ancestors: '#{dir_path}'")
-          if ! directories.has_key?(dir_path)
-            empty_directories[dir_path] ||= create_proxy_resource(File.join(dir_path, index_file), create_metadata(path: dir_path, articles: []))
+          ## neighter in original directories nor new summary above operation
+          if (! directories.has_key?(dir_path)) && (! empty_directories.has_key?(dir_path))
+            md = create_metadata(path: dir_path, articles: [])
+            new_resources << empty_directories[dir_path] =
+              create_proxy_resource(app.sitemap, File.join(dir_path, index_file), template, md)
           end
           [result, part]
         end
       end
-      resources + new_resources + empty_directories.values
+      resources + new_resources
     end
     
     private
-
     Contract ResourceList => Hash
     def get_directories(resources)
       ## list up all directories
@@ -80,11 +82,8 @@ module Middleman::Akcms::DirectorySummary
       directories
     end
 
-    Contract String, Hash => Middleman::Sitemap::ProxyResource
-    def create_proxy_resource(link, metadata = {})
-      app.logger.debug(" -- new resource added: #{link}")
-      template = app.config.akcms[:directory_summary_template]
-      Middleman::Sitemap::ProxyResource.new(app.sitemap, link, template).tap do |p|
+    def create_proxy_resource(sitemap, link, template, metadata = {})
+      Middleman::Sitemap::ProxyResource.new(sitemap, link, template).tap do |p|
         p.add_metadata(metadata)
       end
     end

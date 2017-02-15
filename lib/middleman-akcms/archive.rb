@@ -6,8 +6,9 @@ module Middleman::Akcms::Archive
   
   module InstanceMethodsToStore
     include Contracts
-    
-    Contract Hash
+
+    # e.g. archives[:month].each do |date, res|...
+    Contract HashOf[TypeSymbol => HashOf[Date => Middleman::Sitemap::Resource]]
     def archives
       @app.extensions[:akcms_archive].archives
     end
@@ -22,16 +23,10 @@ module Middleman::Akcms::Archive
     attr_reader :archives
     
     def after_configuration
+      ## add 'archives' methods into sitemap
       Middleman::Sitemap::Store.prepend InstanceMethodsToStore
     end
 
-    Contract Middleman::Sitemap::Store, String, String, Hash => Middleman::Sitemap::ProxyResource
-    def create_proxy_resource(sitemap, link, template, metadata = {})
-      Middleman::Sitemap::ProxyResource.new(sitemap, link, template).tap do |p|
-        p.add_metadata(metadata)
-      end
-    end
-    
     Contract ResourceList => ResourceList
     def manipulate_resource_list(resources)
       @archives = {year: {}, month: {}, day: {}}
@@ -50,18 +45,16 @@ module Middleman::Akcms::Archive
         end
       end
       return resources + new_resources
-      #return resources + @archives.sort_by {|k, _res| k }.reverse.map {|ar| ar[1]}
     end
     
-    ################
     private
     Contract TypeSymbol, Date => String
-    def link_path(type=:month, date)
+    def link_path(type, date)
       @app.config.akcms[:archive][type][:link] % {year: date.year, month: date.month, day: date.day}
     end
 
     Contract TypeSymbol, ResourceList => HashOf[Date => ResourceList]
-    def group_by_type(type=:month, resources)
+    def group_by_type(type, resources)
       case type
       when :day
         resources.group_by {|a| Date.new(a.date.year, a.date.month, a.date.day)}        
@@ -70,11 +63,6 @@ module Middleman::Akcms::Archive
       when :year
         resources.group_by {|a| Date.new(a.date.year, 1, 1)}
       end
-    end
-    
-    Contract ResourceList => Hash
-    def group_by_month(resources)
-      group_by(:month, resources)
     end
   end # class
 end
