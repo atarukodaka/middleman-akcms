@@ -13,7 +13,7 @@ module Middleman::Akcms::DirectorySummary
       return ret if ret
       parts = File.dirname(path).split('/')
       parts.pop
-      extname = File.extname(@app.config[:index_file])
+      extname = File.extname(@app.config.index_file)
       @store.find_resource_by_destination_path(File.join(parts) + extname)
     end
   end  ## module
@@ -31,7 +31,7 @@ module Middleman::Akcms::DirectorySummary
 
     Contract ResourceList => ResourceList
     def manipulate_resource_list(resources)
-      index_file = app.config[:index_file]
+      index_file = app.config.index_file
       new_resources = []      
       empty_directories = {}
       template = app.config.akcms[:directory_summary_template]

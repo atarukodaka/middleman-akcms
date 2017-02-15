@@ -43,8 +43,11 @@ module Middleman::Akcms
 
       app.config[:akcms] = {
         layout: options.layout,
+        summarize: {
+          summary_length: options.summary_length,
+          summarizer: options.summarizer.new
+        },
         directory_summary_template: options.directory_summary_template,
-        summary_length: options.summary_length,
         pagination: {
           per_page: options.pagination_per_page,
           page_link: options.pagination_page_link
@@ -65,8 +68,7 @@ module Middleman::Akcms
         },
         series: {
           title_template: options.series_title_template
-        },
-        summarizer: options.summarizer.new
+        }
       }
       
       ## activate relevant extensions

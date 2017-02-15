@@ -40,8 +40,8 @@ module Middleman::Akcms::Article
     
     Contract Integer => String
     def summary(length=nil)
-      length ||= @app.config.akcms[:summary_length]
-      @app.config.akcms[:summarizer].summarize(self, length)
+      length ||= @app.config.akcms[:summarize][:summary_length]
+      @app.config.akcms[:summarize][:summarizer].summarize(self, length)
     end
 
     ## pager
