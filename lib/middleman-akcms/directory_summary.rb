@@ -19,6 +19,16 @@ module Middleman::Akcms::DirectorySummary
   end  ## module
 end
 
+module Middleman::Akcms::DirectorySummary
+  module InstanceMethodsToStore
+    def index_resource(dir)
+      dir = Middleman::Util.normalize_path(dir).sub(/\/$/, '')
+      @app.sitemap.find_resource_by_path(dir + "/"  + @app.config.index_file) ||
+        @app.sitemap.find_resource_by_path(dir + File.extname(@app.config.index_file))
+    end
+  end ## module
+end
+
 ################
 module Middleman::Akcms::DirectorySummary
   class Extension < Middleman::Extension
@@ -27,6 +37,7 @@ module Middleman::Akcms::DirectorySummary
 
     def after_configuration
       Middleman::Sitemap::Resource.prepend InstanceMethodsToResource
+      Middleman::Sitemap::Store.prepend InstanceMethodsToStore
     end
 
     Contract ResourceList => ResourceList

@@ -15,7 +15,6 @@ Feature: helpers
       layout: false
       ---
       resource_for: <%= resource_for("/helpers.html").path %>
-      top_page: <%= top_page.data.title %>
       """
 
     And the Server is running at "basic-app"
@@ -25,7 +24,6 @@ Feature: helpers
 
     When I go to "/helpers.html"    
     And I should see "resource_for: helpers.html"
-    And I should see "top_page: HOME"
     
 
 

@@ -8,7 +8,7 @@ module Middleman::Akcms::Archive
     include Contracts
 
     # e.g. archives[:month].each do |date, res|...
-    Contract HashOf[TypeSymbol => HashOf[Date => Middleman::Sitemap::Resource]]
+    Contract HashOf[TypeSymbol => HashOf[Date => Middleman::Sitemap::ProxyResource]]
     def archives
       @app.extensions[:akcms_archive].archives
     end

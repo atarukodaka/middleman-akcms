@@ -11,9 +11,21 @@
   <aside>
     <h2>DIRECTORIES</h2>
     <ul>
-      <% top_page().children.select {|r| r.directory_index? }.each {|res| %>
+      <% sitemap.index_resource("").children.select {|r| r.directory_index? }.each {|res| %>
       <%= partial("partials/directory_recurse", locals: {resource: res}) %>
       <% } %>
+    </ul>
+  </aside>
+  <!-- ================ -->
+  <aside>
+    <h2>TAGS</h2>
+    <ul class="tag_box inline">
+      <li>
+	<% sitemap.tags.each {|name, res| %>
+	<% size = res.locals[:articles].size %>
+	<%= link_to("h(#{name})<span>#{size}</span>", res) %>
+	<% } %>
+      </li>
     </ul>
   </aside>
   <!-- ================ -->

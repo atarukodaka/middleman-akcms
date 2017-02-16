@@ -9,9 +9,10 @@ type: summary
 <h1>Directories</h1>
 
 <div>
-  <ul>
-    <% top_page().children.select {|r| r.path =~ /#{config[:index_file]}$/}.each {|res| %>
-    <%= partial("partials/directory_recurse", locals: {resource: res}) %>
-    <% } %>
+    <ul>
+      <% sitemap.index_resource("").children.select {|r| r.directory_index? }.each {|res| %>
+      <%= partial("partials/directory_recurse", locals: {resource: res}) %>
+      <% } %>
+    </ul>
   </ul>
 </div>

@@ -14,6 +14,10 @@ module Middleman::Akcms
     option :archive_day_template, nil       # 'templates/archive_template.html'
     option :archive_day_link, 'archives/%<year>04d-%<month>02d-%<day>02d.html'
 
+    ## tag settings
+    option :tag_template, nil
+    option :tag_link, "tags/%{tag}.html"
+    
     ## pagination settings
     option :pagination, true
     option :pagination_per_page, 5
@@ -32,10 +36,11 @@ module Middleman::Akcms
       def resource_for(path)
         sitemap.find_resource_by_path(path)
       end
-
+=begin
       def top_page
         sitemap.find_resource_by_path("/" + config[:index_file])
       end
+=end
     end
 
     def initialize(app, options_hash = {}, &block)
@@ -70,6 +75,10 @@ module Middleman::Akcms
             link: options.archive_day_link
           }
         },
+        tag: {
+          template: options.tag_template,
+          link: options.tag_link
+        },
         series: {
           title_template: options.series_title_template
         }
@@ -89,6 +98,7 @@ module Middleman::Akcms
           app.ignore template if template
         end
       end
+      app.extensions.activate(:akcms_tag) if options.tag_template
       app.extensions.activate(:akcms_pagination) if options.pagination
       app.extensions.activate(:akcms_series)
     end      

@@ -2,7 +2,7 @@
  
 - rubygems
 - release 準備
-- tag: archive が収まってきたら再実装？
+
 
 ## 0.0.1
 - カテゴリの階層表現
@@ -47,3 +47,5 @@
 - ancestors, breadcrump まわり、foo.html と foo/index.html のバッティング
 - tag 機能drop
 - extension に分ける
+- tag: archive が収まってきたら再実装
+- top\_page => sitemap.index_resource("")
