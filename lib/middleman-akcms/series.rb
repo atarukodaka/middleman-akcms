@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 require 'middleman-akcms/util'
 
 module Middleman::Akcms::Series
@@ -38,11 +37,11 @@ module Middleman::Akcms::Series
           hash = {
             name: series_name,
             number: series_number,
-            article_title: article.title,
-            articles: series_articles
+            article_title: article.title
           }
           title = series_title_template % hash
-          article.add_metadata({page: {title: title}, locals: {series: hash}})
+          locals = {series: hash.merge(articles: series_articles)}
+          article.add_metadata({page: {title: title}, locals: locals})
         end
       end
 
