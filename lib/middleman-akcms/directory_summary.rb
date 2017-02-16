@@ -93,12 +93,6 @@ module Middleman::Akcms::DirectorySummary
       directories
     end
 
-    def create_proxy_resource(sitemap, link, template, metadata = {})
-      Middleman::Sitemap::ProxyResource.new(sitemap, link, template).tap do |p|
-        p.add_metadata(metadata)
-      end
-    end
-
     Contract String => String
     def dirname_by_path(path)
       if (config_yml = @app.sitemap.find_resource_by_path(File.join(path, "config.yml")))

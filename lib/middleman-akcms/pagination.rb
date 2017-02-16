@@ -21,6 +21,7 @@ module Middleman::Akcms::Pagination
       end.tap do |res|
         res.add_metadata(resource.metadata)
         res.add_metadata(metadata) unless metadata.empty?
+        app.logger.debug("  * new pager added: #{res.path}")
       end
     end
 

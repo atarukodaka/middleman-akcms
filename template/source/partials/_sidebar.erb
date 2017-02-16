@@ -23,7 +23,7 @@
       <li>
 	<% sitemap.tags.each {|name, res| %>
 	<% size = res.locals[:articles].size %>
-	<%= link_to("h(#{name})<span>#{size}</span>", res) %>
+	<%= link_to("#{h(name)}<span>#{size}</span>", res) %>
 	<% } %>
       </li>
     </ul>

@@ -31,26 +31,14 @@ module Middleman::Akcms
     option :summary_length, 250, 'length of charactor to summrize'
     option :summarizer, Middleman::Akcms::OgaSummarizer
 
-    ## helpers
-    helpers do
-      def resource_for(path)
-        sitemap.find_resource_by_path(path)
-      end
-=begin
-      def top_page
-        sitemap.find_resource_by_path("/" + config[:index_file])
-      end
-=end
-    end
-
     def initialize(app, options_hash = {}, &block)
       super
-      set_config
-      activate_relevant_extensions
+      app.config.akcms = options_to_config()
+      activate_relevant_extensions()
     end
 
-    def set_config
-      app.config[:akcms] = {
+    def options_to_config
+      {
         layout: options.layout,
         summarize: {
           summary_length: options.summary_length,

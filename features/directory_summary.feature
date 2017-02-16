@@ -56,3 +56,32 @@ Feature: directory summary
     When I go to "/foo/bar/baz/index.html"
     Then the status code should be "200"
     And I should see "parent: foo/bar.html"
+
+  Scenario: sitemap index resource
+    Given a fixture app "basic-app"
+    And a file named "source/foo/index.html.erb" with ""
+    And a file named "source/show.html.erb" with:
+      """
+      path: <%= sitemap.index_resource("foo").path %>
+      """
+    And the Server is running at "basic-app"
+    When I go to "/show.html"
+    Then the status code should be "200"
+    And I should see "path: foo/index.html"
+
+  Scenario: index resource
+    Given a fixture app "basic-app"
+    And a file named "source/index.html.erb" with ""
+    And a file named "source/foo/index.html.erb" with ""
+    And a file named "source/show.html.erb" with:
+      """
+      /: <%= sitemap.index_resource("/").path %>
+      /foo: <%= sitemap.index_resource("/foo").path %>
+      """
+    And the Server is running at "basic-app"
+    When I go to "/show.html"
+    Then the status code should be "200"
+    And I should see "/: index.html"
+    And I should see "/foo: foo/index.html"
+
+    
