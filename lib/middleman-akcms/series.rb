@@ -8,7 +8,7 @@ module Middleman::Akcms::Series
 
     Contract Middleman::Sitemap::Resource => Integer
     def get_series_number(article)
-      series_number = article.data.series if article.data.series.is_a? Integer
+      series_number = article.data["series-number"] || article.data.series_number
       series_number ||= article.data.series.number if article.data.series.is_a? Hash
       series_number ||= (File.basename(article.path) =~ /^([0-9]+)[_\-\s]/) ? $1.to_i : 1
 
@@ -25,7 +25,9 @@ module Middleman::Akcms::Series
 
         dir_path = File.dirname(config_yml_res.path)
         dir_name = dir_path.split('/').last
-        series_name = yml['series'] || dir_name
+        series_name = yml['series'] if yml['series'].is_a? String
+        series_name ||= yml['series']['title'] if yml['series'].is_a? Hash
+        series_name ||= yml['directory_name'] || dir_name
         
         series_articles = select_articles(resources).select {|article|
           (! article.directory_index?) && File.dirname(article.path) == dir_path}
@@ -46,7 +48,7 @@ module Middleman::Akcms::Series
 
       resources
     end
-    
+=begin    
     Contract ResourceList => ResourceList
     def __manipulate_resource_list(resources)
       series_articles = []
@@ -78,4 +80,5 @@ module Middleman::Akcms::Series
       @app.config.akcms[:series][:title_template] % hash
     end
   end # class
+=end
 end
