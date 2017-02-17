@@ -27,7 +27,10 @@ activate :akcms do |akcms|
   akcms.series_title_template = "%{name} [%{number}]: %{article_title}" 
 end
 
-## markdown
+## other extensions
+activate :syntax
+
 set :markdown_engine, :redcarpet
 set :markdown, :fenced_code_blocks => true, :autolink => true,
   :smartypants => true, :tables => true, :with_toc_data => true
+
