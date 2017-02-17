@@ -5,6 +5,10 @@ module Middleman::Akcms::Series
     include Middleman::Akcms::Util
     include Contracts
 
+    # retrieve series number:
+    #   1. 'series: 2' from the frontmatter
+    #   2. 'series:\n  number: 2' from the frontmatter
+    #   3. from the filename like '2_xxxx.html' 
     Contract Middleman::Sitemap::Resource => Integer
     def get_series_number(article)
       series_number = article.data["series-number"] || article.data.series_number
@@ -14,11 +18,17 @@ module Middleman::Akcms::Series
       return series_number
     end
     
+    # retrieve series name from the yml:
+    #  1. 'series: foo'
+    #  2. "series:\n  name: foo"
+    #  3. "directory_name: foo"
+    Contract Hash => Or[String, nil]
     def get_series_name(yml)
       series_name = yml['series'] if yml['series'].is_a? String
-      series_name ||= yml['series']['title'] if yml['series'].is_a? Hash
+      series_name ||= yml['series']['name'] if yml['series'].is_a? Hash
       series_name ||= yml['directory_name']
     end
+    
     Contract ResourceList => ResourceList
     def manipulate_resource_list(resources)
       series_title_template = app.config.akcms[:series][:title_template]

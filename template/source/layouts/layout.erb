@@ -35,7 +35,6 @@
       <div class="row">
 	<div class="col-sm-9">
 	  <div id="main">
-	    <!-- %= breadcrumb(current_resource) % -->
 	    <%= partial("partials/breadcrumb") %>
 	    <%= yield %>
 	    <%= partial("partials/pagination") %>
@@ -45,12 +44,11 @@
 	  <%= partial "partials/sidebar" %>
 	</div>
       </div>
-
       <!-- footer -->
       <div class="row">
 	<footer id="footer">
 	  <div class="copyright">
-	    copyright()
+	    <%= copyright() %>
 	    powered by <a href="https://middlemanapp.com">middleman</a> and
 	    <a href="https://github.com/atarukodaka/middleman-akcms">middleman-akcms</a>.
 	  </div>

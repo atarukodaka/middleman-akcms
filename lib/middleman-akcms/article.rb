@@ -85,6 +85,14 @@ module Middleman::Akcms::Article
   class Extension < Middleman::Extension
     include Contracts
 
+    helpers do
+      def copyright
+        years = sitemap.articles.map {|a| a.date.year}.uniq.sort
+        str = (years.size == 1) ? years.first : [years.first, years.last].join('-')
+        "copyright(#{str})"
+      end
+    end
+    
     def after_configuration
       Middleman::Sitemap::Resource.prepend InstanceMethodsToResource
       Middleman::Sitemap::Store.prepend InstanceMethodsToStore

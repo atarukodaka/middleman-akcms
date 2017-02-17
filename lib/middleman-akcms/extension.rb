@@ -26,7 +26,7 @@ module Middleman::Akcms
     option :pagination_page_link, "page-%{page_number}"
 
     ## series settings
-    option :series_title_template, "%{name} #%{number}: %{article_title}" 
+    option :series_title_template, "%{name} [%{number}]: %{article_title}" 
 
     ## summarizer
     require 'middleman-akcms/summarize'
