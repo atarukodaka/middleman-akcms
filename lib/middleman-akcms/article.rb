@@ -1,3 +1,7 @@
+require 'active_support/time_with_zone'
+require 'active_support/core_ext/time/acts_like'
+require 'active_support/core_ext/time/calculations'
+
 module Middleman::Akcms::Article
   module InstanceMethodsToResource
     def is_article?
@@ -23,14 +27,17 @@ module Middleman::Akcms::Article
       return data.title.to_s || "(untitled)"
     end
 
-    Contract Date
+    Contract ActiveSupport::TimeWithZone
     def date
-      return @_date ||=
-        begin
-          Date.parse(data.date.to_s)
-        rescue ArgumentError
-          File.mtime(source_file).to_date || Date.new(1970, 1, 1)
-        end
+      return @_date if @_date
+      fm_date = data.date
+      
+      @_date = if fm_date.is_a? Time
+                 fm_date.in_time_zone
+               else
+                 Time.zone.parse(fm_date.to_s)
+               end
+      @_date ||= File.mtime(source_file).in_time_zone || Time.now.in_time_zone
     end
 
     Contract Bool
@@ -84,23 +91,17 @@ module Middleman::Akcms::Article
     end
 
     Contract Middleman::Sitemap::Resource => Bool
-    def resource_as_article?(resource)
+    def resource_to_be_article?(resource)
       return false if resource.ignored? || resource.ext != ".html"
       return false if resource.data.type && (resource.data.type != "article")
       return true
     end
     Contract ResourceList => ResourceList
     def manipulate_resource_list(resources)
-      used_resources = []
-      
       resources.each do |res|
-        if resource_as_article?(res)
-          res.to_article!
-          next unless res.published?
-        end
-        used_resources << res
+        res.to_article! if resource_to_be_article?(res)
       end
-      return used_resources
+      resources.reject {|res| res.is_article? && !res.published?}
     end
   end  ## class  
 end # module

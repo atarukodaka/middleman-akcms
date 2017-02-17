@@ -7,7 +7,8 @@
     <% ancestors.reverse.map do |res| %>
     <% next if res == sitemap.index_resource("") %>
     <li>
-      <%= link_to(h(res.data.title || res.metadata[:directory][:name]), res, :class=>"breadcrumb-item") %>
+      <%= link_to(h(res.data.title || res.directory.name), res, :class=>"breadcrumb-item") %>
+      <!-- %= link_to(h(res.data.title || res.metadata[:directory].try(:[], :name) || File.dirname(res.path).split('/').last), res, :class=>"breadcrumb-item") % -->
     </li>
     <% end%>
     <li class="active">

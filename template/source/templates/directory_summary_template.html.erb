@@ -6,6 +6,6 @@ pagination:
 
 <% articles = page_articles if pagination? %>
 
-<% title = "Directory: #{current_resource.metadata[:directory][:name]}" %>
+<% title = "Directory: #{h(current_resource.directory.name)}" %>
 <%= partial("partials/title", locals: {title: title }) %>
 <%= partial("partials/article_summary", locals: {articles: articles }) %>

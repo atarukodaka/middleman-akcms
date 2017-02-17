@@ -11,8 +11,9 @@
   <aside>
     <h2>DIRECTORIES</h2>
     <ul>
-      <% sitemap.index_resource("").children.select {|r| r.directory_index? }.each {|res| %>
-      <%= partial("partials/directory_recurse", locals: {resource: res}) %>
+      <!-- % sitemap.index_resource("").children.select {|r| r.directory_index? && r.path !~ /^archives/ }.each {|res| % -->
+      <% sitemap.index_resource("").directory.children.each {|res| %>
+      <%= partial("partials/directory_recurse", locals: {resource: res, options: {directory_only: true}}) %>
       <% } %>
     </ul>
   </aside>

@@ -29,7 +29,6 @@ module Middleman::Akcms::Tag
   end  ## module
 end
 
-
 module Middleman::Akcms::Tag
   class Extension < Middleman::Extension
     include Middleman::Akcms::Util

@@ -8,7 +8,7 @@ Feature: directory summary
       title: event2015sum
       layout: layout
       ---
-      directory name: <%= current_resource.metadata[:directory][:name] %>
+      directory name: <%= current_resource.directory.name %>
       """
 
     And a file named "source/game/kancolle/event/config.yml" with:
