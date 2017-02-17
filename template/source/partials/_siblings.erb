@@ -1,6 +1,6 @@
 <div class="references">
   <div class="header">
-    Relevant Articles
+    Sibling Articles under '<%= link_to(h(current_resource.directory.name), current_resource.parent) %>'
   </div>
   <ul>
     <% current_resource.siblings.first(10).each do |res| %>

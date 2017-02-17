@@ -89,7 +89,7 @@ module Middleman::Akcms::Article
       def copyright
         years = sitemap.articles.map {|a| a.date.year}.uniq.sort
         str = (years.size == 1) ? years.first : [years.first, years.last].join('-')
-        "copyright(#{str})"
+        "&copy; Copyright(#{str}) #{data.config.site_info.author}"
       end
     end
     
