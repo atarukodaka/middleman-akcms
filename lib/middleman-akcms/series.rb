@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 require 'middleman-akcms/util'
 
 module Middleman::Akcms::Series
@@ -10,11 +9,16 @@ module Middleman::Akcms::Series
     def get_series_number(article)
       series_number = article.data["series-number"] || article.data.series_number
       series_number ||= article.data.series.number if article.data.series.is_a? Hash
-      series_number ||= (File.basename(article.path) =~ /^([0-9]+)[_\-\s]/) ? $1.to_i : 1
+      series_number ||= (File.basename(article.path) =~ /^([0-9]+)[_\-\s]/) ? $1.to_i : 0
 
       return series_number
     end
     
+    def get_series_name(yml)
+      series_name = yml['series'] if yml['series'].is_a? String
+      series_name ||= yml['series']['title'] if yml['series'].is_a? Hash
+      series_name ||= yml['directory_name']
+    end
     Contract ResourceList => ResourceList
     def manipulate_resource_list(resources)
       series_title_template = app.config.akcms[:series][:title_template]
@@ -25,9 +29,7 @@ module Middleman::Akcms::Series
 
         dir_path = File.dirname(config_yml_res.path)
         dir_name = dir_path.split('/').last
-        series_name = yml['series'] if yml['series'].is_a? String
-        series_name ||= yml['series']['title'] if yml['series'].is_a? Hash
-        series_name ||= yml['directory_name'] || dir_name
+        series_name = get_series_name(yml) || dir_name
         
         series_articles = select_articles(resources).select {|article|
           File.dirname(article.path) == dir_path}
