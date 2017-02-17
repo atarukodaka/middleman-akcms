@@ -26,7 +26,7 @@ module Middleman::Akcms::Series
     def get_series_name(yml)
       series_name = yml['series'] if yml['series'].is_a? String
       series_name ||= yml['series']['name'] if yml['series'].is_a? Hash
-      series_name ||= yml['directory_name']
+      return series_name ||= yml['directory_name']  # rubocop:disable Lint/UselessAssignment
     end
     
     Contract ResourceList => ResourceList
@@ -40,10 +40,9 @@ module Middleman::Akcms::Series
         dir_path = File.dirname(config_yml_res.path)
         dir_name = dir_path.split('/').last
         series_name = get_series_name(yml) || dir_name
-        
-        series_articles = select_articles(resources).select {|article|
-          File.dirname(article.path) == dir_path}
-        
+
+        series_articles = select_articles(resources).select {|res| File.dirname(res.path) == dir_path}
+
         series_articles.each do |article|
           series_number = get_series_number(article)
           
@@ -52,17 +51,16 @@ module Middleman::Akcms::Series
             name: series_name,
             number: series_number,
             article_title: article.title,
-            articles: series_articles.reject {|r| r.directory_index?}
+            articles: series_articles
           }
-          title = if article.directory_index?
-                    (article.title.to_s == "") ? series_name : article.title
-                  else
-                    series_title_template % hash
-                  end
+          title = series_title_template % hash
           article.add_metadata({locals: {series: hash}, page: {title: title}})
         end
+        if (index_res = resources.find {|r| r.path == File.join(dir_path, app.config.index_file) || r.path == dir_path + ".html" })
+          index_res.add_metadata({locals: {series: {articles: series_articles}},
+                                   page: {title: index_res.data.title || series_name}})
+        end
       end
-
       resources
     end
   end # class

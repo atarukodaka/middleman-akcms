@@ -3,16 +3,17 @@
     <li><%= link_to("Home", sitemap.index_resource("")) %></li>
     <% ancestors = []; p = current_resource.parent; %>
     <% while p ; ancestors.push(p); p = p.parent; end; %>
-    <!-- current_resource.metadata[:ancestors].reverse. -->
     <% ancestors.reverse.map do |res| %>
     <% next if res == sitemap.index_resource("") %>
     <li>
       <%= link_to(h(res.data.title || res.directory.name), res, :class=>"breadcrumb-item") %>
-      <!-- %= link_to(h(res.data.title || res.metadata[:directory].try(:[], :name) || File.dirname(res.path).split('/').last), res, :class=>"breadcrumb-item") % -->
     </li>
     <% end%>
     <li class="active">
       <%= h(yield_content(:title) || current_resource.data.title) %>
+      <% if pagination? && paginator[:num_pages] > 1 %>
+      (page <%= paginator[:page_number] %> / <%= paginator[:num_pages] %>)
+      <% end %>
     </li>
   </ol>
 </nav>

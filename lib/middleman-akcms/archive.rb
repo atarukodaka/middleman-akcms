@@ -40,7 +40,6 @@ module Middleman::Akcms::Archive
         next if template.nil?
 
         group_by_type(type, articles).each do |date, d_articles|
-          title = 
           md = {locals: {date: date, articles: d_articles, archive_type: type}}
           
           new_resources << @archives[type][date] =

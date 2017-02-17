@@ -22,9 +22,9 @@ module Middleman::Akcms::DirectorySummary
     def name
       return @_name if @_name
       @_name = if (config_yml = @store.find_resource_by_path(File.join(path, "config.yml")))
-                  yml = YAML::load(config_yml.render(layout: false))
-                  yml["directory_name"].to_s
-                end
+                 yml = YAML::load(config_yml.render(layout: false))
+                 yml["directory_name"].to_s
+               end
       @_name ||= path.split('/').last
     end
 

@@ -51,6 +51,7 @@ module Middleman::Akcms
     end
 
     
+    # rubocop:disable Metrics/MethodLength
     def options_to_config
       {
         layout: options.layout,
@@ -86,6 +87,7 @@ module Middleman::Akcms
         }
       }
     end
+    # rubocop:enable Metrics/MethodLength
     
     def activate_relevant_extensions
       app.extensions.activate(:akcms_article)
