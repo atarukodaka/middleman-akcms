@@ -2,7 +2,7 @@
  
 - rubygems
 - release 準備
-
+- archives on directory tree
 
 ## 0.0.1
 - カテゴリの階層表現

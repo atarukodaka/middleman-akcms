@@ -1,3 +1,6 @@
+require 'active_support/time_with_zone'
+#require 'active_support/core_ext/time/acts_like'
+require 'active_support/core_ext/time/calculations'
 require 'middleman-akcms/util'
 
 module Middleman::Akcms::Archive
@@ -8,7 +11,7 @@ module Middleman::Akcms::Archive
     include Contracts
 
     # e.g. archives[:month].each do |date, res|...
-    Contract HashOf[TypeSymbol => HashOf[Date => Middleman::Sitemap::ProxyResource]]
+    Contract HashOf[TypeSymbol => HashOf[ActiveSupport::TimeWithZone => Middleman::Sitemap::ProxyResource]]
     def archives
       @app.extensions[:akcms_archive].archives
     end
@@ -32,36 +35,36 @@ module Middleman::Akcms::Archive
       @archives = {year: {}, month: {}, day: {}}
       new_resources = []
       articles = select_articles(resources)
-      
       [:year, :month, :day].each do |type|
         template = @app.config.akcms[:archive][type][:template]
         next if template.nil?
 
         group_by_type(type, articles).each do |date, d_articles|
-          locals = {locals: {date: date, articles: d_articles, archive_type: type}}
+          title = 
+          md = {locals: {date: date, articles: d_articles, archive_type: type}}
           
           new_resources << @archives[type][date] =
-            create_proxy_resource(@app.sitemap, link_path(type, date), template, locals)
+            create_proxy_resource(@app.sitemap, link_path(type, date), template, md)
         end
       end
       return resources + new_resources
     end
     
     private
-    Contract TypeSymbol, Date => String
+    Contract TypeSymbol, ActiveSupport::TimeWithZone => String
     def link_path(type, date)
       @app.config.akcms[:archive][type][:link] % {year: date.year, month: date.month, day: date.day}
     end
 
-    Contract TypeSymbol, ResourceList => HashOf[Date => ResourceList]
+    Contract TypeSymbol, ResourceList => HashOf[ActiveSupport::TimeWithZone => ResourceList]
     def group_by_type(type, resources)
       case type
-      when :day
-        resources.group_by {|a| Date.new(a.date.year, a.date.month, a.date.day)}        
-      when :month
-        resources.group_by {|a| Date.new(a.date.year, a.date.month, 1)}
       when :year
-        resources.group_by {|a| Date.new(a.date.year, 1, 1)}
+        resources.group_by {|a| a.date.beginning_of_year }
+      when :month
+        resources.group_by {|a| a.date.beginning_of_month }
+      when :day
+        resources.group_by {|a| a.date.beginning_of_day }
       end
     end
   end # class

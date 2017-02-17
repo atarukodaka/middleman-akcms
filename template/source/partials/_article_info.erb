@@ -3,7 +3,7 @@
 
 <div class="article_info">
   <% if ! article.parent.nil? %>
-  | <%= link_to(h(article.metadata[:directory][:name]), article.parent) %> |
+  | <%= link_to(h(article.directory.name), article.parent) %> |
   <% end %>
   <%= link_to(article.date.strftime("%d %b %Y"), article) %> |
 </div>

@@ -1,3 +1,5 @@
+require 'active_support/core_ext/time/zones'
+
 module Middleman::Akcms
   class Extension < Middleman::Extension
     ## default options
@@ -30,13 +32,25 @@ module Middleman::Akcms
     require 'middleman-akcms/summarize'
     option :summary_length, 250, 'length of charactor to summrize'
     option :summarizer, Middleman::Akcms::OgaSummarizer
-
+    
     def initialize(app, options_hash = {}, &block)
       super
       app.config.akcms = options_to_config()
       activate_relevant_extensions()
     end
 
+    def after_configuration
+      ## activesupport timezone
+      Time.zone = app.config[:time_zone] if app.config[:time_zone]
+      time_zone = Time.zone || 'UTC'
+      zone_default = Time.find_zone!(time_zone)
+      unless zone_default
+        raise 'Value assigned to time_zone not recognized.'
+      end
+      Time.zone_default = zone_default
+    end
+
+    
     def options_to_config
       {
         layout: options.layout,
@@ -86,7 +100,10 @@ module Middleman::Akcms
           app.ignore template if template
         end
       end
-      app.extensions.activate(:akcms_tag) if options.tag_template
+      if options.tag_template
+        app.extensions.activate(:akcms_tag) 
+        app.ignore options.tag_template
+      end
       app.extensions.activate(:akcms_pagination) if options.pagination
       app.extensions.activate(:akcms_series)
     end      

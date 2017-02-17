@@ -1,8 +1,44 @@
 require 'middleman-akcms/summarize'
 require 'middleman-akcms/util'
+
 require 'contracts'
 
 module Middleman::Akcms::DirectorySummary
+  class Directory
+    include Contracts
+
+    Contract Middleman::Sitemap::Store, Middleman::Sitemap::Resource => Any
+    def initialize(store, res)
+      @store = store
+      @resource = res
+    end
+
+    Contract String
+    def path
+      File.dirname(@resource.path).to_s
+    end
+
+    Contract String
+    def name
+      return @_name if @_name
+      @_name = if (config_yml = @store.find_resource_by_path(File.join(path, "config.yml")))
+                  yml = YAML::load(config_yml.render(layout: false))
+                  yml["directory_name"].to_s
+                end
+      @_name ||= path.split('/').last
+    end
+
+    Contract ResourceList
+    def children
+      @resource.children.select {|r| r.directory_index? }
+    end
+
+    Contract Or[Middleman::Sitemap::Resource, nil]
+    def index
+      @store.index_resource(path)
+    end
+  end  ## class
+
   module InstanceMethodsToResource
     include Contracts
     
@@ -15,6 +51,10 @@ module Middleman::Akcms::DirectorySummary
       parts.pop
       extname = File.extname(@app.config.index_file)
       @store.find_resource_by_destination_path(File.join(parts) + extname)
+    end
+
+    def directory
+      @_directory ||= Directory.new(@store, self)
     end
   end  ## module
 end
@@ -40,6 +80,8 @@ module Middleman::Akcms::DirectorySummary
       Middleman::Sitemap::Store.prepend InstanceMethodsToStore
     end
 
+    #self.resource_list_manipulator_priority = 55
+    
     Contract ResourceList => ResourceList
     def manipulate_resource_list(resources)
       index_file = app.config.index_file
@@ -50,14 +92,10 @@ module Middleman::Akcms::DirectorySummary
       directories = get_directories(resources)
       directories.each do |dir, hash|
         app.logger.debug(" -- checking dir: '#{dir}'...")
-        ## add directory metadata for each resources
-        hash[:articles].each do |res|
-          res.add_metadata(directory: {name: dirname_by_path(dir), path: dir})
-        end
         
         ## create new dir summary if the dir doesnt have d/i
         if hash[:directory_indices].empty?
-          md = create_metadata(path: dir, articles: hash[:articles])
+          md = {locals: {articles: hash[:articles]}}
           new_resources << create_proxy_resource(app.sitemap, File.join(dir, index_file), template, md)
         end
 
@@ -67,7 +105,7 @@ module Middleman::Akcms::DirectorySummary
           app.logger.debug("   -- traversing ancestors: '#{dir_path}'")
           ## neighter in original directories nor new summary above operation
           if (! directories.has_key?(dir_path)) && (! empty_directories.has_key?(dir_path))
-            md = create_metadata(path: dir_path, articles: [])
+            md = {locals: {articles: []}}
             new_resources << empty_directories[dir_path] =
               create_proxy_resource(app.sitemap, File.join(dir_path, index_file), template, md)
           end
@@ -83,31 +121,19 @@ module Middleman::Akcms::DirectorySummary
       ## list up all directories
       directories = {}  ## {directory_indices:, resources:}
 
-      resources.group_by {|r| dirname(resource_eponymous_path(r))}.each do |dir_path, list|
+      resources.reject {|r| r.ignored?}.group_by {|r|
+        File.dirname(resource_eponymous_path(r)).sub(/^\.$/, '')}.each do |dir_path, list|
         next if dir_to_exclude?(dir_path)
+        
+        articles = select_articles(list)
+        next if articles.empty?
+        
         directories[dir_path] = {
           directory_indices: list.select {|a| a.directory_index?},
-          articles: select_articles(list)
+          articles: articles
         }
       end
       directories
-    end
-
-    Contract String => String
-    def dirname_by_path(path)
-      if (config_yml = @app.sitemap.find_resource_by_path(File.join(path, "config.yml")))
-        yml = YAML::load(config_yml.render(layout: false))
-        yml["directory_name"]  ## yet
-      else
-        path.split('/').last
-      end.to_s
-    end
-    Contract KeywordArgs[:path => String, :articles => ResourceList] => Hash
-    def create_metadata(path: "", articles: [])
-      {
-        directory: { name: dirname_by_path(path), path: path},
-        locals: {articles: articles}
-      }
     end
 
     ## fonts/images/js/css/layouts dir will be excluded
@@ -129,12 +155,6 @@ module Middleman::Akcms::DirectorySummary
       else
         resource.path
       end
-    end
-
-    ## if its root dir, return '' instead of '.' (which is given by std lib)
-    Contract String => String
-    def dirname(path)
-      File.dirname(path).sub(/^\.$/, '')
     end
   end  ## class
 end

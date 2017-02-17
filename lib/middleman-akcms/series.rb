@@ -30,7 +30,8 @@ module Middleman::Akcms::Series
         series_name ||= yml['directory_name'] || dir_name
         
         series_articles = select_articles(resources).select {|article|
-          (! article.directory_index?) && File.dirname(article.path) == dir_path}
+          File.dirname(article.path) == dir_path}
+        
         series_articles.each do |article|
           series_number = get_series_number(article)
           
@@ -39,10 +40,14 @@ module Middleman::Akcms::Series
             name: series_name,
             number: series_number,
             article_title: article.title,
-            articles: series_articles
+            articles: series_articles.reject {|r| r.directory_index?}
           }
-          title = series_title_template % hash
-          article.add_metadata({page: {title: title}, locals: {series: hash}})
+          title = if article.directory_index?
+                    (article.title.to_s == "") ? series_name : article.title
+                  else
+                    series_title_template % hash
+                  end
+          article.add_metadata({locals: {series: hash}, page: {title: title}})
         end
       end
 
