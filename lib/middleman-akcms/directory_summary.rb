@@ -29,7 +29,7 @@ module Middleman::Akcms::DirectorySummary
     end
 
     Contract ResourceList
-    def children
+    def children_indices
       @resource.children.select {|r| r.directory_index? }
     end
 

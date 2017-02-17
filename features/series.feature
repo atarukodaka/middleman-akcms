@@ -29,6 +29,13 @@ Feature: series
         number: 2
       ---
       """
+    And a file named "source/game/index.html.erb" with:
+      """
+      ---
+      ---
+      title: <%= current_resource.data.title %>
+      """
+      
     And a file named "source/layouts/series.erb" with:
       """
       <% series[:articles].each {|res| %>
@@ -43,3 +50,6 @@ Feature: series
     And I should see "PLAY GAME [1]: install"
     And I should see "PLAY GAME [2]: start"    
 
+    When I go to "/game/index.html"
+    Then the status code should be "200"
+    And I should see "title: PLAY GAME"

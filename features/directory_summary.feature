@@ -84,4 +84,22 @@ Feature: directory summary
     And I should see "/: index.html"
     And I should see "/foo: foo/index.html"
 
+  Scenario: children, index methods for directory
+    Given a fixture app "directory-summary-app"
+    And a file named "source/foo/index.html.erb" with:
+      """
+      children: <%= current_resource.directory.children_indices.map {|r| r.path }.join(",") %>
+      """
+    And a file named "source/foo/bar.html.erb" with:   
+      """
+      index: <%= current_resource.directory.index.path %>
+      """
+    And a file named "source/foo/baz/index.html.erb" with ""
+    And the Server is running at "directory-summary-app"
+    When I go to "/foo/index.html"
+    Then the status code should be "200"
+    And I should see "children: foo/baz/index.html"
+    When I go to "/foo/bar.html"
+    Then the status code should be "200"
+    And I should see "index: foo/index.html"
     
