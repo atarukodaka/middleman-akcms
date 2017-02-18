@@ -16,10 +16,9 @@ middleman のディレクトリごとのサマリーを自動生成する文書�
 <a href="/images/middleman-akcms-snapshot.png"><img src="/images/middleman-akcms-snapshot.png" alt="スナップショット" style="max-width: 70%"></a>
 </div>
 
-middleman-blogみたいなものですが、ソースファイル名に日付をつける必要がなく、各記事のフロントマターにcategory: をつけなくとも、ディレクトリ階層をカテゴリとして認識します。
-例えば、source/game/wot/tanks.html.md とすれば、game親カテゴリー、wot子カテゴリーが自動的に認識されます。
+foo/bar/baz.html を作成すると、foo/bar/index.html, foo/index.html, index.html といったディレクトリサマリーページを自動生成します。これにより、どのリソースからも parent, children でたどることができるようになります。
 
-その他、月別アーカイブ、タグ、ぺじネーション、breadcrumbなどをサポートします。
+その他、月別アーカイブ、タグ、ペジネーション、breadcrumbなどをサポートします。
 付属テンプレートでは bootstrap3をサポートします。
 
 ## インストールと使いかた
@@ -30,18 +29,16 @@ $ middleman init proj --template git@github.com:atarukodaka/middleman-akcms.git
 ```
 
 後は通常どおりにprojに入ってsource/ 以下お好きなようにファイルを作って中身を書き build や server 回します。
-「日付をつける必要はない」とは書きましたが、アーカイブなどで日付情報自体は使うので、
-date: に書いてあげたほうがいいでしょう。なければ mtime() で取ります。
 
 ### 設定
 #### config.rb
-標準テンプレートだと以下のようになっています：
+config.rb にて :akcms を activate し、各種設定をします。
 
 ```ruby
 activate :akcms do |akcms|
   akcms.layout = "article"
 
-  akcms.category_template = "templates/category_template.html"
+  akcms.directory_summary_template = "templates/directory_summary_template.html"
   akcms.archive_month_template = "templates/archive_template.html"
   akcms.tag_template = "templates/tag_template.html"
   akcms.pagination_per_page = 10
@@ -52,9 +49,67 @@ end
 ペジネーションのデフォルト表示数/頁も指定できますが、
 記事ごとに指定することもできます（後述）。
 
+## 設計と機能
+### 記事 / Article
 
-#### data/config.yml
-著者名や著者・サイト情報をYAMLで記述します。テンプレートで data.config.author などと取れます。
+以下の特徴を持ったリソースは、article とみなされ：
+
+- ignored でないもの
+- 拡張子が .html あるいは .htm のもの
+- フロントマターで type: summary などと、'article' 以外のものが明示的に指定されていないもの
+
+以下のメソッドを持ちます：
+
+- title：記事タイトル
+- date：日付(TimeWithZoneクラス）。date: フロントマターあるいは更新日時から生成
+- summary：サマリー表示
+- published?：出力するか。published: false でなければ真
+- prev_article：次の記事
+- next_article：前の記事
+- body：記事本文（レイアウト不使用）
+
+そして、Middleman::Sitemap::Store クラス(sitemapオブジェクトが生成される）には、以下のインスタンスメソッドが追加されます。
+
+- articles()：全ての article リソース配列
+
+また、全てのリソースに、以下のメソッドが追加されます：
+
+- is_article?：article かどうか
+- to_article!：当該リソースを article 属性を持たせる
+
+
+### ディレクトリサマリー / DirectorySummary
+activate の際、テンプレートを指定するとディレクトリサマリー生成機能が稼働します。
+
+```ruby
+activate :akcms do |conf|
+  conf.directory_summary_template = "templates/directory_summary.html"
+end
+```
+
+これにより、例えば foo/bar/baz.html というリソースがあった場合、
+
+- foo/bar/index.html
+- foo/index.html
+- index.html
+
+が（存在しなければ）テンプレートに従いプロキシリソースが生成されます。
+その際、ローカル変数として、
+
+- directory:  当該ディレクトリの情報を保持するname, path メソッドを持つオブジェクト
+- articles[]：当該ディレクトリ下にある article のリソース配列
+
+```erb
+% cat templates/directory_summary.html.erb
+<h1>Directory: <%= directory.name %></h1>
+<ul>
+<% articles.each do |article| %>
+  <li><%= link_to(article.title, article) %>
+<% end %>
+</ul>
+```
+
+などとします。
 
 ## 利用できるヘルパー、メソッド
 
@@ -99,6 +154,8 @@ end
 - next_article：前の記事
 - body：記事本文（レイアウト不使用）
 - tags:
+
+
 
 ## 機能と実装
 ### Controller
@@ -224,3 +281,5 @@ pagination:
 
 とやっておくと便利です。
 
+#### data/config.yml
+著者名や著者・サイト情報をYAMLで記述します。テンプレートで data.config.author などと取れます。

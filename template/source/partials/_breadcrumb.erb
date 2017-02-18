@@ -1,14 +1,14 @@
 <nav>
   <ol class="breadcrumb">
     <li><%= link_to("Home", sitemap.find_directory_index("")) %></li>
-    <% ancestors = []; p = current_resource.parent; %>
-    <% while p ; ancestors.push(p); p = p.parent; end; %>
-    <% ancestors.reverse.map do |res| %>
+
+    <% current_resource.ancestors.reverse.map do |res| %>
     <% next if res == sitemap.find_directory_index("") %>
     <li>
       <%= link_to(h(res.data.title || res.directory.name), res, :class=>"breadcrumb-item") %>
     </li>
     <% end%>
+
     <li class="active">
       <%= h(yield_content(:title) || current_resource.data.title) %>
       <% if pagination? && paginator[:num_pages] > 1 %>

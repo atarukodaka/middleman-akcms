@@ -41,7 +41,7 @@ module Middleman::Akcms::DirectorySummary
     include Contracts
     
     ## foo/bar.html as parent of foo/bar/baz/index.html
-    Contract nil => Or[Middleman::Sitemap::Resource, nil]
+    Contract Or[Middleman::Sitemap::Resource, nil]
     def parent
       ret = super
       return ret if ret
@@ -51,6 +51,17 @@ module Middleman::Akcms::DirectorySummary
       @store.find_resource_by_destination_path(File.join(parts) + extname)
     end
 
+    Contract ResourceList
+    def ancestors
+      array = []
+      p = parent
+      while p
+        array << p
+        p = p.parent
+      end
+      array
+    end
+    
     Contract Middleman::Akcms::DirectorySummary::Directory
     def directory
       @_directory ||= Directory.new(File.dirname(path), sitemap: @store)
@@ -98,8 +109,9 @@ module Middleman::Akcms::DirectorySummary
           directory_index = find_directory_index(path, resources: resources, index_file: index_file)
         if directory_index.blank?
           articles = resources.select {|r| r.is_article? && r.path =~ /^#{path}\/[^\/]*$/}
-          md = {locals: {articles: articles}}
-          create_proxy_resource(app.sitemap, File.join(path, index_file), template, md).tap do |p|
+
+          create_proxy_resource(app.sitemap, File.join(path, index_file), template).tap do |p|
+            p.add_metadata({locals: {directory: p.directory, articles: articles}})
             new_resources << p
           end
         end
