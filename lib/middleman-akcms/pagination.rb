@@ -5,7 +5,7 @@ module Middleman::Akcms::Pagination
     helpers do
       def pagination?
         res = current_resource
-        (res.data.pagination && res.locals.has_key?(:paginator)) ? true : false
+        (res.data.pagination && res.locals[:paginator].present?) ? true : false
       end
     end
 
@@ -25,15 +25,6 @@ module Middleman::Akcms::Pagination
       end
     end
 
-    Contract Hash => Integer
-    def get_per_page(pagination)
-      if pagination.is_a?(Hash) && pagination[:per_page].to_i > 0
-        pagination[:per_page]
-      else
-        @app.config.akcms[:pagination][:per_page]
-      end.to_i
-    end
-    
     Contract ResourceList => ResourceList
     def manipulate_resource_list(resources)
       new_resources = []
@@ -44,21 +35,21 @@ module Middleman::Akcms::Pagination
         
         paginated_resources = []
         prev_page = nil
-        per_page = get_per_page(pagination)
+        per_page = pagination.try(:[], :per_page) || @app.config.akcms[:pagination][:per_page]
         
         articles = res.locals[:articles] || @app.sitemap.articles || []
         articles.per_page(per_page).each {|items, num, meta, _is_last|
           # set pager
           meta.prev_page = prev_page
           meta.next_page = nil
-          locals = {locals: {page_articles: items, paginator: meta}}
+          md = {locals: {page_articles: items, paginator: meta}}
           
           if num == 1                          # original resource
-            res.add_metadata(locals)
+            res.add_metadata(md)
             paginated_resources << res
             prev_page = res
           else                                 # new pager resource 2-
-            new_res = create_page_resource(res, num, locals)
+            new_res = create_page_resource(res, num, md)
             prev_page.locals[:paginator][:next_page] = new_res
             paginated_resources << new_res
             prev_page = new_res

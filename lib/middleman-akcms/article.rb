@@ -84,12 +84,14 @@ end
 module Middleman::Akcms::Article
   class Extension < Middleman::Extension
     include Contracts
-
+    self.resource_list_manipulator_priority = 45
+    
     helpers do
       def copyright
         years = sitemap.articles.map {|a| a.date.year}.uniq.sort
-        str = (years.size == 1) ? years.first : [years.first, years.last].join('-')
-        "&copy; Copyright(#{str}) #{data.config.site_info.author}"
+        str = [years.first, years.last].uniq.join("-")
+        #str = (years.size == 1) ? years.first : [years.first, years.last].join('-')
+        "&copy; Copyright(#{str}) #{data.config.site_info.author if data.respond_to?(:config)}"
       end
     end
     
@@ -100,7 +102,7 @@ module Middleman::Akcms::Article
 
     Contract Middleman::Sitemap::Resource => Bool
     def resource_to_be_article?(resource)
-      return false if resource.ignored? || resource.ext != ".html"
+      return false if resource.ignored? || resource.ext !~ /\.html?$/
       return false if resource.data.type && (resource.data.type != "article")
       return true
     end

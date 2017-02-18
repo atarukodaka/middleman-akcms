@@ -5,7 +5,8 @@ module Middleman::Akcms::Util
 
   Contract ResourceList => Or[ResourceList, nil]
   def select_articles(resources)
-    resources.select {|r| r.is_article? }.sort_by {|a| a.date}.reverse
+    #resources.select {|r| r.is_article? }.sort_by {|a| a.date}.reverse
+    resources.select(&:is_article?).sort_by(&:date).reverse
   end
 
   Contract Middleman::Sitemap::Store, String, String, Hash => Middleman::Sitemap::ProxyResource

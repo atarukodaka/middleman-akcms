@@ -102,4 +102,20 @@ Feature: directory summary
     When I go to "/foo/bar.html"
     Then the status code should be "200"
     And I should see "index: foo/index.html"
+
+  Scenario: eponymous path
+    Given a fixture app "directory-summary-app"
+    And a file named "source/foo/bar.html" with ""
+    And a file named "source/foo/bar/baz.html.erb" with:
+      """
+      parent: <%= current_resource.parent.path %>
+      """
     
+    And the Server is running at "directory-summary-app"
+
+    When I go to "/foo/bar/index.html"
+    Then the status code should be "404"
+
+    When I go to "/foo/bar/baz.html"
+    Then the status code should be "200"
+    And I should see "parent: foo/bar.html"

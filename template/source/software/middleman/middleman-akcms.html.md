@@ -56,39 +56,49 @@ end
 #### data/config.yml
 著者名や著者・サイト情報をYAMLで記述します。テンプレートで data.config.author などと取れます。
 
-## 利用できるヘルパーとリソースメソッド
+## 利用できるヘルパー、メソッド
 
-### ヘルパー
+### helper
 
-- akcms
- - tags
- - tag_resources
- - archives
- - archive_resources
-- pagination?
+- pagination?：ペジネーションが利用できれば真
+- copyright：コピーライト表記
+
+### Middleman::Sitemap::Store
+
+- articles()：記事コレクション
+- index_resource(path)：
+- tags()
+- archives()
 
 ### Middleman::Sitemap::Resource
 
-- paginator
+- is_article?()
+- to_article!()
+- directory()
+  - name, path
+  - children_indices, index
+
+- paginator{}
   - page_number
   - num_pages
   - articles
 
-- series
-  - fff
-
+- metadata{:locals}{}
+  - series{}
+    - number
 
 ### Article
 
-- title
-- date
-- summary
-- prev_article
-- next_article
+記事(Article)として認識されたリソース（後述）は、以下のメソッドを持ちます。
 
-  
-
-
+- title：記事タイトル
+- date：日付。date: フロントマターあるいは更新日時
+- summary：サマリー表示
+- published?：出力するか。published: false でなければ真
+- prev_article：次の記事
+- next_article：前の記事
+- body：記事本文（レイアウト不使用）
+- tags:
 
 ## 機能と実装
 ### Controller

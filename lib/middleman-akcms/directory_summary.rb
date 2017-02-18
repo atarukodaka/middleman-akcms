@@ -30,7 +30,7 @@ module Middleman::Akcms::DirectorySummary
 
     Contract ResourceList
     def children_indices
-      @resource.children.select {|r| r.directory_index? }
+      @resource.children.select(&:directory_index?)
     end
 
     Contract Or[Middleman::Sitemap::Resource, nil]
@@ -122,14 +122,15 @@ module Middleman::Akcms::DirectorySummary
       directories = {}  ## {directory_indices:, resources:}
 
       resources.reject {|r| r.ignored?}.group_by {|r|
-        File.dirname(resource_eponymous_path(r)).sub(/^\.$/, '')}.each do |dir_path, list|
+        #File.dirname(resource_eponymous_path(r)).sub(/^\.$/, '')}.each do |dir_path, list|
+        resource_eponymous_dir(r)}.each do |dir_path, list|
         next if dir_to_exclude?(dir_path)
         
         articles = select_articles(list)
         next if articles.empty?
         
         directories[dir_path] = {
-          directory_indices: list.select {|a| a.directory_index?},
+          directory_indices: list.select(&:directory_index?),
           articles: articles
         }
       end
@@ -147,6 +148,15 @@ module Middleman::Akcms::DirectorySummary
       (regex =~ dir) ? true : false
     end    
 
+    ## e.g. if foo/bar.html and foo/bar/ dir exists, return 'foo/bar'
+    def resource_eponymous_dir(resource)
+      if resource.eponymous_directory?
+        resource.eponymous_directory_path.sub(/\/$/, '')
+      else
+        File.dirname(resource.path).sub(/^\.$/, '')
+      end
+    end
+=begin    
     ## e.g. if foo/bar.html and foo/bar/ dir exists, return foo/bar/index.html
     Contract Middleman::Sitemap::Resource => String
     def resource_eponymous_path(resource)
@@ -156,5 +166,6 @@ module Middleman::Akcms::DirectorySummary
         resource.path
       end
     end
+=end
   end  ## class
 end

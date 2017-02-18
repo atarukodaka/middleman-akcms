@@ -1,5 +1,4 @@
 require 'active_support/time_with_zone'
-#require 'active_support/core_ext/time/acts_like'
 require 'active_support/core_ext/time/calculations'
 require 'middleman-akcms/util'
 
@@ -34,7 +33,8 @@ module Middleman::Akcms::Archive
     def manipulate_resource_list(resources)
       @archives = {year: {}, month: {}, day: {}}
       new_resources = []
-      articles = select_articles(resources)
+      articles = resources.select(&:is_article?)
+
       [:year, :month, :day].each do |type|
         template = @app.config.akcms[:archive][type][:template]
         next if template.nil?
@@ -42,8 +42,10 @@ module Middleman::Akcms::Archive
         group_by_type(type, articles).each do |date, d_articles|
           md = {locals: {date: date, articles: d_articles, archive_type: type}}
           
-          new_resources << @archives[type][date] =
-            create_proxy_resource(@app.sitemap, link_path(type, date), template, md)
+          create_proxy_resource(@app.sitemap, link_path(type, date), template, md).tap do |p|
+            @archives[type][date] = p
+            new_resources << p
+          end
         end
       end
       return resources + new_resources
