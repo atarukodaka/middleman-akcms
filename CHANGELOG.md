@@ -2,9 +2,8 @@
  
 - rubygems
 - release 準備
-- archives on directory tree
 
-## 0.0.1
+## 0.0.1.alpha1
 - カテゴリの階層表現
 - tag サポート
 - 複数tagのサポート
@@ -49,3 +48,4 @@
 - extension に分ける
 - tag: archive が収まってきたら再実装
 - top\_page => sitemap.index_resource("")
+- TAG: v0.0.1.alpha1 (Feb 18, 2017)
