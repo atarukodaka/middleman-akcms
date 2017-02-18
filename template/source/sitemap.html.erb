@@ -11,6 +11,6 @@ group: navigation
 
 <div>
   <ul>
-    <%= partial("partials/directory_recurse", locals: {resource: sitemap.index_resource(""), include_siblings: false}) %>
+    <%= partial("partials/directory_recurse", locals: {resource: sitemap.find_directory_index(""), include_siblings: false}) %>
   </ul>
 </div>

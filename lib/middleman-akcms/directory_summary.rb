@@ -28,7 +28,7 @@ module Middleman::Akcms::DirectorySummary
 
     Contract Or[Middleman::Sitemap::Resource, nil]
     def index
-      @sitemap.index_resource(path)
+      @sitemap.find_directory_index(path)
     end
 
     Contract ResourceList
@@ -51,7 +51,7 @@ module Middleman::Akcms::DirectorySummary
       @store.find_resource_by_destination_path(File.join(parts) + extname)
     end
 
-    #Contract Middleman::Akcms::DirectorySummary::Directory
+    Contract Middleman::Akcms::DirectorySummary::Directory
     def directory
       @_directory ||= Directory.new(File.dirname(path), sitemap: @store)
     end
@@ -63,7 +63,7 @@ module Middleman::Akcms::DirectorySummary
     include Contracts
 
     Contract String => Or[Middleman::Sitemap::Resource, nil]
-    def index_resource(dir)
+    def find_directory_index(dir = "")
       dir = Middleman::Util.normalize_path(dir).sub(/\/$/, '')
       @app.sitemap.find_resource_by_path(dir + "/"  + @app.config.index_file) ||
         @app.sitemap.find_resource_by_path(dir + File.extname(@app.config.index_file))

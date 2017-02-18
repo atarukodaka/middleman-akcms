@@ -1,10 +1,10 @@
 <nav>
   <ol class="breadcrumb">
-    <li><%= link_to("Home", sitemap.index_resource("")) %></li>
+    <li><%= link_to("Home", sitemap.find_directory_index("")) %></li>
     <% ancestors = []; p = current_resource.parent; %>
     <% while p ; ancestors.push(p); p = p.parent; end; %>
     <% ancestors.reverse.map do |res| %>
-    <% next if res == sitemap.index_resource("") %>
+    <% next if res == sitemap.find_directory_index("") %>
     <li>
       <%= link_to(h(res.data.title || res.directory.name), res, :class=>"breadcrumb-item") %>
     </li>

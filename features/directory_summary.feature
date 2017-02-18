@@ -62,7 +62,7 @@ Feature: directory summary
     And a file named "source/foo/index.html.erb" with ""
     And a file named "source/show.html.erb" with:
       """
-      path: <%= sitemap.index_resource("foo").path %>
+      path: <%= sitemap.find_directory_index("foo").path %>
       """
     And the Server is running at "basic-app"
     When I go to "/show.html"
@@ -75,8 +75,8 @@ Feature: directory summary
     And a file named "source/foo/index.html.erb" with ""
     And a file named "source/show.html.erb" with:
       """
-      /: <%= sitemap.index_resource("/").path %>
-      /foo: <%= sitemap.index_resource("/foo").path %>
+      /: <%= sitemap.find_directory_index("/").path %>
+      /foo: <%= sitemap.find_directory_index("/foo").path %>
       """
     And the Server is running at "basic-app"
     When I go to "/show.html"

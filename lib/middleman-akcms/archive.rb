@@ -33,7 +33,7 @@ module Middleman::Akcms::Archive
     def manipulate_resource_list(resources)
       @archives = {year: {}, month: {}, day: {}}
       new_resources = []
-      articles = resources.select(&:is_article?)
+      articles = select_articles(resources)
 
       [:year, :month, :day].each do |type|
         template = @app.config.akcms[:archive][type][:template]
