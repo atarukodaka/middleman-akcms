@@ -78,6 +78,8 @@ end
 - to_article!：当該リソースを article 属性を持たせる
 
 
+see https://github.com/atarukodaka/middleman-akcms/blob/master/lib/middleman-akcms/article.rb
+
 ### ディレクトリサマリー / DirectorySummary
 activate の際、テンプレートを指定するとディレクトリサマリー生成機能が稼働します。
 
@@ -99,6 +101,8 @@ end
 - directory:  当該ディレクトリの情報を保持するname, path メソッドを持つオブジェクト
 - articles[]：当該ディレクトリ下にある article のリソース配列
 
+が渡されるため、
+
 ```erb
 % cat templates/directory_summary.html.erb
 <h1>Directory: <%= directory.name %></h1>
@@ -111,154 +115,51 @@ end
 
 などとします。
 
-## 利用できるヘルパー、メソッド
+#### breadcrump
 
-### helper
+全てのリソースに、ancestors メソッドが追加されるため、以下のように
+breadcrumbs を手軽に作ることができます。
 
-- pagination?：ペジネーションが利用できれば真
-- copyright：コピーライト表記
+```erb
+<ol class="breadcrumb">
+  <% current_resource.ancestors.reverse.map do |res| %>
+  <li><%= link_to(res.data.title || res.directory.name, res) %></li>
+  <% end %>
+  <li class="active">current_resource.data.title</li>
+</ol>
+```
 
-### Middleman::Sitemap::Store
+### タグ
 
-- articles()：記事コレクション
-- index_resource(path)：
-- tags()
-- archives()
+options.tag_template
 
-### Middleman::Sitemap::Resource
+- resource.tags: 当該リソースのタグ配列
+- sitemap.tags：タグ=>プロキシリソースのハッシュ
 
-- is_article?()
-- to_article!()
-- directory()
-  - name, path
-  - children_indices, index
+### アーカイブ
 
-- paginator{}
+options.archive\_month_template
+
+- sitemap.archives：日付(TimeWithZone)=>プロキシリソースのハッシュ
+
+### ペジネーション
+
+- pagination?：ヘルパ関数
+- current_resource.paginator：
   - page_number
   - num_pages
-  - articles
+  - ...
 
-- metadata{:locals}{}
-  - series{}
-    - number
+### シリーズ機能
 
-### Article
+options.series\_title_template
 
-記事(Article)として認識されたリソース（後述）は、以下のメソッドを持ちます。
+config.yml
 
-- title：記事タイトル
-- date：日付。date: フロントマターあるいは更新日時
-- summary：サマリー表示
-- published?：出力するか。published: false でなければ真
-- prev_article：次の記事
-- next_article：前の記事
-- body：記事本文（レイアウト不使用）
-- tags:
-
-
-
-## 機能と実装
-### Controller
-Middleman::Akcms::Controllerクラス。
-
-ヘルパ関数 akcms でtemplate や layout からコントローラにアクセスできます。
-このコントローラー経由で、下記の機能オブジェクトにアクセスします。
-
-### Manipulator
-拡張機能のキモ：resource を manipulate する機能集団。現在以下の5つあります：
-
-- ArticleManipulator
-- CategoryManipulator
-- TagManipulator
-- ArchiveManipulator
-- PaginatorManipulator
-
-#### ArticleManipulator
-記事群を生成するクラス。
-resource から ext == ".html"なリソースに
-Middleman::Akcms::ArticleResource module を extend し、
-date, title, category などのメソッドを追加します。
-
-これらの記事群は archives[] に集められ、akcms.arcives でアクセスできます。
-新しい記事を取得したければ、
-
-```ruby
-akcms.articles.first(10).each do |article|
-  link_to(article.title, article)
-end
+```yml
+series: シリーズ名
 ```
 
-などとします。
-
-#### CategoryManipulator
-本クラスのインスタンスオブジェクトの categories{}に、
-category_template.html.erb に従って生成されたプロキシリソースのハッシュが入ります。
-各記事のmetadata[:locals] にでname, display\_name, articlesが取得できます。
-
-nameはgame/wot のようにフルパスですが、display\_nameは wotのみ、あるいはsource/game/wot/category\_name.txtがあれば中身を使います。
-
-```ruby
-akcms.categories.each do |category, res|
-  link_to(category, res)
-end
-```
-
-あるいは、標準の parent, children メソッドを使って、再帰ツリーを表示せることもできます。
-詳しくは
-[middleman\-akcms/categories\.html\.erb at master · atarukodaka/middleman\-akcms](https://github.com/atarukodaka/middleman-akcms/blob/master/template/source/categories.html.erb) および
-[middleman\-akcms/\_category\_list\.erb](https://github.com/atarukodaka/middleman-akcms/blob/master/template/source/partials/_category_list.erb)
-参照。
-
-指定カテゴリに属するの記事群は、category_resource.locals[:articles] に入ってるので、
-プロキシテンプレートでは、articles でとれます。
-
-
-#### TagManipulator
-タグ。同様に akcms.tags{} にプロキシリソースハッシュが入ります。
-
-```ruby
-akcms.tags.each do |tag, res|
-  link_to(tag, res)
-end
-```
-
-#### ArchiveManipulator
-月別アーカイブ。
-
-月別アーカイブはakcms.archives{} で取得できます。リソースのハッシュです。中身はproxy resourceで、localsでdate, articlesが取れます。
-
-#### PaginatorManipulator
-
-ペジネーションは、mm4についてるper\_pageを使ってます。frontmatterにpagination: trueをつけると、ペジネーションが有効になります。
-proxy template には、page\_articlesとして表示分記事が渡り、paginator変数に、page\_number num_pages next\_page prev\_pageが使えます。
-
-簡単なページャーは、テンプレートに以下のように記述します：
-
-```ruby
-  <nav>
-    <ul class="pager">
-      <% if paginator.prev_page %>
-      <li class="previous"><%= link_to("prev", paginator.prev_page) if paginator.prev_page %></li>
-      <% end %>
-      <% if paginator.next_page %>
-      <li class="next"><%= link_to("next", paginator.next_page) if paginator.next_page %></li>
-      <% end %>
-    </ul>
-    <div class="text-center">
-      <%= paginator.page_number %> / <%= paginator.num_pages %>
-    </div>
-  </nav>
-```
-
-また、fromtmatter で
-
-```yaml
-title: ぺじネーションテスト
-pagination:
-  per_page: 5
-```
-
-と記事毎にパラメータを指定することができます。
 
 ## Tips
 ### .emacs

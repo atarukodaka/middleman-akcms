@@ -5,7 +5,7 @@
     <% current_resource.ancestors.reverse.map do |res| %>
     <% next if res == sitemap.find_directory_index("") %>
     <li>
-      <%= link_to(h(res.data.title || res.directory.name), res, :class=>"breadcrumb-item") %>
+      <%= link_to(h(res.data.title || res.directory.name), res) %>
     </li>
     <% end%>
 

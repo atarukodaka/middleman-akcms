@@ -110,7 +110,7 @@ module Middleman::Akcms::Article
     def resource_to_be_article?(resource)
       return false if resource.ignored? || resource.ext !~ /\.html?$/
       return false if resource.data.type && (resource.data.type != "article")
-      return true
+      true
     end
     Contract ResourceList => ResourceList
     def manipulate_resource_list(resources)

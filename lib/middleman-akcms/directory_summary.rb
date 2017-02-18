@@ -108,7 +108,8 @@ module Middleman::Akcms::DirectorySummary
       dirs.each do |path|
           directory_index = find_directory_index(path, resources: resources, index_file: index_file)
         if directory_index.blank?
-          articles = resources.select {|r| r.is_article? && r.path =~ /^#{path}\/[^\/]*$/}
+          #articles = resources.select {|r| r.is_article? && r.path =~ /^#{path}\/[^\/]*$/}
+          articles = select_articles(resources).select {|r| r.path =~ /^#{path}\/[^\/]*$/}
 
           create_proxy_resource(app.sitemap, File.join(path, index_file), template).tap do |p|
             p.add_metadata({locals: {directory: p.directory, articles: articles}})

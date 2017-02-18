@@ -57,34 +57,34 @@ module Middleman::Akcms
         layout: options.layout,
         summarize: {
           summary_length: options.summary_length,
-          summarizer: options.summarizer.new
+          summarizer: options.summarizer.new,
         },
         directory_summary_template: options.directory_summary_template,
         pagination: {
           per_page: options.pagination_per_page,
-          page_link: options.pagination_page_link
+          page_link: options.pagination_page_link,
         },
         archive: {
           year: {
             template: options.archive_year_template,
-            link: options.archive_year_link
+            link: options.archive_year_link,
           },
           month: {
             template: options.archive_month_template,
-            link: options.archive_month_link
+            link: options.archive_month_link,
           },
           day: {
             template: options.archive_day_template,
-            link: options.archive_day_link
-          }
+            link: options.archive_day_link,
+          },
         },
         tag: {
           template: options.tag_template,
-          link: options.tag_link
+          link: options.tag_link,
         },
         series: {
-          title_template: options.series_title_template
-        }
+          title_template: options.series_title_template,
+        },
       }
     end
     # rubocop:enable Metrics/MethodLength
