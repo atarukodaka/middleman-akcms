@@ -33,7 +33,7 @@ module Middleman::Akcms::DirectorySummary
 
     Contract ResourceList
     def articles
-      @sitemap.resources.select {|r| r.path =~ /^#{path}\//}
+      @sitemap.resources.select {|r| r.path =~ /^#{path}\/[^\/]*$/}
     end
   end  ## class
 
@@ -79,9 +79,6 @@ module Middleman::Akcms::DirectorySummary
       Middleman::Sitemap::Store.prepend InstanceMethodsToStore
     end
 
-    #self.resource_list_manipulator_priority = 55
-    attr_reader :directories
-    
     def manipulate_resource_list(resources)
       new_resources = []
       template = app.config.akcms[:directory_summary_template]
@@ -91,7 +88,7 @@ module Middleman::Akcms::DirectorySummary
       dirs.each do |path|
         directory_index = resources.find {|r| r.path == Middleman::Util.normalize_path(File.join(path, index_file)) || r.path == "#{path}.html"}
         if directory_index.blank?
-          articles = resources.select {|r| r.is_article? && r.path =~ /^#{path}\//}
+          articles = resources.select {|r| r.is_article? && r.path =~ /^#{path}\/[^\/]*$/}
           md = {locals: {articles: articles}}
           create_proxy_resource(app.sitemap, File.join(path, index_file), template, md).tap do |p|
             directory_index = p
