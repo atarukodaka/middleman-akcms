@@ -5,37 +5,12 @@ require 'contracts'
 
 module Middleman::Akcms::DirectorySummary
   class Directory
-    include Contracts
-
-    Contract Middleman::Sitemap::Store, Middleman::Sitemap::Resource => Any
-    def initialize(store, res)
-      @store = store
-      @resource = res
-    end
-
-    Contract String
-    def path
-      File.dirname(@resource.path).to_s
-    end
-
-    Contract String
-    def name
-      return @_name if @_name
-      @_name = if (config_yml = @store.find_resource_by_path(File.join(path, "config.yml")))
-                 yml = YAML::load(config_yml.render(layout: false))
-                 yml["directory_name"].to_s
-               end
-      @_name ||= path.split('/').last
-    end
-
-    Contract ResourceList
-    def children_indices
-      @resource.children.select(&:directory_index?)
-    end
-
-    Contract Or[Middleman::Sitemap::Resource, nil]
-    def index
-      @store.index_resource(path)
+    attr_reader :path, :name, :index, :articles
+    def initialize(path, name: nil, index: nil, articles: [])
+      @path = path
+      @index = index
+      @articles = articles
+      @name = name || path.split('/').last
     end
   end  ## class
 
@@ -54,7 +29,8 @@ module Middleman::Akcms::DirectorySummary
     end
 
     def directory
-      @_directory ||= Directory.new(@store, self)
+      #@_directory ||= Directory.new(path)
+      @app.extensions[:akcms_directory_summary].directories[File.dirname(path).sub(/^\.$/, '')]
     end
   end  ## module
 end
@@ -81,9 +57,54 @@ module Middleman::Akcms::DirectorySummary
     end
 
     #self.resource_list_manipulator_priority = 55
+    attr_reader :directories
     
-    Contract ResourceList => ResourceList
     def manipulate_resource_list(resources)
+      @directories = {}
+      new_resources = []
+      template = app.config.akcms[:directory_summary_template]
+      index_file = app.config.index_file
+      
+      dirs = directories_including_ancestors(resources)
+      dirs.each do |path|
+        directory_index = resources.find {|r| r.path == Middleman::Util.normalize_path(File.join(path, index_file)) || r.path == "#{path}.html"}
+        if directory_index.blank?
+          articles = resources.select {|r| r.is_article? && r.path =~ /^#{path}\//}
+          md = {locals: {articles: articles}}
+          create_proxy_resource(app.sitemap, File.join(path, index_file), template, md).tap do |p|
+            directory_index = p
+            new_resources << p
+          end
+        end
+
+        name = if (config_yml = resources.find{|r| r.path == (File.join(path, "config.yml"))})
+                 yml = YAML::load(config_yml.render(layout: false))
+                 yml["directory_name"].to_s
+               end
+        @directories[path] = Directory.new(path, name: name, index: directory_index, articles: articles)
+      end  ## each dirs
+      resources + new_resources
+    end
+    
+    def existing_directories(resources)
+      resources.reject(&:ignored?).map {|r| resource_eponymous_dir(r)}.uniq.reject {|path| dir_to_exclude?(path)}
+    end
+    def directories_including_ancestors(resources)
+      ancestor_directories = []
+
+      directories = existing_directories(resources)
+      directories.map do |dir|
+        dir.split('/').inject("") do |result, part|
+          ancestor_directories << Middleman::Util.normalize_path([result, part].join('/'))
+          [result, part]
+        end
+      end
+      [*directories, *ancestor_directories].uniq
+    end
+
+=begin    
+    Contract ResourceList => ResourceList
+    def _manipulate_resource_list(resources)
       index_file = app.config.index_file
       new_resources = []      
       empty_directories = {}
@@ -112,6 +133,7 @@ module Middleman::Akcms::DirectorySummary
           [result, part]
         end
       end
+      binding.pry
       resources + new_resources
     end
     
@@ -136,7 +158,7 @@ module Middleman::Akcms::DirectorySummary
       end
       directories
     end
-
+=end
     ## fonts/images/js/css/layouts dir will be excluded
     Contract String => Bool
     def dir_to_exclude?(dir)
@@ -156,6 +178,7 @@ module Middleman::Akcms::DirectorySummary
         File.dirname(resource.path).sub(/^\.$/, '')
       end
     end
+
 =begin    
     ## e.g. if foo/bar.html and foo/bar/ dir exists, return foo/bar/index.html
     Contract Middleman::Sitemap::Resource => String

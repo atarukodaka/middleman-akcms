@@ -88,7 +88,7 @@ Feature: directory summary
     Given a fixture app "directory-summary-app"
     And a file named "source/foo/index.html.erb" with:
       """
-      children: <%= current_resource.directory.children_indices.map {|r| r.path }.join(",") %>
+      children: <%= current_resource.children.select(&:directory_index?).map(&:path).join(",") %>
       """
     And a file named "source/foo/bar.html.erb" with:   
       """
