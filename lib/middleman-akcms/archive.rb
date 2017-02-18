@@ -37,7 +37,7 @@ module Middleman::Akcms::Archive
 
       [:year, :month, :day].each do |type|
         template = @app.config.akcms[:archive][type][:template]
-        next if template.nil?
+        next if template.blank?
 
         group_by_type(type, articles).each do |date, d_articles|
           md = {locals: {date: date, articles: d_articles, archive_type: type}}

@@ -1,12 +1,15 @@
 require 'active_support/time_with_zone'
-require 'active_support/core_ext/time/acts_like'
 require 'active_support/core_ext/time/calculations'
 
 module Middleman::Akcms::Article
   module InstanceMethodsToResource
+    include Contracts
+
+    Contract Bool
     def is_article?
-      (self.is_a? InstanceMethodsToArticle) ? true : false
+      self.is_a? InstanceMethodsToArticle
     end
+    Contract Middleman::Sitemap::Resource
     def to_article!
       self.extend InstanceMethodsToArticle
       self
@@ -14,6 +17,9 @@ module Middleman::Akcms::Article
   end  # module
 
   module InstanceMethodsToStore
+    include Contracts
+
+    ResourceList
     def articles
       resources.select {|r| r.is_article? }.sort_by {|r| r.date }.reverse
     end
@@ -24,7 +30,7 @@ module Middleman::Akcms::Article
 
     Contract String
     def title
-      return data.title.to_s || "(untitled)"
+      return data.title.to_s.presence || "(untitled)"
     end
 
     Contract ActiveSupport::TimeWithZone
