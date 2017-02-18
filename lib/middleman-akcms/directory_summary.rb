@@ -100,7 +100,6 @@ module Middleman::Akcms::DirectorySummary
           articles = resources.select {|r| r.is_article? && r.path =~ /^#{path}\/[^\/]*$/}
           md = {locals: {articles: articles}}
           create_proxy_resource(app.sitemap, File.join(path, index_file), template, md).tap do |p|
-            directory_index = p
             new_resources << p
           end
         end

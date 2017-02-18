@@ -30,14 +30,13 @@ module Middleman::Akcms::Pagination
       new_resources = []
       
       resources.each {|res|
-        pagination = res.data.pagination
         next if res.ignored? || !pagination
         
         paginated_resources = []
         prev_page = nil
-        per_page = pagination.try(:[], :per_page) || @app.config.akcms[:pagination][:per_page]
+        per_page = res.data.pagination.try(:[], :per_page) || @app.config.akcms[:pagination][:per_page]
         
-        articles = res.locals[:articles] || @app.sitemap.articles || []
+        articles = res.locals[:articles] || @app.sitemap.articles
         articles.per_page(per_page).each {|items, num, meta, _is_last|
           # set pager
           meta.prev_page = prev_page
@@ -50,9 +49,9 @@ module Middleman::Akcms::Pagination
             prev_page = res
           else                                 # new pager resource 2-
             new_res = create_page_resource(res, num, md)
+            prev_page = new_res
             prev_page.locals[:paginator][:next_page] = new_res
             paginated_resources << new_res
-            prev_page = new_res
             new_resources << new_res
           end
         } # each for per_page

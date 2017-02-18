@@ -19,7 +19,7 @@ module Middleman::Akcms::Article
   module InstanceMethodsToStore
     include Contracts
 
-    ResourceList
+    Contract ResourceList
     def articles
       resources.select {|r| r.is_article? }.sort_by {|r| r.date }.reverse
     end
