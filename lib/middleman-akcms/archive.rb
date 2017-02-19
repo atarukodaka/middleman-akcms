@@ -37,11 +37,10 @@ module Middleman::Akcms::Archive
 
       [:year, :month, :day].each do |type|
         app.sitemap.archives[type] = {}
-        template = @app.config.akcms[:archive][type][:template]
+        template = app.config.akcms[:archive][type][:template]
         next if template.blank?
 
-        beginning_of = "beginning_of_#{type}"
-        articles.group_by {|a| a.date.method(beginning_of).call}.each do |date, d_articles|
+        articles.group_by {|a| a.date.method("beginning_of_#{type}").call}.each do |date, d_articles|
           md = {locals: {date: date, articles: d_articles, archive_type: type}}
           
           create_proxy_resource(app.sitemap, link_path(type, date), template, md).tap do |p|

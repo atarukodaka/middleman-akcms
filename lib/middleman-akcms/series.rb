@@ -5,17 +5,15 @@ module Middleman::Akcms::Series
     include Middleman::Akcms::Util
     include Contracts
 
-    # retrieve series number:
-    #   1. 'series: 2' from the frontmatter
+    # retrieve series number from resource:
+    #   1. 'series-number: 2' from the frontmatter
     #   2. 'series:\n  number: 2' from the frontmatter
     #   3. from the filename like '2_xxxx.html' 
     Contract Middleman::Sitemap::Resource => Integer
     def get_series_number(article)
-      series_number = article.data["series-number"] || article.data.series_number
-      series_number ||= article.data.series.number if article.data.series.is_a? Hash
-      series_number ||= (File.basename(article.path) =~ /^([0-9]+)[_\-\s]/) ? $1.to_i : 0
-
-      return series_number
+      series_number = article.data["series-number"] || article.data.series_number ||
+        (article.data.series.number if article.data.series.is_a? Hash) || 
+        ((File.basename(article.path) =~ /^([0-9]+)[_\-\s]/) ? $1.to_i : 0)
     end
     
     # retrieve series name from the yml:
@@ -51,12 +49,14 @@ module Middleman::Akcms::Series
             name: series_name,
             number: series_number,
             article_title: article.title,
-            articles: series_articles
+            articles: series_articles,
           }
           title = series_title_template % hash
           article.add_metadata({locals: {series: hash}, page: {title: title}})
         end
-        if (index_res = resources.find {|r| r.path == File.join(dir_path, app.config.index_file) || r.path == dir_path + ".html" })
+        index_file = app.config.index_file
+        ext = File.extname(index_file)
+        if (index_res = resources.find {|r| r.path == File.join(dir_path, index_file) || r.path == dir_path + ext })
           index_res.add_metadata({locals: {series: {articles: series_articles}},
                                    page: {title: index_res.data.title || series_name}})
         end

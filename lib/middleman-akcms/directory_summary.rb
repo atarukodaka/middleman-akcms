@@ -76,9 +76,9 @@ module Middleman::Akcms::DirectorySummary
 
     Contract String => Or[Middleman::Sitemap::Resource, nil]
     def find_directory_index(dir = "")
-      _dir = Middleman::Util.normalize_path(dir).sub(/\/$/, '')
-      @app.sitemap.find_resource_by_path(_dir + "/"  + @app.config.index_file) ||
-        @app.sitemap.find_resource_by_path(_dir + File.extname(@app.config.index_file))
+      dir = Middleman::Util.normalize_path(dir).sub(/\/$/, '')
+      @app.sitemap.find_resource_by_path(dir + "/"  + @app.config.index_file) ||
+        @app.sitemap.find_resource_by_path(dir + File.extname(@app.config.index_file))
     end
   end ## module
 end

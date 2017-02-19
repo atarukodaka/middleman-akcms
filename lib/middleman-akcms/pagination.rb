@@ -15,12 +15,11 @@ module Middleman::Akcms::Pagination
       link = resource.path.sub(%r{(^|/)([^/]*)\.([^/]*)$}, "\\1\\2-#{page_url}.\\3")
 
       if resource.is_a? Middleman::Sitemap::ProxyResource
-        Middleman::Sitemap::ProxyResource.new(@app.sitemap, link, resource.target)
+        Middleman::Sitemap::ProxyResource.new(app.sitemap, link, resource.target)
       else
-        Middleman::Sitemap::Resource.new(@app.sitemap, link, resource.source_file)
+        Middleman::Sitemap::Resource.new(app.sitemap, link, resource.source_file)
       end.tap do |res|
-        res.add_metadata(resource.metadata)
-        res.add_metadata(metadata) unless metadata.empty?
+        res.add_metadata(resource.metadata.merge(metadata))
         app.logger.debug("  * new pager added: #{res.path}")
       end
     end
@@ -35,7 +34,7 @@ module Middleman::Akcms::Pagination
         paginated_resources = []
         prev_page = nil
         per_page = res.data.pagination.try(:[], :per_page) || @app.config.akcms[:pagination][:per_page]
-        articles = res.locals[:articles] || @app.sitemap.articles
+        articles = res.locals[:articles] || app.sitemap.articles
         articles.per_page(per_page).each {|items, num, meta, _is_last|
           # set pager
           meta.prev_page = prev_page
