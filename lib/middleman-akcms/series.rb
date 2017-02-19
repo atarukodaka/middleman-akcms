@@ -37,11 +37,11 @@ module Middleman::Akcms::Series
         yml = YAML::load(config_yml_res.render(layout: false))
         next unless yml['series']
 
-        dir_path = File.dirname(config_yml_res.path)
+        dir_path = dirname(config_yml_res.path)
         dir_name = dir_path.split('/').last
         series_name = get_series_name(yml) || dir_name
 
-        series_articles = select_articles(resources).select {|res| File.dirname(res.path) == dir_path}
+        series_articles = select_articles(resources).select {|res| dirname(res.path) == dir_path}
 
         series_articles.each do |article|
           series_number = get_series_number(article)

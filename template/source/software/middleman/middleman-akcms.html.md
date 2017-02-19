@@ -28,7 +28,7 @@ middleman4 を入れた状態で、テンプレートを指定してプロジェ
 $ middleman init proj --template git@github.com:atarukodaka/middleman-akcms.git
 ```
 
-後は通常どおりにprojに入ってsource/ 以下お好きなようにファイルを作って中身を書き build や server 回します。
+後は通常どおりにprojに入って bundle install し、source/ 以下お好きなようにファイルを作って中身を書き build や server 回します。
 
 ### 設定
 #### config.rb
@@ -52,11 +52,11 @@ end
 ## 設計と機能
 ### 記事 / Article
 
-以下の特徴を持ったリソースは、article とみなされ：
+以下の特徴を持ったリソースは、記事 (article) とみなされ：
 
 - ignored でないもの
 - 拡張子が .html あるいは .htm のもの
-- フロントマターで type: summary などと、'article' 以外のものが明示的に指定されていないもの
+- type: フロントマターで 'article' 以外のものが明示的に指定されていないもの
 
 以下のメソッドを持ちます：
 
@@ -70,7 +70,19 @@ end
 
 そして、Middleman::Sitemap::Store クラス(sitemapオブジェクトが生成される）には、以下のインスタンスメソッドが追加されます。
 
-- articles()：全ての article リソース配列
+- articles()：全ての article リソース配列（日付逆順ソート済）
+
+これを使って、
+
+```erb
+<ul>
+<% sitemap.articles.first(10).each do |article| %>
+  <li><%= link_to(article.title, article) %></li>
+<% end%>
+</ul>
+```
+
+などと最新１０件の記事を表示することができます。
 
 また、全てのリソースに、以下のメソッドが追加されます：
 
@@ -113,7 +125,7 @@ end
 </ul>
 ```
 
-などとします。
+などと当該ディレクトリの記事一覧を作成できます。
 
 #### breadcrump
 
@@ -128,6 +140,22 @@ breadcrumbs を手軽に作ることができます。
   <li class="active">current_resource.data.title</li>
 </ol>
 ```
+
+#### foo/config.yml
+あるディレクトリに "directory_name: "というエントリを持つ config.yml が存在する場合、
+resource.directory.name はその値が入ります。
+
+
+```yml
+$ cat source/foo/config.yml
+directory_name: フー
+```
+
+```erb
+$ cat source/foo/index.html.erb
+<h1>directory: <%= current_resource.directory.name %></h1> <!-- 'フー' と表示される -->
+```
+
 
 ### タグ
 

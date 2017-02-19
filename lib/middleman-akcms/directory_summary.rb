@@ -38,6 +38,7 @@ module Middleman::Akcms::DirectorySummary
   end  ## class
 
   module InstanceMethodsToResource
+    include Middleman::Akcms::Util
     include Contracts
     
     ## foo/bar.html as parent of foo/bar/baz/index.html
@@ -45,7 +46,7 @@ module Middleman::Akcms::DirectorySummary
     def parent
       ret = super
       return ret if ret
-      parts = File.dirname(path).split('/')
+      parts = dirname(path).split('/')
       parts.pop
       extname = File.extname(@app.config.index_file)
       @store.find_resource_by_destination_path(File.join(parts) + extname)
@@ -64,7 +65,7 @@ module Middleman::Akcms::DirectorySummary
     
     Contract Middleman::Akcms::DirectorySummary::Directory
     def directory
-      @_directory ||= Directory.new(File.dirname(path), sitemap: @store)
+      @_directory ||= Directory.new(dirname(path), sitemap: @store)
     end
   end  ## module
 end
@@ -75,9 +76,9 @@ module Middleman::Akcms::DirectorySummary
 
     Contract String => Or[Middleman::Sitemap::Resource, nil]
     def find_directory_index(dir = "")
-      dir = Middleman::Util.normalize_path(dir).sub(/\/$/, '')
-      @app.sitemap.find_resource_by_path(dir + "/"  + @app.config.index_file) ||
-        @app.sitemap.find_resource_by_path(dir + File.extname(@app.config.index_file))
+      _dir = Middleman::Util.normalize_path(dir).sub(/\/$/, '')
+      @app.sitemap.find_resource_by_path(_dir + "/"  + @app.config.index_file) ||
+        @app.sitemap.find_resource_by_path(_dir + File.extname(@app.config.index_file))
     end
   end ## module
 end
@@ -152,7 +153,7 @@ module Middleman::Akcms::DirectorySummary
       if resource.eponymous_directory?
         resource.eponymous_directory_path.sub(/\/$/, '')
       else
-        File.dirname(resource.path).sub(/^\.$/, '')
+        dirname(resource.path)
       end
     end
   end  ## class

@@ -94,10 +94,12 @@ module Middleman::Akcms::Article
     
     helpers do
       def copyright
+        template = "&copy; Copyright(%{years}) %{author}"
         years = sitemap.articles.map {|a| a.date.year}.uniq.sort
-        str = [years.first, years.last].uniq.join("-")
+        years_str = [years.first, years.last].uniq.join("-")
         #str = (years.size == 1) ? years.first : [years.first, years.last].join('-')
-        "&copy; Copyright(#{str}) #{data.config.site_info.author if data.respond_to?(:config)}"
+        #"&copy; Copyright(#{str}) #{data.config.site_info.author if data.respond_to?(:config)}"
+        template % {years: years_str, author: (data.respond_to?(:config)) ? data.config.site_info.author : ""}
       end
     end
     

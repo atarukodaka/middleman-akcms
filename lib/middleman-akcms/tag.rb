@@ -24,7 +24,7 @@ module Middleman::Akcms::Tag
 
     Contract HashOf[String => Middleman::Sitemap::ProxyResource]
     def tags
-      @app.extensions[:akcms_tag].tags
+      @_tags ||= {}
     end
   end  ## module
 end
@@ -42,16 +42,17 @@ module Middleman::Akcms::Tag
     
     Contract ResourceList => ResourceList
     def manipulate_resource_list(resources)
-      @tags = {}
+      app.sitemap.tags.clear
+
       template = app.config.akcms[:tag][:template]
       
       select_articles(resources).each {|article|
         article.tags.each {|tag|
-          @tags[tag] ||= create_proxy_resource(app.sitemap, link_path(tag), template, locals: {tag_name: tag, articles: []})
-          @tags[tag].locals[:articles] << article
+          app.sitemap.tags[tag] ||= create_proxy_resource(app.sitemap, link_path(tag), template, locals: {tag_name: tag, articles: []})
+          app.sitemap.tags[tag].locals[:articles] << article
         }
       }
-      resources + @tags.values
+      resources + app.sitemap.tags.values
     end
     private
     Contract String => String

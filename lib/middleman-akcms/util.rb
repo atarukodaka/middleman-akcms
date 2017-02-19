@@ -16,4 +16,9 @@ module Middleman::Akcms::Util
       p.add_metadata(metadata)
     end
   end
+
+  Contract String => String
+  def dirname(path)
+    File.dirname(path).sub(/^\.$/, '')
+  end
 end  ## module

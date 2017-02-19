@@ -12,7 +12,7 @@ module Middleman::Akcms::Archive
     # e.g. archives[:month].each do |date, res|...
     Contract HashOf[TypeSymbol => HashOf[ActiveSupport::TimeWithZone => Middleman::Sitemap::ProxyResource]]
     def archives
-      @app.extensions[:akcms_archive].archives
+      @_archives ||= {}
     end
   end
 end
@@ -31,19 +31,21 @@ module Middleman::Akcms::Archive
 
     Contract ResourceList => ResourceList
     def manipulate_resource_list(resources)
-      @archives = {year: {}, month: {}, day: {}}
+      app.sitemap.archives.clear
       new_resources = []
       articles = select_articles(resources)
 
       [:year, :month, :day].each do |type|
+        app.sitemap.archives[type] = {}
         template = @app.config.akcms[:archive][type][:template]
         next if template.blank?
 
-        group_by_type(type, articles).each do |date, d_articles|
+        beginning_of = "beginning_of_#{type}"
+        articles.group_by {|a| a.date.method(beginning_of).call}.each do |date, d_articles|
           md = {locals: {date: date, articles: d_articles, archive_type: type}}
           
-          create_proxy_resource(@app.sitemap, link_path(type, date), template, md).tap do |p|
-            @archives[type][date] = p
+          create_proxy_resource(app.sitemap, link_path(type, date), template, md).tap do |p|
+            app.sitemap.archives[type][date] = p
             new_resources << p
           end
         end
@@ -54,19 +56,7 @@ module Middleman::Akcms::Archive
     private
     Contract TypeSymbol, ActiveSupport::TimeWithZone => String
     def link_path(type, date)
-      @app.config.akcms[:archive][type][:link] % {year: date.year, month: date.month, day: date.day}
-    end
-
-    Contract TypeSymbol, ResourceList => HashOf[ActiveSupport::TimeWithZone => ResourceList]
-    def group_by_type(type, resources)
-      case type
-      when :year
-        resources.group_by {|a| a.date.beginning_of_year }
-      when :month
-        resources.group_by {|a| a.date.beginning_of_month }
-      when :day
-        resources.group_by {|a| a.date.beginning_of_day }
-      end
+      app.config.akcms[:archive][type][:link] % {year: date.year, month: date.month, day: date.day}
     end
   end # class
 end
