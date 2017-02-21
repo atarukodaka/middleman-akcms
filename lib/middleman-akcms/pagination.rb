@@ -19,7 +19,8 @@ module Middleman::Akcms::Pagination
       else
         Middleman::Sitemap::Resource.new(app.sitemap, link, resource.source_file)
       end.tap do |res|
-        res.add_metadata(resource.metadata.merge(metadata))
+        res.add_metadata(resource.metadata)
+        res.add_metadata(metadata) unless metadata.empty?
         app.logger.debug("  * new pager added: #{res.path}")
       end
     end

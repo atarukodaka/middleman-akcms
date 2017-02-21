@@ -5,30 +5,60 @@ module Middleman::Akcms::Series
     include Middleman::Akcms::Util
     include Contracts
 
+
+    Contract ResourceList => ResourceList
+    def manipulate_resource_list(resources)
+      series_title_template = app.config.akcms[:series][:title_template]
+      selected_articles = []
+      
+      select_articles(resources).each do |article|
+        if (n = get_series_number(article))
+          article.add_metadata(locals: {series: {number: n, name: dirname(article.path)}})
+          selected_articles << article
+        end
+      end
+      selected_articles.group_by {|a| a.locals[:series][:name]}.each do |dir_path, articles|
+        series_name =dir_path.split('/').last
+        articles.sort_by! {|a| a.locals[:series][:number]}
+
+        if (index_res = app.sitemap.find_resource_by_path(File.join(dir_path, app.config.index_file)))
+          series_name = index_res.data.title if index_res.data.present?
+          index_res.add_metadata(locals: {articles: articles})
+        end
+        articles.each do |article|
+          title = series_title_template % article.locals[:series].merge({name: series_name, article_title: article.title})
+
+          article.add_metadata({page: {title: title},
+                                 locals: {series: {name: series_name, articles: articles}}})
+        end
+      end
+      resources
+    end    
+    
     # retrieve series number from resource:
     #   1. 'series-number: 2' from the frontmatter
     #   2. 'series:\n  number: 2' from the frontmatter
     #   3. from the filename like '2_xxxx.html' 
-    Contract Middleman::Sitemap::Resource => Integer
+    Contract Middleman::Sitemap::Resource => Or[Integer,nil]
     def get_series_number(article)
       series_number = article.data["series-number"] || article.data.series_number ||
         (article.data.series.number if article.data.series.is_a? Hash) || 
-        ((File.basename(article.path) =~ /^([0-9]+)[_\-\s]/) ? $1.to_i : 0)
+        ((File.basename(article.path) =~ /^([0-9]+)[_\-\s]/) ? $1.to_i : nil)
     end
-    
+
     # retrieve series name from the yml:
     #  1. 'series: foo'
     #  2. "series:\n  name: foo"
     #  3. "directory_name: foo"
     Contract Hash => Or[String, nil]
-    def get_series_name(yml)
+    def _get_series_name(yml)
       series_name = yml['series'] if yml['series'].is_a? String
       series_name ||= yml['series']['name'] if yml['series'].is_a? Hash
       return series_name ||= yml['directory_name']  # rubocop:disable Lint/UselessAssignment
     end
     
     Contract ResourceList => ResourceList
-    def manipulate_resource_list(resources)
+    def _manipulate_resource_list(resources)
       series_title_template = app.config.akcms[:series][:title_template]
 
       resources.select {|r| r.path =~ /\/config.yml$/}.each do |config_yml_res|
