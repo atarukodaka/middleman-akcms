@@ -13,12 +13,7 @@
 
   <footer>
     <%= partial("partials/pager") %>
-
-    <% if current_resource.data.series %>
-    <%= partial("partials/series") %>
-    <% else %>
     <%= partial("partials/siblings") %>
-    <% end %>
   </footer>
 </article>
 
