@@ -26,7 +26,7 @@ module Middleman::Akcms
     option :pagination_page_link, "page-%{page_number}"
 
     ## series settings
-    option :series_title_template, "%{name} [%{number}]: %{article_title}" 
+    # option :series_title_template, "%{name} [%{number}]: %{article_title}" 
 
     ## summarizer
     require 'middleman-akcms/summarize'
@@ -82,32 +82,25 @@ module Middleman::Akcms
           template: options.tag_template,
           link: options.tag_link,
         },
+=begin
         series: {
           title_template: options.series_title_template,
         },
+=end
       }
     end
     # rubocop:enable Metrics/MethodLength
     
     def activate_relevant_extensions
-      app.extensions.activate(:akcms_article)
-      if (t = options.directory_summary_template)
-        app.extensions.activate(:akcms_directory_summary)
-        app.ignore t
+      [:article, :directory_summary, :archive, :tag, :pagination].each do |ext|
+        app.extensions.activate(("akcms_" + ext.to_s).to_sym)
       end
-      archive_templates = [options.archive_year_template, options.archive_month_template, options.archive_day_template]
-      if archive_templates.any?
-        app.extensions.activate(:akcms_archive)
-        archive_templates.each do |template|
-          app.ignore template if template
+
+      [:directory_summary, :archive_year, :archive_month, :archve_day, :tag].each do |t|
+        if template = options["#{t.to_s}_template".to_sym]        
+          app.ignore(template)
         end
       end
-      if options.tag_template
-        app.extensions.activate(:akcms_tag) 
-        app.ignore options.tag_template
-      end
-      app.extensions.activate(:akcms_pagination) if options.pagination
-      app.extensions.activate(:akcms_series)
     end      
   end  ## class
 end

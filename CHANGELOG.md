@@ -3,6 +3,7 @@
 - rubygems
 - release 準備
 - File.dirname("foo.bar") => "."
+- modified_at
 
 ## 0.0.1.alpha1
 - カテゴリの階層表現

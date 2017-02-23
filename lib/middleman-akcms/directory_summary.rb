@@ -22,7 +22,7 @@ module Middleman::Akcms::DirectorySummary
     def name
       @name ||= if (config_yml = @sitemap.find_resource_by_path(File.join(path, "config.yml")))
                   yml = YAML::load(config_yml.render(layout: false))
-                  yml["directory_name"].to_s
+                  yml.try(:[], "directory_name").try(:to_s)
                 end || @path.split('/').last
     end
 
@@ -101,9 +101,10 @@ module Middleman::Akcms::DirectorySummary
 
     Contract ResourceList => ResourceList
     def manipulate_resource_list(resources)
+      index_file = app.config.index_file
       new_resources = []
       template = app.config.akcms[:directory_summary_template]
-      index_file = app.config.index_file
+      return resources if template.blank?
       
       dirs = directories_including_ancestors(resources)
       dirs.each do |path|

@@ -45,6 +45,7 @@ module Middleman::Akcms::Tag
       app.sitemap.tags.clear
 
       template = app.config.akcms[:tag][:template]
+      return resources if template.blank?
       
       select_articles(resources).each {|article|
         article.tags.each {|tag|

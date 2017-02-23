@@ -30,9 +30,3 @@ Middleman::Extensions.register(:akcms_tag) do
   require 'middleman-akcms/tag'
   Middleman::Akcms::Tag::Extension
 end
-
-Middleman::Extensions.register(:akcms_series) do
-  require 'middleman-akcms/series'
-  Middleman::Akcms::Series::Extension
-end
-
