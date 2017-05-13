@@ -18,7 +18,7 @@ module Middleman::Akcms::DirectorySummary
       @articles = []
     end
 
-    Contract String
+    #Contract String
     def name
       @name ||= if (config_yml = @sitemap.find_resource_by_path(File.join(path, "config.yml")))
                   yml = YAML::load(config_yml.render(layout: false))

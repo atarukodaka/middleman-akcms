@@ -16,6 +16,9 @@
     <%= stylesheet_link_tag "pygment_trac.css" %>
     <%= stylesheet_link_tag "tagbox.css" %>
     <%= stylesheet_link_tag "style.css" %>
+    <% if app.extensions[:google_analytics] %>
+    <%= google_analytics_tag %>
+    <% end %>
   </head>
   
   <!-- ================ -->
